@@ -279,12 +279,16 @@ export function useGameState() {
     setGame((prev) => ({ ...prev, screen: 'tutorial' }));
   }, []);
 
-  const startGame = useCallback(() => {
+  const goToDiceRoll = useCallback(() => {
+    setGame((prev) => ({ ...prev, screen: 'dice-roll' }));
+  }, []);
+
+  const startGame = useCallback((firstPlayer: 0 | 1 = 0) => {
     const timeLimit = getTimeLimitForFormat(game.gameFormat);
     setGame((prev) => ({
       ...prev,
       screen: 'game',
-      currentPlayerIndex: 0,
+      currentPlayerIndex: firstPlayer,
       scores: [0, 0],
       cooperativeScore: 0,
       usedTaskIds: [],
@@ -532,11 +536,9 @@ export function useGameState() {
 
   const playAgain = useCallback(() => {
     clearTimer();
-    const timeLimit = getTimeLimitForFormat(game.gameFormat);
     setGame((prev) => ({
       ...prev,
-      screen: 'game',
-      currentPlayerIndex: 0,
+      screen: 'dice-roll',
       scores: [0, 0],
       cooperativeScore: 0,
       usedTaskIds: [],
@@ -547,10 +549,10 @@ export function useGameState() {
       winner: null,
       spinCategory: null,
       sessionNewAchievements: [],
-      timeLimitSeconds: timeLimit,
-      timeRemainingSeconds: timeLimit,
+      timeLimitSeconds: null,
+      timeRemainingSeconds: null,
     }));
-  }, [clearTimer, game.gameFormat]);
+  }, [clearTimer]);
 
   const resetScores = useCallback(() => {
     setGame((prev) => ({
@@ -593,6 +595,7 @@ export function useGameState() {
     setCustomTargetScore,
     setRoundCount,
     goToTutorial,
+    goToDiceRoll,
     startGame,
     startSpin,
     handleSpinEnd,

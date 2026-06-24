@@ -100,15 +100,16 @@ export function QuickSetupScreen({
   };
 
   return (
-    <section className="page-screen setup-screen">
-      <div className="setup-card">
-        <header className="setup-header">
+    <section className="page-screen flow-screen setup-screen">
+      <div className="setup-card flow-card">
+        <header className="flow-header setup-header">
           <button type="button" className="icon-btn" onClick={onBack} aria-label="חזרה">
             →
           </button>
           <div>
-            <h1 className="setup-title">מוכנים לשחק?</h1>
-            <p className="setup-sub">3 בחירות ומתחילים — אפשר לשנות תמיד</p>
+            <p className="flow-kicker">שלב 1 מתוך 2</p>
+            <h1 className="flow-title setup-title">מוכנים לשחק?</h1>
+            <p className="flow-desc setup-sub">3 בחירות — אחר כך קובייה למי מתחיל</p>
           </div>
         </header>
 
@@ -252,9 +253,9 @@ export function QuickSetupScreen({
 
         <div className="setup-footer">
           <button type="button" className="cta-button pressable" onClick={onStart}>
-            🎡 התחילו לשחק
+            🎲 המשך לקובייה
           </button>
-          <p className="setup-hint">תמיד אפשר לדלג על משימה או שאלה</p>
+          <p className="setup-hint">הקובייה תקבע מי מתחיל · תמיד אפשר לדלג</p>
         </div>
       </div>
     </section>

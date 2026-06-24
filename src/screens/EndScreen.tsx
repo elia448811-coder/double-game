@@ -60,15 +60,15 @@ export function EndScreen({ game, settings, onNewGame, onPlayAgain, onHome }: En
   };
 
   return (
-    <section className="page-screen end-screen">
+    <section className="page-screen flow-screen end-screen">
       <ConfettiEffect
         active
         colors={[settings.playerOneColor, settings.playerTwoColor, '#FACC15', '#FF4FA3']}
       />
-      <div className="game-card end-card">
-        <p className="eyebrow">כל הכבוד</p>
-        <h1 className="end-card__title">{phrase}</h1>
-        <p className="subtitle end-card__subtitle">
+      <div className="flow-card end-card">
+        <p className="flow-kicker">כל הכבוד</p>
+        <h1 className="flow-title end-card__title">{phrase}</h1>
+        <p className="flow-desc end-card__subtitle">
           {game.eveningName && <span>{game.eveningName} · </span>}
           סיימתם עם {game.stats.totalCompleted}{' '}
           {game.contentMode === 'questions' ? 'שאלות שנענו' : 'משימות שבוצעו'}
@@ -76,14 +76,21 @@ export function EndScreen({ game, settings, onNewGame, onPlayAgain, onHome }: En
         </p>
 
         {winnerName ? (
-          <p className="end-card__winner">🏆 המנצח/ת: {winnerName}</p>
+          <div className="end-winner-pill">
+            <span>🏆</span>
+            <strong>{winnerName}</strong>
+            <span>ניצח/ה!</span>
+          </div>
         ) : game.winner === 'tie' ? (
-          <p className="end-card__winner">🤝 נגמר בתיקו מושלם</p>
+          <div className="end-winner-pill end-winner-pill--tie">
+            <span>🤝</span>
+            <strong>תיקו מושלם</strong>
+          </div>
         ) : null}
 
         {game.stats.funniestTaskTitle && (
           <p className="funniest-task">
-            {game.contentMode === 'questions' ? '⭐ השאלה המועדפת:' : '😂 המשימה הכי מצחיקה:'}{' '}
+            {game.contentMode === 'questions' ? '⭐ השאלה מועדפת:' : '😂 המשימה הכי מצחיקה:'}{' '}
             {game.stats.funniestTaskTitle}
           </p>
         )}
@@ -109,7 +116,7 @@ export function EndScreen({ game, settings, onNewGame, onPlayAgain, onHome }: En
 
         {newAchievements.length > 0 && (
           <div className="achievements-unlocked">
-            <span className="settings-label">הישגים חדשים בהישג יד</span>
+            <span className="setup-label">הישגים חדשים 🎉</span>
             <div className="achievements-row">
               {newAchievements.map((a) => (
                 <span key={a.id} className="achievement-badge">
@@ -124,7 +131,7 @@ export function EndScreen({ game, settings, onNewGame, onPlayAgain, onHome }: En
 
         <div className="end-actions">
           <button type="button" className="cta-button pressable" onClick={onPlayAgain}>
-            🔄 שחקו שוב
+            🎲 שחקו שוב
           </button>
           <button type="button" className="end-actions__secondary pressable" onClick={handleShare} disabled={sharing}>
             {sharing ? 'משתף...' : '📤 שתפו'}

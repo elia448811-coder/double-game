@@ -25,7 +25,7 @@ export const allQuestions: CoupleQuestionTask[] = [
   {
     id: 'q-001',
     title: "שאלות היכרות עמוקה",
-    description: "מה הדבר שהכי חשוב לך שאבין עליך?",
+    description: "אם היית צריך/ה לבחור דבר אחד שחשוב לי להבין עליך — מה זה?",
     kind: 'question',
     questionGroup: 'deep',
     category: 'romantic',
@@ -35,7 +35,7 @@ export const allQuestions: CoupleQuestionTask[] = [
   {
     id: 'q-002',
     title: "שאלות היכרות עמוקה",
-    description: "מה גורם לך להרגיש באמת אהוב/ה?",
+    description: "מתי את/ה באמת מרגיש/ה אהוב/ה?",
     kind: 'question',
     questionGroup: 'deep',
     category: 'romantic',
@@ -45,7 +45,7 @@ export const allQuestions: CoupleQuestionTask[] = [
   {
     id: 'q-003',
     title: "שאלות היכרות עמוקה",
-    description: "מה הדבר שהכי מרגיע אותך כשאתה/את בלחץ?",
+    description: "מה הכי מרגיע אותך כשהלחץ עולה?",
     kind: 'question',
     questionGroup: 'deep',
     category: 'romantic',
@@ -55,7 +55,7 @@ export const allQuestions: CoupleQuestionTask[] = [
   {
     id: 'q-004',
     title: "שאלות היכרות עמוקה",
-    description: "מתי את/ה מרגיש/ה הכי עצמך?",
+    description: "מתי את/ה הכי \"את/ה\" — בלי מסכות?",
     kind: 'question',
     questionGroup: 'deep',
     category: 'romantic',
@@ -65,7 +65,7 @@ export const allQuestions: CoupleQuestionTask[] = [
   {
     id: 'q-005',
     title: "שאלות היכרות עמוקה",
-    description: "מה הדבר שהיית רוצה שאעשה יותר בקשר שלנו?",
+    description: "מה היית רוצה שאעשה יותר בינינו?",
     kind: 'question',
     questionGroup: 'deep',
     category: 'romantic',
@@ -75,7 +75,7 @@ export const allQuestions: CoupleQuestionTask[] = [
   {
     id: 'q-006',
     title: "שאלות היכרות עמוקה",
-    description: "מה הדבר שהיית רוצה שאבין בלי שתצטרך/י להסביר הרבה?",
+    description: "יש משהו שחשוב לך שאבין מעצמי, בלי שתצטרך/י להסביר?",
     kind: 'question',
     questionGroup: 'deep',
     category: 'romantic',
@@ -85,7 +85,7 @@ export const allQuestions: CoupleQuestionTask[] = [
   {
     id: 'q-007',
     title: "שאלות היכרות עמוקה",
-    description: "מה גורם לך להרגיש בטוח/ה בקשר?",
+    description: "מה נותן לך תחושת ביטחון בקשר?",
     kind: 'question',
     questionGroup: 'deep',
     category: 'romantic',
@@ -95,7 +95,7 @@ export const allQuestions: CoupleQuestionTask[] = [
   {
     id: 'q-008',
     title: "שאלות היכרות עמוקה",
-    description: "מה הדבר שהכי מפחיד אותך בקשר זוגי?",
+    description: "מה מפחיד אותך הכי הרבה בזוגיות?",
     kind: 'question',
     questionGroup: 'deep',
     category: 'romantic',
@@ -105,7 +105,7 @@ export const allQuestions: CoupleQuestionTask[] = [
   {
     id: 'q-009',
     title: "שאלות היכרות עמוקה",
-    description: "מה הזיכרון הכי יפה שיש לך מאיתנו?",
+    description: "איזה זיכרון שלנו את/ה שומר/ת בלב?",
     kind: 'question',
     questionGroup: 'deep',
     category: 'romantic',
@@ -115,7 +115,7 @@ export const allQuestions: CoupleQuestionTask[] = [
   {
     id: 'q-010',
     title: "שאלות היכרות עמוקה",
-    description: "איזה רגע קטן איתי גרם לך לחייך באמת?",
+    description: "איזה רגע קטן איתי גרם לך לחייך מבפנים?",
     kind: 'question',
     questionGroup: 'deep',
     category: 'romantic',
@@ -125,7 +125,7 @@ export const allQuestions: CoupleQuestionTask[] = [
   {
     id: 'q-011',
     title: "שאלות היכרות עמוקה",
-    description: "מה הדבר הכי חשוב לך בבית משותף?",
+    description: "מה הכי חשוב לך בבית שאנחנו בונים יחד?",
     kind: 'question',
     questionGroup: 'deep',
     category: 'romantic',
@@ -145,7 +145,7 @@ export const allQuestions: CoupleQuestionTask[] = [
   {
     id: 'q-013',
     title: "שאלות היכרות עמוקה",
-    description: "מה הדבר שהכי חשוב לך בזמן ריב?",
+    description: "מה הכי חשוב לך כשאנחנו רבים?",
     kind: 'question',
     questionGroup: 'deep',
     category: 'romantic',
@@ -155,7 +155,7 @@ export const allQuestions: CoupleQuestionTask[] = [
   {
     id: 'q-014',
     title: "שאלות היכרות עמוקה",
-    description: "איך את/ה מעדיף/ה שאפנה אליך כשקשה לך?",
+    description: "איך כדאי לגשת אליך כשקשה לך?",
     kind: 'question',
     questionGroup: 'deep',
     category: 'romantic',
@@ -165,7 +165,7 @@ export const allQuestions: CoupleQuestionTask[] = [
   {
     id: 'q-015',
     title: "שאלות היכרות עמוקה",
-    description: "מה גורם לך להרגיש שמקשיבים לך באמת?",
+    description: "מתי את/ה מרגיש/ה שבאמת מקשיבים לך?",
     kind: 'question',
     questionGroup: 'deep',
     category: 'romantic',
@@ -175,7 +175,7 @@ export const allQuestions: CoupleQuestionTask[] = [
   {
     id: 'q-016',
     title: "שאלות היכרות עמוקה",
-    description: "מה הדבר הכי יפה שלמדת על עצמך בקשר?",
+    description: "מה למדת על עצמך מאז שאנחנו יחד?",
     kind: 'question',
     questionGroup: 'deep',
     category: 'romantic',
@@ -185,7 +185,7 @@ export const allQuestions: CoupleQuestionTask[] = [
   {
     id: 'q-017',
     title: "שאלות היכרות עמוקה",
-    description: "מה הדבר שהיית רוצה שנשפר ביחד?",
+    description: "במה היית רוצה שנשתפר כצמד?",
     kind: 'question',
     questionGroup: 'deep',
     category: 'romantic',
@@ -195,7 +195,7 @@ export const allQuestions: CoupleQuestionTask[] = [
   {
     id: 'q-018',
     title: "שאלות היכרות עמוקה",
-    description: "מה גורם לך להרגיש קרוב/ה אליי?",
+    description: "מה מקרב אותך אליי הכי מהר?",
     kind: 'question',
     questionGroup: 'deep',
     category: 'romantic',
@@ -205,7 +205,7 @@ export const allQuestions: CoupleQuestionTask[] = [
   {
     id: 'q-019',
     title: "שאלות היכרות עמוקה",
-    description: "מה הדבר שאתה/את הכי מעריך/ה בי?",
+    description: "מה את/ה הכי מעריך/ה בי?",
     kind: 'question',
     questionGroup: 'deep',
     category: 'romantic',
@@ -215,7 +215,7 @@ export const allQuestions: CoupleQuestionTask[] = [
   {
     id: 'q-020',
     title: "שאלות היכרות עמוקה",
-    description: "מה הדבר שאתה/את מרגיש/ה שאני לא תמיד שם/ה לב אליו?",
+    description: "יש משהו שאת/ה מרגיש/ה שאני לא תמיד שם/ה לב אליו?",
     kind: 'question',
     questionGroup: 'deep',
     category: 'romantic',
@@ -245,7 +245,7 @@ export const allQuestions: CoupleQuestionTask[] = [
   {
     id: 'q-023',
     title: "שאלות היכרות עמוקה",
-    description: "מה הדבר שהכי חשוב לך בעתיד?",
+    description: "מה הכי חשוב לך כשאת/ה חושב/ת על העתיד?",
     kind: 'question',
     questionGroup: 'deep',
     category: 'romantic',
@@ -265,7 +265,7 @@ export const allQuestions: CoupleQuestionTask[] = [
   {
     id: 'q-025',
     title: "שאלות היכרות עמוקה",
-    description: "מה הדבר שאתה/את הכי רוצה שנבנה יחד?",
+    description: "מה את/ה הכי רוצה שנבנה יחד?",
     kind: 'question',
     questionGroup: 'deep',
     category: 'romantic',
@@ -275,7 +275,7 @@ export const allQuestions: CoupleQuestionTask[] = [
   {
     id: 'q-026',
     title: "שאלות היכרות עמוקה",
-    description: "מה גורם לך להרגיש שאנחנו צוות?",
+    description: "מתי את/ה מרגיש/ה שאנחנו צוות?",
     kind: 'question',
     questionGroup: 'deep',
     category: 'romantic',
@@ -285,7 +285,7 @@ export const allQuestions: CoupleQuestionTask[] = [
   {
     id: 'q-027',
     title: "שאלות היכרות עמוקה",
-    description: "מה הדבר שאתה/את הכי צריך/ה ממני בתקופות עמוסות?",
+    description: "מה את/ה הכי צריך/ה ממני בתקופות עמוסות?",
     kind: 'question',
     questionGroup: 'deep',
     category: 'romantic',
@@ -295,7 +295,7 @@ export const allQuestions: CoupleQuestionTask[] = [
   {
     id: 'q-028',
     title: "שאלות היכרות עמוקה",
-    description: "מה הדרך הכי טובה לעודד אותך?",
+    description: "איך הכי טוב לעודד אותך?",
     kind: 'question',
     questionGroup: 'deep',
     category: 'romantic',
@@ -305,7 +305,7 @@ export const allQuestions: CoupleQuestionTask[] = [
   {
     id: 'q-029',
     title: "שאלות היכרות עמוקה",
-    description: "מה הדבר שהכי פוגע בך גם אם הוא נראה קטן?",
+    description: "מה פוגע בך גם כשזה נראה \"קטן\"?",
     kind: 'question',
     questionGroup: 'deep',
     category: 'romantic',
@@ -315,7 +315,7 @@ export const allQuestions: CoupleQuestionTask[] = [
   {
     id: 'q-030',
     title: "שאלות היכרות עמוקה",
-    description: "מה הדבר שהכי מחזק אותך?",
+    description: "מה נותן לך הכי הרבה כוח?",
     kind: 'question',
     questionGroup: 'deep',
     category: 'romantic',
@@ -335,7 +335,7 @@ export const allQuestions: CoupleQuestionTask[] = [
   {
     id: 'q-032',
     title: "שאלות היכרות עמוקה",
-    description: "מה בעיניך הופך קשר לבריא?",
+    description: "מה הופך קשר לבריא בעיניך?",
     kind: 'question',
     questionGroup: 'deep',
     category: 'romantic',
@@ -345,7 +345,7 @@ export const allQuestions: CoupleQuestionTask[] = [
   {
     id: 'q-033',
     title: "שאלות היכרות עמוקה",
-    description: "מה מבחינתך גבול שאסור לחצות בקשר?",
+    description: "מה מבחינתך גבול שלא כדאי לחצות?",
     kind: 'question',
     questionGroup: 'deep',
     category: 'romantic',
@@ -355,7 +355,7 @@ export const allQuestions: CoupleQuestionTask[] = [
   {
     id: 'q-034',
     title: "שאלות היכרות עמוקה",
-    description: "מה חשוב לך שנשמור גם כשאנחנו רבים?",
+    description: "מה חשוב לך לשמור גם כשיש מתח בינינו?",
     kind: 'question',
     questionGroup: 'deep',
     category: 'romantic',
@@ -375,7 +375,7 @@ export const allQuestions: CoupleQuestionTask[] = [
   {
     id: 'q-036',
     title: "שאלות היכרות עמוקה",
-    description: "מה הדבר שהכי קשה לך לבקש?",
+    description: "מה הכי קשה לך לבקש?",
     kind: 'question',
     questionGroup: 'deep',
     category: 'romantic',
@@ -385,7 +385,7 @@ export const allQuestions: CoupleQuestionTask[] = [
   {
     id: 'q-037',
     title: "שאלות היכרות עמוקה",
-    description: "מה הדבר שהכי קל לך לתת?",
+    description: "מה הכי קל לך לתת?",
     kind: 'question',
     questionGroup: 'deep',
     category: 'romantic',
@@ -405,7 +405,7 @@ export const allQuestions: CoupleQuestionTask[] = [
   {
     id: 'q-039',
     title: "שאלות היכרות עמוקה",
-    description: "מה הדבר שאתה/את לא אומר/ת הרבה אבל מרגיש/ה?",
+    description: "יש משהו שאת/ה לא אומר/ת הרבה, אבל מרגיש/ה?",
     kind: 'question',
     questionGroup: 'deep',
     category: 'romantic',
@@ -415,7 +415,7 @@ export const allQuestions: CoupleQuestionTask[] = [
   {
     id: 'q-040',
     title: "שאלות היכרות עמוקה",
-    description: "מה גורם לך להרגיש מוערך/ת?",
+    description: "מתי את/ה מרגיש/ה מוערך/ת?",
     kind: 'question',
     questionGroup: 'deep',
     category: 'romantic',
@@ -425,7 +425,7 @@ export const allQuestions: CoupleQuestionTask[] = [
   {
     id: 'q-041',
     title: "שאלות היכרות עמוקה",
-    description: "איזה רגע בחיים עיצב אותך מאוד?",
+    description: "איזה רגע בחיים עיצב אותך במיוחד?",
     kind: 'question',
     questionGroup: 'deep',
     category: 'romantic',
@@ -435,7 +435,7 @@ export const allQuestions: CoupleQuestionTask[] = [
   {
     id: 'q-042',
     title: "שאלות היכרות עמוקה",
-    description: "מה למדת מהקשרים שהיו לך בעבר?",
+    description: "מה למדת מקשרים קודמים?",
     kind: 'question',
     questionGroup: 'deep',
     category: 'romantic',
@@ -445,7 +445,7 @@ export const allQuestions: CoupleQuestionTask[] = [
   {
     id: 'q-043',
     title: "שאלות היכרות עמוקה",
-    description: "מה למדת מהמשפחה שלך על אהבה?",
+    description: "מה הממשפחה שלך לימדה אותך על אהבה?",
     kind: 'question',
     questionGroup: 'deep',
     category: 'romantic',
@@ -455,7 +455,7 @@ export const allQuestions: CoupleQuestionTask[] = [
   {
     id: 'q-044',
     title: "שאלות היכרות עמוקה",
-    description: "איזה הרגל מהבית שלך היית רוצה להביא לקשר שלנו?",
+    description: "איזה הרגל מהבית שלך היית רוצה להביא אלינו?",
     kind: 'question',
     questionGroup: 'deep',
     category: 'romantic',
@@ -465,7 +465,7 @@ export const allQuestions: CoupleQuestionTask[] = [
   {
     id: 'q-045',
     title: "שאלות היכרות עמוקה",
-    description: "איזה הרגל מהבית שלך היית רוצה לשנות?",
+    description: "איזה הרגל מהבית היית רוצה לשנות?",
     kind: 'question',
     questionGroup: 'deep',
     category: 'romantic',
@@ -475,7 +475,7 @@ export const allQuestions: CoupleQuestionTask[] = [
   {
     id: 'q-046',
     title: "שאלות היכרות עמוקה",
-    description: "מה בעיניך אומר להיות נאמן/ה רגשית?",
+    description: "מה בעיניך אומר \"נאמנות רגשית\"?",
     kind: 'question',
     questionGroup: 'deep',
     category: 'romantic',
@@ -495,7 +495,7 @@ export const allQuestions: CoupleQuestionTask[] = [
   {
     id: 'q-048',
     title: "שאלות היכרות עמוקה",
-    description: "מה יכול לגרום לך להתרחק רגשית?",
+    description: "מה עלול לגרום לך להתרחק רגשית?",
     kind: 'question',
     questionGroup: 'deep',
     category: 'romantic',
@@ -515,7 +515,7 @@ export const allQuestions: CoupleQuestionTask[] = [
   {
     id: 'q-050',
     title: "שאלות היכרות עמוקה",
-    description: "מה הדבר שהכי חשוב לך שאזכור עליך?",
+    description: "מה הכי חשוב לך שאזכור עליך?",
     kind: 'question',
     questionGroup: 'deep',
     category: 'romantic',
@@ -525,7 +525,7 @@ export const allQuestions: CoupleQuestionTask[] = [
   {
     id: 'q-051',
     title: "שאלות היכרות עמוקה",
-    description: "מה עושה אותך גאה בעצמך?",
+    description: "מה גורם לך להרגיש גאה בעצמך?",
     kind: 'question',
     questionGroup: 'deep',
     category: 'romantic',
@@ -535,7 +535,7 @@ export const allQuestions: CoupleQuestionTask[] = [
   {
     id: 'q-052',
     title: "שאלות היכרות עמוקה",
-    description: "מה הדבר שאתה/את עדיין עובד/ת עליו בעצמך?",
+    description: "על מה את/ה עדיין עובד/ת בעצמך?",
     kind: 'question',
     questionGroup: 'deep',
     category: 'romantic',
@@ -565,7 +565,7 @@ export const allQuestions: CoupleQuestionTask[] = [
   {
     id: 'q-055',
     title: "שאלות היכרות עמוקה",
-    description: "מה מחזק לך את הביטחון?",
+    description: "מה מחזק את הביטחון שלך?",
     kind: 'question',
     questionGroup: 'deep',
     category: 'romantic',
@@ -605,7 +605,7 @@ export const allQuestions: CoupleQuestionTask[] = [
   {
     id: 'q-059',
     title: "שאלות היכרות עמוקה",
-    description: "איזה מחמאה הכי נשארת איתך?",
+    description: "איזו מחמאה נשארה איתך הכי הרבה זמן?",
     kind: 'question',
     questionGroup: 'deep',
     category: 'romantic',
@@ -625,7 +625,7 @@ export const allQuestions: CoupleQuestionTask[] = [
   {
     id: 'q-061',
     title: "שאלות היכרות עמוקה",
-    description: "איך את/ה מגדיר/ה אהבה?",
+    description: "איך את/ה מגדיר/ה \"אהבה\"?",
     kind: 'question',
     questionGroup: 'deep',
     category: 'romantic',
@@ -635,7 +635,7 @@ export const allQuestions: CoupleQuestionTask[] = [
   {
     id: 'q-062',
     title: "שאלות היכרות עמוקה",
-    description: "איך את/ה מגדיר/ה חברות בתוך זוגיות?",
+    description: "איך נראית \"חברות\" בתוך זוגיות בשבילך?",
     kind: 'question',
     questionGroup: 'deep',
     category: 'romantic',
@@ -645,7 +645,7 @@ export const allQuestions: CoupleQuestionTask[] = [
   {
     id: 'q-063',
     title: "שאלות היכרות עמוקה",
-    description: "מה חשוב לך יותר, יציבות או ריגוש?",
+    description: "מה חשוב לך יותר — יציבות או ריגוש?",
     kind: 'question',
     questionGroup: 'deep',
     category: 'romantic',
@@ -655,7 +655,7 @@ export const allQuestions: CoupleQuestionTask[] = [
   {
     id: 'q-064',
     title: "שאלות היכרות עמוקה",
-    description: "מה בעיניך הדבר שהכי שומר על קשר לאורך זמן?",
+    description: "מה לדעתך שומר על קשר לאורך זמן?",
     kind: 'question',
     questionGroup: 'deep',
     category: 'romantic',
@@ -665,7 +665,7 @@ export const allQuestions: CoupleQuestionTask[] = [
   {
     id: 'q-065',
     title: "שאלות היכרות עמוקה",
-    description: "איזה דבר קטן ביום יום עושה לך טוב?",
+    description: "איזה דבר קטן ביום-יום עושה לך טוב?",
     kind: 'question',
     questionGroup: 'deep',
     category: 'romantic',
@@ -675,7 +675,7 @@ export const allQuestions: CoupleQuestionTask[] = [
   {
     id: 'q-066',
     title: "שאלות היכרות עמוקה",
-    description: "מה הדבר שהכי משמח אותך בבית?",
+    description: "מה הכי משמח אותך בבית?",
     kind: 'question',
     questionGroup: 'deep',
     category: 'romantic',
@@ -685,7 +685,7 @@ export const allQuestions: CoupleQuestionTask[] = [
   {
     id: 'q-067',
     title: "שאלות היכרות עמוקה",
-    description: "מה הדבר שהכי מעייף אותך בקשר?",
+    description: "מה הכי מעייף אותך בקשר?",
     kind: 'question',
     questionGroup: 'deep',
     category: 'romantic',
@@ -695,7 +695,7 @@ export const allQuestions: CoupleQuestionTask[] = [
   {
     id: 'q-068',
     title: "שאלות היכרות עמוקה",
-    description: "מה גורם לך להרגיש לבד גם כשאנחנו יחד?",
+    description: "מתי את/ה מרגיש/ה לבד גם כשאנחנו יחד?",
     kind: 'question',
     questionGroup: 'deep',
     category: 'romantic',
@@ -705,7 +705,7 @@ export const allQuestions: CoupleQuestionTask[] = [
   {
     id: 'q-069',
     title: "שאלות היכרות עמוקה",
-    description: "מה גורם לך להרגיש שאנחנו קרובים?",
+    description: "מה גורם לך להרגיש קרוב/ה אליי?",
     kind: 'question',
     questionGroup: 'deep',
     category: 'romantic',
@@ -715,7 +715,7 @@ export const allQuestions: CoupleQuestionTask[] = [
   {
     id: 'q-070',
     title: "שאלות היכרות עמוקה",
-    description: "מה היית רוצה שנעשה יותר בלי טלפונים?",
+    description: "מה היית רוצה שנעשה יותר בלי מסכים?",
     kind: 'question',
     questionGroup: 'deep',
     category: 'romantic',
@@ -725,7 +725,7 @@ export const allQuestions: CoupleQuestionTask[] = [
   {
     id: 'q-071',
     title: "שאלות היכרות עמוקה",
-    description: "מה הדרך הכי טובה לפתור בינינו אי הבנה?",
+    description: "איך הכי טוב לפתור בינינו אי-הבנה?",
     kind: 'question',
     questionGroup: 'deep',
     category: 'romantic',
@@ -765,7 +765,7 @@ export const allQuestions: CoupleQuestionTask[] = [
   {
     id: 'q-075',
     title: "שאלות היכרות עמוקה",
-    description: "מה גורם לך להרגיש שמכבדים אותך?",
+    description: "מתי את/ה מרגיש/ה שמכבדים אותך?",
     kind: 'question',
     questionGroup: 'deep',
     category: 'romantic',
@@ -775,7 +775,7 @@ export const allQuestions: CoupleQuestionTask[] = [
   {
     id: 'q-076',
     title: "שאלות היכרות עמוקה",
-    description: "איזה נושא קשה לך לדבר עליו?",
+    description: "על איזה נושא קשה לך לדבר?",
     kind: 'question',
     questionGroup: 'deep',
     category: 'romantic',
@@ -825,7 +825,7 @@ export const allQuestions: CoupleQuestionTask[] = [
   {
     id: 'q-081',
     title: "שאלות היכרות עמוקה",
-    description: "מה הדבר שהכי מצחיק אותך בי?",
+    description: "מה הכי מצחיק אותך בי?",
     kind: 'question',
     questionGroup: 'deep',
     category: 'romantic',
@@ -835,7 +835,7 @@ export const allQuestions: CoupleQuestionTask[] = [
   {
     id: 'q-082',
     title: "שאלות היכרות עמוקה",
-    description: "מה הדבר הכי חמוד שאני עושה בלי לשים לב?",
+    description: "מה הכי חמוד שאני עושה בלי לשים לב?",
     kind: 'question',
     questionGroup: 'deep',
     category: 'romantic',
@@ -845,7 +845,7 @@ export const allQuestions: CoupleQuestionTask[] = [
   {
     id: 'q-083',
     title: "שאלות היכרות עמוקה",
-    description: "איזה רגע איתי היית רוצה לשחזר?",
+    description: "איזה רגע איתי היית רוצה לחזור אליו?",
     kind: 'question',
     questionGroup: 'deep',
     category: 'romantic',
@@ -865,7 +865,7 @@ export const allQuestions: CoupleQuestionTask[] = [
   {
     id: 'q-085',
     title: "שאלות היכרות עמוקה",
-    description: "מה מקום שהיית רוצה שנלך אליו יחד?",
+    description: "לאן היית רוצה שנטייל יחד?",
     kind: 'question',
     questionGroup: 'deep',
     category: 'romantic',
@@ -905,7 +905,7 @@ export const allQuestions: CoupleQuestionTask[] = [
   {
     id: 'q-089',
     title: "שאלות היכרות עמוקה",
-    description: "מה הדבר הכי פשוט שיכול לשפר לנו את היום?",
+    description: "מה הכי פשוט שיכול לשפר לנו את היום?",
     kind: 'question',
     questionGroup: 'deep',
     category: 'romantic',
@@ -925,7 +925,7 @@ export const allQuestions: CoupleQuestionTask[] = [
   {
     id: 'q-091',
     title: "שאלות היכרות עמוקה",
-    description: "מה הדבר שאתה/את הכי רוצה להרגיש בקשר שלנו?",
+    description: "מה את/ה הכי רוצה להרגיש בקשר שלנו?",
     kind: 'question',
     questionGroup: 'deep',
     category: 'romantic',
@@ -945,7 +945,7 @@ export const allQuestions: CoupleQuestionTask[] = [
   {
     id: 'q-093',
     title: "שאלות היכרות עמוקה",
-    description: "מה הדבר שחשוב לך שלא נאבד עם הזמן?",
+    description: "מה חשוב לך שלא נאבד עם הזמן?",
     kind: 'question',
     questionGroup: 'deep',
     category: 'romantic',
@@ -965,7 +965,7 @@ export const allQuestions: CoupleQuestionTask[] = [
   {
     id: 'q-095',
     title: "שאלות היכרות עמוקה",
-    description: "מה מבחינתך אומר להיות פרטנרים אמיתיים?",
+    description: "מה בעיניך אומר \"להיות שותפים אמיתיים\"?",
     kind: 'question',
     questionGroup: 'deep',
     category: 'romantic',
@@ -975,7 +975,7 @@ export const allQuestions: CoupleQuestionTask[] = [
   {
     id: 'q-096',
     title: "שאלות היכרות עמוקה",
-    description: "מה הדבר שהכי מחבר בינינו לדעתך?",
+    description: "מה לדעתך הכי מחבר בינינו?",
     kind: 'question',
     questionGroup: 'deep',
     category: 'romantic',
@@ -995,7 +995,7 @@ export const allQuestions: CoupleQuestionTask[] = [
   {
     id: 'q-098',
     title: "שאלות היכרות עמוקה",
-    description: "מה היית רוצה שאני אעריך אצלך יותר?",
+    description: "מה היית רוצה שאעריך אצלך יותר?",
     kind: 'question',
     questionGroup: 'deep',
     category: 'romantic',
@@ -1005,7 +1005,7 @@ export const allQuestions: CoupleQuestionTask[] = [
   {
     id: 'q-099',
     title: "שאלות היכרות עמוקה",
-    description: "מה הדבר הכי טוב שקרה לך בזכות הקשר שלנו?",
+    description: "מה הכי טוב שקרה לך בזכות הקשר שלנו?",
     kind: 'question',
     questionGroup: 'deep',
     category: 'romantic',
@@ -1015,7 +1015,7 @@ export const allQuestions: CoupleQuestionTask[] = [
   {
     id: 'q-100',
     title: "שאלות היכרות עמוקה",
-    description: "מה משפט אחד שהיית רוצה שניקח איתנו להמשך הקשר?",
+    description: "איזה משפט אחד היית רוצה שניקח איתנו להמשך?",
     kind: 'question',
     questionGroup: 'deep',
     category: 'romantic',
@@ -1025,7 +1025,7 @@ export const allQuestions: CoupleQuestionTask[] = [
   {
     id: 'q-101',
     title: "שאלות מצחיקות",
-    description: "מי מאיתנו היה שורד יותר טוב באי בודד?",
+    description: "מי מאיתנו היה שורד יותר טוב על אי בודד?",
     kind: 'question',
     questionGroup: 'funny',
     category: 'funny',
@@ -1045,7 +1045,7 @@ export const allQuestions: CoupleQuestionTask[] = [
   {
     id: 'q-103',
     title: "שאלות מצחיקות",
-    description: "אם היינו תוכנית טלוויזיה, איך היו קוראים לה?",
+    description: "אם היינו תוכנית טלוויזיה — איך היו קוראים לה?",
     kind: 'question',
     questionGroup: 'funny',
     category: 'funny',
@@ -1065,7 +1065,7 @@ export const allQuestions: CoupleQuestionTask[] = [
   {
     id: 'q-105',
     title: "שאלות מצחיקות",
-    description: "מה הדבר הכי מצחיק שקרה לנו יחד?",
+    description: "מה הכי מצחיק שקרה לנו יחד?",
     kind: 'question',
     questionGroup: 'funny',
     category: 'funny',
@@ -1085,7 +1085,7 @@ export const allQuestions: CoupleQuestionTask[] = [
   {
     id: 'q-107',
     title: "שאלות מצחיקות",
-    description: "אם הייתי חיה מצוירת, איזו חיה הייתי?",
+    description: "אם הייתי דמות מצוירת — איזו חיה הייתי?",
     kind: 'question',
     questionGroup: 'funny',
     category: 'funny',
@@ -1115,7 +1115,7 @@ export const allQuestions: CoupleQuestionTask[] = [
   {
     id: 'q-110',
     title: "שאלות מצחיקות",
-    description: "מה הדבר הכי מוזר שאני עושה?",
+    description: "מה הכי מוזר שאני עושה?",
     kind: 'question',
     questionGroup: 'funny',
     category: 'funny',
@@ -1125,7 +1125,7 @@ export const allQuestions: CoupleQuestionTask[] = [
   {
     id: 'q-111',
     title: "שאלות מצחיקות",
-    description: "אם היינו פותחים מסעדה, מה היה השם הכי גרוע שלה?",
+    description: "אם היינו פותחים מסעדה — מה השם הכי גרוע שהייתם נותנים לה?",
     kind: 'question',
     questionGroup: 'funny',
     category: 'funny',
@@ -1145,7 +1145,7 @@ export const allQuestions: CoupleQuestionTask[] = [
   {
     id: 'q-113',
     title: "שאלות מצחיקות",
-    description: "איזה שיר הכי לא מתאים לי אבל מצחיק לדמיין אותי שר/ה?",
+    description: "איזה שיר הכי לא מתאים לי, אבל מצחיק לדמיין אותי שר/ה?",
     kind: 'question',
     questionGroup: 'funny',
     category: 'funny',
@@ -1175,7 +1175,7 @@ export const allQuestions: CoupleQuestionTask[] = [
   {
     id: 'q-116',
     title: "שאלות מצחיקות",
-    description: "איזה חוק מצחיק היית מוסיף/ה לבית שלנו?",
+    description: "איזה \"חוק בית\" מצחיק היית מוסיף/ה?",
     kind: 'question',
     questionGroup: 'funny',
     category: 'funny',
@@ -1185,7 +1185,7 @@ export const allQuestions: CoupleQuestionTask[] = [
   {
     id: 'q-117',
     title: "שאלות מצחיקות",
-    description: "אם היה לנו קמע זוגי, מה הוא היה?",
+    description: "אם היה לנו קמע זוגי — מה הוא היה?",
     kind: 'question',
     questionGroup: 'funny',
     category: 'funny',
@@ -1195,7 +1195,7 @@ export const allQuestions: CoupleQuestionTask[] = [
   {
     id: 'q-118',
     title: "שאלות מצחיקות",
-    description: "איזה פרס מצחיק מגיע לי?",
+    description: "איזה פרס מצחיק מגיע לי היום?",
     kind: 'question',
     questionGroup: 'funny',
     category: 'funny',
@@ -1205,7 +1205,7 @@ export const allQuestions: CoupleQuestionTask[] = [
   {
     id: 'q-119',
     title: "שאלות מצחיקות",
-    description: "מה הדבר הכי מצחיק שחשבת עליי בהתחלה?",
+    description: "מה הכי מצחיק שחשבת עליי בהתחלה?",
     kind: 'question',
     questionGroup: 'funny',
     category: 'funny',
@@ -1245,7 +1245,7 @@ export const allQuestions: CoupleQuestionTask[] = [
   {
     id: 'q-123',
     title: "שאלות רומנטיות נקיות",
-    description: "מה מחווה קטנה שהיית רוצה לקבל יותר?",
+    description: "איזו מחווה קטנה היית רוצה לקבל יותר?",
     kind: 'question',
     questionGroup: 'romantic',
     category: 'romantic',
@@ -1265,7 +1265,7 @@ export const allQuestions: CoupleQuestionTask[] = [
   {
     id: 'q-125',
     title: "שאלות רומנטיות נקיות",
-    description: "מה הדבר שהכי נעים לך בשגרה שלנו?",
+    description: "מה הכי נעים לך בשגרה שלנו?",
     kind: 'question',
     questionGroup: 'romantic',
     category: 'romantic',
@@ -1285,7 +1285,7 @@ export const allQuestions: CoupleQuestionTask[] = [
   {
     id: 'q-127',
     title: "שאלות רומנטיות נקיות",
-    description: "מה מחמאה שהיית רוצה להגיד לי עכשיו?",
+    description: "איזו מחמאה היית רוצה להגיד לי עכשיו?",
     kind: 'question',
     questionGroup: 'romantic',
     category: 'romantic',
@@ -1295,7 +1295,7 @@ export const allQuestions: CoupleQuestionTask[] = [
   {
     id: 'q-128',
     title: "שאלות רומנטיות נקיות",
-    description: "מה הדבר שהכי חיזק את הקשר שלנו?",
+    description: "מה הכי חיזק את הקשר שלנו?",
     kind: 'question',
     questionGroup: 'romantic',
     category: 'romantic',
@@ -1315,7 +1315,7 @@ export const allQuestions: CoupleQuestionTask[] = [
   {
     id: 'q-130',
     title: "שאלות רומנטיות נקיות",
-    description: "מה הדבר שאתה/את אוהב/ת בדרך שבה אנחנו צוחקים יחד?",
+    description: "מה את/ה אוהב/ת בדרך שבה אנחנו צוחקים יחד?",
     kind: 'question',
     questionGroup: 'romantic',
     category: 'romantic',
@@ -1325,7 +1325,7 @@ export const allQuestions: CoupleQuestionTask[] = [
   {
     id: 'q-131',
     title: "שאלות רומנטיות נקיות",
-    description: "מה הדבר הכי יפה בקשר שלנו?",
+    description: "מה הכי יפה בקשר שלנו?",
     kind: 'question',
     questionGroup: 'romantic',
     category: 'romantic',
@@ -1345,7 +1345,7 @@ export const allQuestions: CoupleQuestionTask[] = [
   {
     id: 'q-133',
     title: "שאלות רומנטיות נקיות",
-    description: "מה מקום שהיית רוצה שנחזור אליו?",
+    description: "לאן היית רוצה שנחזור יחד?",
     kind: 'question',
     questionGroup: 'romantic',
     category: 'romantic',
@@ -1365,7 +1365,7 @@ export const allQuestions: CoupleQuestionTask[] = [
   {
     id: 'q-135',
     title: "שאלות רומנטיות נקיות",
-    description: "מה הדבר שאתה/את הכי מעריך/ה בהתנהלות שלי?",
+    description: "מה את/ה הכי מעריך/ה בהתנהלות שלי?",
     kind: 'question',
     questionGroup: 'romantic',
     category: 'romantic',
@@ -1395,7 +1395,7 @@ export const allQuestions: CoupleQuestionTask[] = [
   {
     id: 'q-138',
     title: "שאלות רומנטיות נקיות",
-    description: "מה הדבר שהכי מחמם לך את הלב?",
+    description: "מה הכי מחמם לך את הלב?",
     kind: 'question',
     questionGroup: 'romantic',
     category: 'romantic',
@@ -1405,7 +1405,7 @@ export const allQuestions: CoupleQuestionTask[] = [
   {
     id: 'q-139',
     title: "שאלות רומנטיות נקיות",
-    description: "מה גורם לך להרגיש שאנחנו קרובים?",
+    description: "מתי בדיוק את/ה מרגיש/ה הכי קרוב/ה אליי?",
     kind: 'question',
     questionGroup: 'romantic',
     category: 'romantic',
@@ -1415,7 +1415,7 @@ export const allQuestions: CoupleQuestionTask[] = [
   {
     id: 'q-140',
     title: "שאלות רומנטיות נקיות",
-    description: "מה היית רוצה שיהיה הרגע הזוגי הבא שלנו?",
+    description: "איך היית רוצה שיראה הרגע הזוגי הבא שלנו?",
     kind: 'question',
     questionGroup: 'romantic',
     category: 'romantic',
@@ -1465,7 +1465,7 @@ export const allQuestions: CoupleQuestionTask[] = [
   {
     id: 'q-145',
     title: "שאלות על עתיד",
-    description: "איך נראה בעיניך בית נעים?",
+    description: "איך נראה בעיניך \"בית נעים\"?",
     kind: 'question',
     questionGroup: 'future',
     category: 'calm',
@@ -1485,7 +1485,7 @@ export const allQuestions: CoupleQuestionTask[] = [
   {
     id: 'q-147',
     title: "שאלות על עתיד",
-    description: "איזה הרגל זוגי נרצה לבנות מהיום?",
+    description: "איזה הרגל זוגי נרצה לבנות כבר מהיום?",
     kind: 'question',
     questionGroup: 'future',
     category: 'calm',
@@ -1505,7 +1505,7 @@ export const allQuestions: CoupleQuestionTask[] = [
   {
     id: 'q-149',
     title: "שאלות על עתיד",
-    description: "מה מקום בארץ שהיית רוצה שנבקר בו?",
+    description: "לאן בארץ היית רוצה שנטייל?",
     kind: 'question',
     questionGroup: 'future',
     category: 'calm',
@@ -1515,7 +1515,7 @@ export const allQuestions: CoupleQuestionTask[] = [
   {
     id: 'q-150',
     title: "שאלות על עתיד",
-    description: "מה מקום בעולם שהיית רוצה שנראה יחד?",
+    description: "לאן בעולם היית רוצה שנראה יחד?",
     kind: 'question',
     questionGroup: 'future',
     category: 'calm',
@@ -1525,7 +1525,7 @@ export const allQuestions: CoupleQuestionTask[] = [
   {
     id: 'q-151',
     title: "שאלות על עתיד",
-    description: "איזה דבר היית רוצה שנחסוך אליו?",
+    description: "למה היית רוצה שנחסוך יחד?",
     kind: 'question',
     questionGroup: 'future',
     category: 'calm',
@@ -1575,7 +1575,7 @@ export const allQuestions: CoupleQuestionTask[] = [
   {
     id: 'q-156',
     title: "שאלות על עתיד",
-    description: "איזה מסורת זוגית היית רוצה ליצור?",
+    description: "איזו מסורת זוגית חדשה היית רוצה ליצור?",
     kind: 'question',
     questionGroup: 'future',
     category: 'calm',
@@ -1585,7 +1585,7 @@ export const allQuestions: CoupleQuestionTask[] = [
   {
     id: 'q-157',
     title: "שאלות על עתיד",
-    description: "מה בעיניך יהיה סימן שאנחנו מתקדמים?",
+    description: "מה יהיה סימן בעיניך שאנחנו מתקדמים?",
     kind: 'question',
     questionGroup: 'future',
     category: 'calm',
@@ -1595,7 +1595,7 @@ export const allQuestions: CoupleQuestionTask[] = [
   {
     id: 'q-158',
     title: "שאלות על עתיד",
-    description: "איזה דבר חדש היית רוצה לנסות יחד?",
+    description: "מה חדש היית רוצה לנסות יחד?",
     kind: 'question',
     questionGroup: 'future',
     category: 'calm',
@@ -1625,7 +1625,7 @@ export const allQuestions: CoupleQuestionTask[] = [
   {
     id: 'q-161',
     title: "שאלות על שגרה",
-    description: "מה הדבר שהכי משפר לך את היום?",
+    description: "מה הכי משפר לך את היום?",
     kind: 'question',
     questionGroup: 'routine',
     category: 'calm',
@@ -1635,7 +1635,7 @@ export const allQuestions: CoupleQuestionTask[] = [
   {
     id: 'q-162',
     title: "שאלות על שגרה",
-    description: "מה הדבר שהכי מפריע לך בשגרה?",
+    description: "מה הכי מפריע לך בשגרה?",
     kind: 'question',
     questionGroup: 'routine',
     category: 'calm',
@@ -1645,7 +1645,7 @@ export const allQuestions: CoupleQuestionTask[] = [
   {
     id: 'q-163',
     title: "שאלות על שגרה",
-    description: "איך אפשר להפוך בוקר ליותר נעים?",
+    description: "איך אפשר להפוך את הבוקר ליותר נעים?",
     kind: 'question',
     questionGroup: 'routine',
     category: 'calm',
@@ -1655,7 +1655,7 @@ export const allQuestions: CoupleQuestionTask[] = [
   {
     id: 'q-164',
     title: "שאלות על שגרה",
-    description: "איך אפשר להפוך ערב ליותר רגוע?",
+    description: "איך אפשר להפוך את הערב ליותר רגוע?",
     kind: 'question',
     questionGroup: 'routine',
     category: 'calm',
@@ -1685,7 +1685,7 @@ export const allQuestions: CoupleQuestionTask[] = [
   {
     id: 'q-167',
     title: "שאלות על שגרה",
-    description: "מה משימה יומיומית שהיית רוצה שנעשה יחד?",
+    description: "איזו משימה יומיומית היית רוצה שנעשה יחד?",
     kind: 'question',
     questionGroup: 'routine',
     category: 'calm',
@@ -1695,7 +1695,7 @@ export const allQuestions: CoupleQuestionTask[] = [
   {
     id: 'q-168',
     title: "שאלות על שגרה",
-    description: "מה הדבר שאת/ה הכי אוהב/ת לעשות בסוף יום?",
+    description: "מה את/ה הכי אוהב/ת לעשות בסוף יום?",
     kind: 'question',
     questionGroup: 'routine',
     category: 'calm',
@@ -1705,7 +1705,7 @@ export const allQuestions: CoupleQuestionTask[] = [
   {
     id: 'q-169',
     title: "שאלות על שגרה",
-    description: "מה הדבר שהכי חשוב לך בסדר בבית?",
+    description: "מה הכי חשוב לך בסדר בבית?",
     kind: 'question',
     questionGroup: 'routine',
     category: 'calm',
@@ -1745,7 +1745,7 @@ export const allQuestions: CoupleQuestionTask[] = [
   {
     id: 'q-173',
     title: "שאלות על שגרה",
-    description: "מה הדבר הכי חשוב לך בזמן ארוחה משותפת?",
+    description: "מה הכי חשוב לך בזמן ארוחה משותפת?",
     kind: 'question',
     questionGroup: 'routine',
     category: 'calm',
@@ -1755,7 +1755,7 @@ export const allQuestions: CoupleQuestionTask[] = [
   {
     id: 'q-174',
     title: "שאלות על שגרה",
-    description: "מה היית רוצה שנעשה בלי מסכים?",
+    description: "איך נוכל לשלב יותר זמן בלי מסכים ביום-יום?",
     kind: 'question',
     questionGroup: 'routine',
     category: 'calm',
@@ -1765,7 +1765,7 @@ export const allQuestions: CoupleQuestionTask[] = [
   {
     id: 'q-175',
     title: "שאלות על שגרה",
-    description: "מה הדבר שהכי מרגיע אותך בבית?",
+    description: "מה הכי מרגיע אותך בבית?",
     kind: 'question',
     questionGroup: 'routine',
     category: 'calm',
@@ -1775,7 +1775,7 @@ export const allQuestions: CoupleQuestionTask[] = [
   {
     id: 'q-176',
     title: "שאלות על שגרה",
-    description: "איך נראה ערב רגיל אבל מושלם?",
+    description: "איך נראה \"ערב רגיל אבל מושלם\"?",
     kind: 'question',
     questionGroup: 'routine',
     category: 'calm',
@@ -1785,7 +1785,7 @@ export const allQuestions: CoupleQuestionTask[] = [
   {
     id: 'q-177',
     title: "שאלות על שגרה",
-    description: "מה הדבר שהיית רוצה שנפסיק לדחות?",
+    description: "מה היית רוצה שנפסיק לדחות?",
     kind: 'question',
     questionGroup: 'routine',
     category: 'calm',
@@ -1795,7 +1795,7 @@ export const allQuestions: CoupleQuestionTask[] = [
   {
     id: 'q-178',
     title: "שאלות על שגרה",
-    description: "מה פעולה קטנה שיכולה לקרב בינינו כל יום?",
+    description: "איזו פעולה קטנה יכולה לקרב בינינו כל יום?",
     kind: 'question',
     questionGroup: 'routine',
     category: 'calm',
@@ -1815,7 +1815,7 @@ export const allQuestions: CoupleQuestionTask[] = [
   {
     id: 'q-180',
     title: "שאלות על שגרה",
-    description: "מה הדבר הכי פשוט שעושה לך שמח?",
+    description: "מה הכי פשוט שעושה לך שמח?",
     kind: 'question',
     questionGroup: 'routine',
     category: 'calm',
@@ -1845,7 +1845,7 @@ export const allQuestions: CoupleQuestionTask[] = [
   {
     id: 'q-183',
     title: "שאלות על תקשורת",
-    description: "מה גורם לך להרגיש שלא מקשיבים לך?",
+    description: "מתי את/ה מרגיש/ה שלא מקשיבים לך?",
     kind: 'question',
     questionGroup: 'communication',
     category: 'calm',
@@ -1855,7 +1855,7 @@ export const allQuestions: CoupleQuestionTask[] = [
   {
     id: 'q-184',
     title: "שאלות על תקשורת",
-    description: "איך אפשר להגיד ביקורת בצורה שלא תפגע?",
+    description: "איך אפשר להגיד ביקורת בלי לפגוע?",
     kind: 'question',
     questionGroup: 'communication',
     category: 'calm',
@@ -1895,7 +1895,7 @@ export const allQuestions: CoupleQuestionTask[] = [
   {
     id: 'q-188',
     title: "שאלות על תקשורת",
-    description: "מה משפט שיכול להרגיע אותך?",
+    description: "איזה משפט יכול להרגיע אותך?",
     kind: 'question',
     questionGroup: 'communication',
     category: 'calm',
@@ -1905,7 +1905,7 @@ export const allQuestions: CoupleQuestionTask[] = [
   {
     id: 'q-189',
     title: "שאלות על תקשורת",
-    description: "מה משפט שעדיף שלא אגיד בזמן לחץ?",
+    description: "איזה משפט עדיף שלא אגיד בזמן לחץ?",
     kind: 'question',
     questionGroup: 'communication',
     category: 'calm',
@@ -1915,7 +1915,7 @@ export const allQuestions: CoupleQuestionTask[] = [
   {
     id: 'q-190',
     title: "שאלות על תקשורת",
-    description: "איך נוכל לדבר טוב יותר כשאנחנו עייפים?",
+    description: "איך נדבר טוב יותר כשאנחנו עייפים?",
     kind: 'question',
     questionGroup: 'communication',
     category: 'calm',
@@ -1935,7 +1935,7 @@ export const allQuestions: CoupleQuestionTask[] = [
   {
     id: 'q-192',
     title: "שאלות על תקשורת",
-    description: "מה סוג שיחה שאת/ה אוהב/ת?",
+    description: "איזה סוג שיחה את/ה הכי אוהב/ת?",
     kind: 'question',
     questionGroup: 'communication',
     category: 'calm',
@@ -1945,7 +1945,7 @@ export const allQuestions: CoupleQuestionTask[] = [
   {
     id: 'q-193',
     title: "שאלות על תקשורת",
-    description: "מה נושא שקל לך לדבר עליו?",
+    description: "על מה קל לך לדבר?",
     kind: 'question',
     questionGroup: 'communication',
     category: 'calm',
@@ -1955,7 +1955,7 @@ export const allQuestions: CoupleQuestionTask[] = [
   {
     id: 'q-194',
     title: "שאלות על תקשורת",
-    description: "מה נושא שקשה לך לדבר עליו?",
+    description: "על מה קשה לך לדבר?",
     kind: 'question',
     questionGroup: 'communication',
     category: 'calm',
@@ -2005,7 +2005,7 @@ export const allQuestions: CoupleQuestionTask[] = [
   {
     id: 'q-199',
     title: "שאלות על תקשורת",
-    description: "מה הדבר שהכי חשוב לך בשיחה זוגית?",
+    description: "מה הכי חשוב לך בשיחה זוגית?",
     kind: 'question',
     questionGroup: 'communication',
     category: 'calm',
@@ -2015,7 +2015,7 @@ export const allQuestions: CoupleQuestionTask[] = [
   {
     id: 'q-200',
     title: "שאלות על תקשורת",
-    description: "איך אפשר לשפר את התקשורת שלנו כבר השבוע?",
+    description: "איך נשפר את התקשורת שלנו כבר השבוע?",
     kind: 'question',
     questionGroup: 'communication',
     category: 'calm',
@@ -2035,7 +2035,7 @@ export const allQuestions: CoupleQuestionTask[] = [
   {
     id: 'q-202',
     title: "שאלות על משפחה וערכים",
-    description: "איזה דבר מהבית שלך היית רוצה לעשות אחרת?",
+    description: "מה מהבית שלך היית רוצה לעשות אחרת?",
     kind: 'question',
     questionGroup: 'family',
     category: 'romantic',
@@ -2045,7 +2045,7 @@ export const allQuestions: CoupleQuestionTask[] = [
   {
     id: 'q-203',
     title: "שאלות על משפחה וערכים",
-    description: "מה בעיניך משפחה בריאה?",
+    description: "איך נראית \"משפחה בריאה\" בעיניך?",
     kind: 'question',
     questionGroup: 'family',
     category: 'romantic',
@@ -2085,7 +2085,7 @@ export const allQuestions: CoupleQuestionTask[] = [
   {
     id: 'q-207',
     title: "שאלות על משפחה וערכים",
-    description: "מה למדת מהמשפחה שלך על אהבה?",
+    description: "מה עוד למדת מהמשפחה שלך על קשרים?",
     kind: 'question',
     questionGroup: 'family',
     category: 'romantic',
@@ -2135,7 +2135,7 @@ export const allQuestions: CoupleQuestionTask[] = [
   {
     id: 'q-212',
     title: "שאלות על משפחה וערכים",
-    description: "מה חשוב לך שנכבד במשפחה אחד של השני?",
+    description: "מה חשוב לך שנכבד במשפחות שלנו?",
     kind: 'question',
     questionGroup: 'family',
     category: 'romantic',
@@ -2155,7 +2155,7 @@ export const allQuestions: CoupleQuestionTask[] = [
   {
     id: 'q-214',
     title: "שאלות על משפחה וערכים",
-    description: "מה גבול משפחתי שחשוב לך לשמור?",
+    description: "איזה גבול משפחתי חשוב לך לשמור?",
     kind: 'question',
     questionGroup: 'family',
     category: 'romantic',
@@ -2165,7 +2165,7 @@ export const allQuestions: CoupleQuestionTask[] = [
   {
     id: 'q-215',
     title: "שאלות על משפחה וערכים",
-    description: "מה דבר שהיית רוצה שאבין על המשפחה שלך?",
+    description: "מה היית רוצה שאבין על הממשפחה שלך?",
     kind: 'question',
     questionGroup: 'family',
     category: 'romantic',
@@ -2175,7 +2175,7 @@ export const allQuestions: CoupleQuestionTask[] = [
   {
     id: 'q-216',
     title: "שאלות על משפחה וערכים",
-    description: "מה דבר שאתה/את אוהב/ת במשפחה שלי?",
+    description: "מה את/ה אוהב/ת במשפחה שלי?",
     kind: 'question',
     questionGroup: 'family',
     category: 'romantic',
@@ -2185,7 +2185,7 @@ export const allQuestions: CoupleQuestionTask[] = [
   {
     id: 'q-217',
     title: "שאלות על משפחה וערכים",
-    description: "איך נוכל להיות צוות מול אנשים מבחוץ?",
+    description: "איך נהיה צוות מול אנשים מבחוץ?",
     kind: 'question',
     questionGroup: 'family',
     category: 'romantic',
@@ -2205,7 +2205,7 @@ export const allQuestions: CoupleQuestionTask[] = [
   {
     id: 'q-219',
     title: "שאלות על משפחה וערכים",
-    description: "מה בעיניך כבוד בתוך משפחה?",
+    description: "מה בעיניך \"כבוד\" בתוך משפחה?",
     kind: 'question',
     questionGroup: 'family',
     category: 'romantic',
@@ -2245,7 +2245,7 @@ export const allQuestions: CoupleQuestionTask[] = [
   {
     id: 'q-223',
     title: "שאלות על כסף ועבודה",
-    description: "מה גורם לך להרגיש ביטחון כלכלי?",
+    description: "מה נותן לך תחושת ביטחון כלכלי?",
     kind: 'question',
     questionGroup: 'money',
     category: 'challenge',
@@ -2295,7 +2295,7 @@ export const allQuestions: CoupleQuestionTask[] = [
   {
     id: 'q-228',
     title: "שאלות על כסף ועבודה",
-    description: "מה הוצאה קטנה שמשמחת אותך?",
+    description: "איזו הוצאה קטנה משמחת אותך?",
     kind: 'question',
     questionGroup: 'money',
     category: 'challenge',
@@ -2305,7 +2305,7 @@ export const allQuestions: CoupleQuestionTask[] = [
   {
     id: 'q-229',
     title: "שאלות על כסף ועבודה",
-    description: "מה יעד כלכלי שהיית רוצה להשיג?",
+    description: "איזה יעד כלכלי היית רוצה להשיג?",
     kind: 'question',
     questionGroup: 'money',
     category: 'challenge',
@@ -2335,7 +2335,7 @@ export const allQuestions: CoupleQuestionTask[] = [
   {
     id: 'q-232',
     title: "שאלות על כסף ועבודה",
-    description: "מה גורם לך להרגיש מסופק/ת מקצועית?",
+    description: "מתי את/ה מרגיש/ה מסופק/ת מקצועית?",
     kind: 'question',
     questionGroup: 'money',
     category: 'challenge',
@@ -2405,7 +2405,7 @@ export const allQuestions: CoupleQuestionTask[] = [
   {
     id: 'q-239',
     title: "שאלות על כסף ועבודה",
-    description: "מה החלטה כלכלית שנרצה לקבל יחד?",
+    description: "איזו החלטה כלכלית שנרצה לקבל יחד?",
     kind: 'question',
     questionGroup: 'money',
     category: 'challenge',
@@ -2425,7 +2425,7 @@ export const allQuestions: CoupleQuestionTask[] = [
   {
     id: 'q-241',
     title: "שאלות יצירתיות",
-    description: "אם היינו בונים בית חלומות, מה היה בו?",
+    description: "אם היינו בונים בית חלומות — מה היה בו?",
     kind: 'question',
     questionGroup: 'creative',
     category: 'creative',
@@ -2435,7 +2435,7 @@ export const allQuestions: CoupleQuestionTask[] = [
   {
     id: 'q-242',
     title: "שאלות יצירתיות",
-    description: "אם היה לנו עסק זוגי, מה הוא היה?",
+    description: "אם היה לנו עסק זוגי — מה הוא היה?",
     kind: 'question',
     questionGroup: 'creative',
     category: 'creative',
@@ -2445,7 +2445,7 @@ export const allQuestions: CoupleQuestionTask[] = [
   {
     id: 'q-243',
     title: "שאלות יצירתיות",
-    description: "אם היינו יוצרים אפליקציה, מה היא הייתה עושה?",
+    description: "אם היינו יוצרים אפליקציה — מה היא הייתה עושה?",
     kind: 'question',
     questionGroup: 'creative',
     category: 'creative',
@@ -2455,7 +2455,7 @@ export const allQuestions: CoupleQuestionTask[] = [
   {
     id: 'q-244',
     title: "שאלות יצירתיות",
-    description: "אם היינו נוסעים לחודש, לאן היינו נוסעים?",
+    description: "אם היינו נוסעים לחודש — לאן היינו נוסעים?",
     kind: 'question',
     questionGroup: 'creative',
     category: 'creative',
@@ -2465,7 +2465,7 @@ export const allQuestions: CoupleQuestionTask[] = [
   {
     id: 'q-245',
     title: "שאלות יצירתיות",
-    description: "אם היה לנו יום בלי מגבלות, מה היינו עושים?",
+    description: "אם היה לנו יום בלי מגבלות — מה היינו עושים?",
     kind: 'question',
     questionGroup: 'creative',
     category: 'creative',
@@ -2475,7 +2475,7 @@ export const allQuestions: CoupleQuestionTask[] = [
   {
     id: 'q-246',
     title: "שאלות יצירתיות",
-    description: "אם היינו דמויות בסרט, איזה סרט זה היה?",
+    description: "אם היינו דמויות בסרט — איזה סרט זה היה?",
     kind: 'question',
     questionGroup: 'creative',
     category: 'creative',
@@ -2485,7 +2485,7 @@ export const allQuestions: CoupleQuestionTask[] = [
   {
     id: 'q-247',
     title: "שאלות יצירתיות",
-    description: "אם היה לנו שיר פתיחה, איזה סגנון הוא היה?",
+    description: "אם היה לנו שיר פתיחה — באיזה סגנון?",
     kind: 'question',
     questionGroup: 'creative',
     category: 'creative',
@@ -2495,7 +2495,7 @@ export const allQuestions: CoupleQuestionTask[] = [
   {
     id: 'q-248',
     title: "שאלות יצירתיות",
-    description: "אם היינו מעצבים לוגו זוגי, מה היה בו?",
+    description: "אם היינו מעצבים לוגו זוגי — מה היה בו?",
     kind: 'question',
     questionGroup: 'creative',
     category: 'creative',
@@ -2505,7 +2505,7 @@ export const allQuestions: CoupleQuestionTask[] = [
   {
     id: 'q-249',
     title: "שאלות יצירתיות",
-    description: "אם היינו כותבים ספר עלינו, מה השם שלו?",
+    description: "אם היינו כותבים ספר עלינו — מה השם שלו?",
     kind: 'question',
     questionGroup: 'creative',
     category: 'creative',
@@ -2515,7 +2515,7 @@ export const allQuestions: CoupleQuestionTask[] = [
   {
     id: 'q-250',
     title: "שאלות יצירתיות",
-    description: "אם היה לנו בית קפה, איך הוא היה נראה?",
+    description: "אם היה לנו בית קפה — איך הוא היה נראה?",
     kind: 'question',
     questionGroup: 'creative',
     category: 'creative',
@@ -2525,7 +2525,7 @@ export const allQuestions: CoupleQuestionTask[] = [
   {
     id: 'q-251',
     title: "שאלות יצירתיות",
-    description: "אם היינו צריכים לבחור צבע שמייצג אותנו, מה הוא היה?",
+    description: "איזה צבע הכי מייצג אותנו?",
     kind: 'question',
     questionGroup: 'creative',
     category: 'creative',
@@ -2535,7 +2535,7 @@ export const allQuestions: CoupleQuestionTask[] = [
   {
     id: 'q-252',
     title: "שאלות יצירתיות",
-    description: "אם היה לנו סמל זוגי, מה הוא היה?",
+    description: "אם היה לנו סמל זוגי — מה הוא היה?",
     kind: 'question',
     questionGroup: 'creative',
     category: 'creative',
@@ -2545,7 +2545,7 @@ export const allQuestions: CoupleQuestionTask[] = [
   {
     id: 'q-253',
     title: "שאלות יצירתיות",
-    description: "אם היינו צריכים להמציא חג זוגי, איך היו חוגגים אותו?",
+    description: "אם היינו ממציאים חג זוגי — איך חוגגים אותו?",
     kind: 'question',
     questionGroup: 'creative',
     category: 'creative',
@@ -2555,7 +2555,7 @@ export const allQuestions: CoupleQuestionTask[] = [
   {
     id: 'q-254',
     title: "שאלות יצירתיות",
-    description: "אם היינו יוצרים מסורת חדשה, מה היא הייתה?",
+    description: "איזו מסורת חדשה היית יוצר/ת?",
     kind: 'question',
     questionGroup: 'creative',
     category: 'creative',
@@ -2565,7 +2565,7 @@ export const allQuestions: CoupleQuestionTask[] = [
   {
     id: 'q-255',
     title: "שאלות יצירתיות",
-    description: "אם היינו מצטלמים לשער מגזין, מה הכותרת הייתה?",
+    description: "אם היינו על שער מגזין — מה הכותרת?",
     kind: 'question',
     questionGroup: 'creative',
     category: 'creative',
@@ -2575,7 +2575,7 @@ export const allQuestions: CoupleQuestionTask[] = [
   {
     id: 'q-256',
     title: "שאלות יצירתיות",
-    description: "אם היינו פותחים ערוץ יוטיוב, על מה הוא היה?",
+    description: "אם היינו פותחים ערוץ יוטיוב — על מה הוא?",
     kind: 'question',
     questionGroup: 'creative',
     category: 'creative',
@@ -2585,7 +2585,7 @@ export const allQuestions: CoupleQuestionTask[] = [
   {
     id: 'q-257',
     title: "שאלות יצירתיות",
-    description: "אם היינו בונים משחק זוגי, איזה חוק היה בו?",
+    description: "אם היינו בונים משחק זוגי — מה החוק הראשון?",
     kind: 'question',
     questionGroup: 'creative',
     category: 'creative',
@@ -2595,7 +2595,7 @@ export const allQuestions: CoupleQuestionTask[] = [
   {
     id: 'q-258',
     title: "שאלות יצירתיות",
-    description: "אם היה לנו משפט קבוע, מה הוא היה?",
+    description: "אם היה לנו משפט קבוע — מה הוא היה?",
     kind: 'question',
     questionGroup: 'creative',
     category: 'creative',
@@ -2605,7 +2605,7 @@ export const allQuestions: CoupleQuestionTask[] = [
   {
     id: 'q-259',
     title: "שאלות יצירתיות",
-    description: "אם היינו מקבלים פרס זוגי, על מה הוא היה?",
+    description: "אם היינו מקבלים פרס זוגי — על מה הוא?",
     kind: 'question',
     questionGroup: 'creative',
     category: 'creative',
@@ -2615,7 +2615,7 @@ export const allQuestions: CoupleQuestionTask[] = [
   {
     id: 'q-260',
     title: "שאלות יצירתיות",
-    description: "אם היינו צריכים לבחור הרפתקה אחת, מה היא הייתה?",
+    description: "אם הייתם בוחרים הרפתקה אחת — מה היא?",
     kind: 'question',
     questionGroup: 'creative',
     category: 'creative',
@@ -2645,7 +2645,7 @@ export const allQuestions: CoupleQuestionTask[] = [
   {
     id: 'q-263',
     title: "שאלות פתיחה",
-    description: "איזה קטגוריה הכי מתאימה לך כרגע?",
+    description: "איזו קטגוריה הכי מתאימה לך כרגע?",
     kind: 'question',
     questionGroup: 'icebreaker',
     category: 'funny',
@@ -2655,7 +2655,7 @@ export const allQuestions: CoupleQuestionTask[] = [
   {
     id: 'q-264',
     title: "שאלות פתיחה",
-    description: "מה יותר מתאים לך עכשיו, צחוק או רוגע?",
+    description: "מה יותר מתאים לך עכשיו — צחוק או רוגע?",
     kind: 'question',
     questionGroup: 'icebreaker',
     category: 'funny',
@@ -2715,7 +2715,7 @@ export const allQuestions: CoupleQuestionTask[] = [
   {
     id: 'q-270',
     title: "שאלות פתיחה",
-    description: "מה המילה שמתארת את היום שלך?",
+    description: "איזו מילה מתארת את היום שלך?",
     kind: 'question',
     questionGroup: 'icebreaker',
     category: 'funny',
@@ -2735,7 +2735,7 @@ export const allQuestions: CoupleQuestionTask[] = [
   {
     id: 'q-272',
     title: "שאלות פתיחה",
-    description: "מה הדבר הכי טוב שקרה לך היום?",
+    description: "מה הכי טוב שקרה לך היום?",
     kind: 'question',
     questionGroup: 'icebreaker',
     category: 'funny',
@@ -2745,7 +2745,7 @@ export const allQuestions: CoupleQuestionTask[] = [
   {
     id: 'q-273',
     title: "שאלות פתיחה",
-    description: "מה הדבר הכי מצחיק שראית לאחרונה?",
+    description: "מה הכי מצחיק שראית לאחרונה?",
     kind: 'question',
     questionGroup: 'icebreaker',
     category: 'funny',
@@ -2765,7 +2765,7 @@ export const allQuestions: CoupleQuestionTask[] = [
   {
     id: 'q-275',
     title: "שאלות פתיחה",
-    description: "מה הדבר הכי פשוט שיכול לשפר את הערב?",
+    description: "מה הכי פשוט שיכול לשפר את הערב?",
     kind: 'question',
     questionGroup: 'icebreaker',
     category: 'funny',
@@ -2785,7 +2785,7 @@ export const allQuestions: CoupleQuestionTask[] = [
   {
     id: 'q-277',
     title: "שאלות פתיחה",
-    description: "מה המשפט הראשון שצריך לפתוח איתו משחק כזה?",
+    description: "איזו שאלה הכי מתאימה לפתיחת ערב כזה?",
     kind: 'question',
     questionGroup: 'icebreaker',
     category: 'funny',
@@ -2795,7 +2795,7 @@ export const allQuestions: CoupleQuestionTask[] = [
   {
     id: 'q-278',
     title: "שאלות פתיחה",
-    description: "מי לדעתך ינצח היום?",
+    description: "מי לדעתך יהיה הכי מצחיק/ה הערב?",
     kind: 'question',
     questionGroup: 'icebreaker',
     category: 'funny',
@@ -2815,7 +2815,7 @@ export const allQuestions: CoupleQuestionTask[] = [
   {
     id: 'q-280',
     title: "שאלות פתיחה",
-    description: "מה הפרס הסמלי למנצח?",
+    description: "מה הפרס הסמלי למנצח/ת?",
     kind: 'question',
     questionGroup: 'icebreaker',
     category: 'funny',
@@ -2935,7 +2935,7 @@ export const allQuestions: CoupleQuestionTask[] = [
   {
     id: 'q-292',
     title: "שאלות סיום וסיכום",
-    description: "מה השאלה שהיית רוצה שתישאר לסוף?",
+    description: "איזו שאלה היית רוצה לשמור לסוף?",
     kind: 'question',
     questionGroup: 'summary',
     category: 'calm',
@@ -2945,7 +2945,7 @@ export const allQuestions: CoupleQuestionTask[] = [
   {
     id: 'q-293',
     title: "שאלות סיום וסיכום",
-    description: "מה היה הציון שלך לערב הזה?",
+    description: "מה הציון שלך לערב הזה?",
     kind: 'question',
     questionGroup: 'summary',
     category: 'calm',
@@ -2965,7 +2965,7 @@ export const allQuestions: CoupleQuestionTask[] = [
   {
     id: 'q-295',
     title: "שאלות סיום וסיכום",
-    description: "מה כדאי שנשאיר בדיוק כמו שהיה?",
+    description: "מה כדאי לשמור בדיוק כמו שהיה?",
     kind: 'question',
     questionGroup: 'summary',
     category: 'calm',
@@ -3005,7 +3005,7 @@ export const allQuestions: CoupleQuestionTask[] = [
   {
     id: 'q-299',
     title: "שאלות סיום וסיכום",
-    description: "מה המשפט שיסכם את המשחק?",
+    description: "איזה משפט מסכם את המשחק?",
     kind: 'question',
     questionGroup: 'summary',
     category: 'calm',

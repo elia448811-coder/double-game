@@ -41,13 +41,6 @@ export function SettingsPanel({ settings, onUpdate, onResetScores, onBack }: Set
 
   return (
     <div className="settings-panel">
-      <header className="top-bar compact-top">
-        <div>
-          <p className="eyebrow">Couple Spin</p>
-          <h1 className="page-heading">הגדרות</h1>
-        </div>
-      </header>
-
       <div className="settings-group">
         <label className="settings-toggle">
           <span>הפעלת סאונד</span>

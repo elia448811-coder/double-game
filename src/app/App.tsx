@@ -3,6 +3,7 @@ import { BackgroundGlow } from '../components/BackgroundGlow';
 import { FloatingParticles } from '../components/FloatingParticles';
 import { MiniRobot } from '../components/MiniRobot';
 import { useGameState } from '../hooks/useGameState';
+import { DiceRollScreen } from '../screens/DiceRollScreen';
 import { EndScreen } from '../screens/EndScreen';
 import { GameScreen } from '../screens/GameScreen';
 import { QuickSetupScreen } from '../screens/QuickSetupScreen';
@@ -26,6 +27,7 @@ export default function App() {
     setEveningName,
     setTargetScore,
     setCustomTargetScore,
+    goToDiceRoll,
     startGame,
     startSpin,
     handleSpinEnd,
@@ -79,8 +81,23 @@ export default function App() {
           onCustomTargetChange={setCustomTargetScore}
           onEveningNameChange={setEveningName}
           onPlayerNamesChange={setPlayerNames}
-          onStart={startGame}
+          onStart={goToDiceRoll}
           onBack={() => navigate('welcome')}
+        />
+      )}
+
+      {game.screen === 'dice-roll' && (
+        <DiceRollScreen
+          playerOneName={game.playerOneName}
+          playerTwoName={game.playerTwoName}
+          playerOneAvatar={settings.playerOneAvatar}
+          playerTwoAvatar={settings.playerTwoAvatar}
+          playerOneColor={settings.playerOneColor}
+          playerTwoColor={settings.playerTwoColor}
+          soundEnabled={settings.soundEnabled}
+          soundPack={settings.soundPack}
+          onStart={startGame}
+          onBack={() => navigate('setup')}
         />
       )}
 

@@ -15,11 +15,17 @@ export function SettingsScreen({
   onBack,
 }: SettingsScreenProps) {
   return (
-    <section className="page-screen settings-screen">
-      <div className="game-card">
-        <button type="button" className="back-btn" onClick={onBack} aria-label="חזרה">
-          →
-        </button>
+    <section className="page-screen flow-screen settings-screen">
+      <div className="flow-card settings-card">
+        <header className="flow-header">
+          <button type="button" className="icon-btn" onClick={onBack} aria-label="חזרה">
+            →
+          </button>
+          <div>
+            <p className="flow-kicker">Couple Spin</p>
+            <h1 className="flow-title">הגדרות</h1>
+          </div>
+        </header>
         <SettingsPanel
           settings={settings}
           onUpdate={onUpdate}

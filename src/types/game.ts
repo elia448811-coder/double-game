@@ -35,6 +35,7 @@ export type SoundPack = 'default' | 'soft' | 'playful';
 export type Screen =
   | 'welcome'
   | 'setup'
+  | 'dice-roll'
   | 'mode-select'
   | 'level-select'
   | 'tutorial'

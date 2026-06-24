@@ -56,6 +56,18 @@ describe('data integrity', () => {
     expect(getFullBankStats('mixed').total).toBe(450);
   });
 
+  it('questions have unique wording', () => {
+    const texts = allQuestions.map((q) => q.description);
+    expect(new Set(texts).size).toBe(texts.length);
+  });
+
+  it('questions use clean Hebrew punctuation', () => {
+    for (const q of allQuestions) {
+      expect(q.description).not.toMatch(/[a-zA-Z]/);
+      expect(q.description).not.toContain('פרטנר');
+    }
+  });
+
   it('spinner has 8 segments', () => {
     expect(SPINNER_SEGMENTS.length).toBe(8);
     expect(SPINNER_SEGMENTS.filter((s) => s.rare).length).toBe(1);
