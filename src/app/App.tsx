@@ -5,10 +5,8 @@ import { MiniRobot } from '../components/MiniRobot';
 import { useGameState } from '../hooks/useGameState';
 import { EndScreen } from '../screens/EndScreen';
 import { GameScreen } from '../screens/GameScreen';
-import { LevelSelectScreen } from '../screens/LevelSelectScreen';
-import { ModeSelectScreen } from '../screens/ModeSelectScreen';
+import { QuickSetupScreen } from '../screens/QuickSetupScreen';
 import { SettingsScreen } from '../screens/SettingsScreen';
-import { TutorialScreen } from '../screens/TutorialScreen';
 import { WelcomeScreen } from '../screens/WelcomeScreen';
 import '../styles/globals.css';
 
@@ -23,14 +21,11 @@ export default function App() {
     setLevel,
     setGameFormat,
     setScoringMode,
-    setCoupleTaskMode,
     setContentMode,
     setPlayerNames,
     setEveningName,
     setTargetScore,
     setCustomTargetScore,
-    setRoundCount,
-    goToTutorial,
     startGame,
     startSpin,
     handleSpinEnd,
@@ -47,64 +42,46 @@ export default function App() {
     toggleSound,
   } = useGameState();
 
+  const isGame = game.screen === 'game';
+  const showRobot = game.screen !== 'game';
+
   return (
-    <main className="app-shell" dir="rtl">
-      <BackgroundGlow />
-      <FloatingParticles />
+    <main className={`app-shell ${isGame ? 'app-shell--focus' : ''}`} dir="rtl">
+      {!isGame && <BackgroundGlow />}
+      {!isGame && <FloatingParticles />}
       <InstallPWABanner />
 
       {game.screen === 'welcome' && (
         <WelcomeScreen
-          onStart={() => navigate('mode-select')}
+          onStart={() => navigate('setup')}
           onSettings={() => navigate('settings')}
         />
       )}
 
-      {game.screen === 'mode-select' && (
-        <ModeSelectScreen
-          selected={game.mode}
-          onSelect={setMode}
-          onContinue={() => navigate('level-select')}
-          onBack={() => navigate('welcome')}
-        />
-      )}
-
-      {game.screen === 'level-select' && (
-        <LevelSelectScreen
+      {game.screen === 'setup' && (
+        <QuickSetupScreen
+          mode={game.mode}
           level={game.level}
+          contentMode={game.contentMode}
           gameFormat={game.gameFormat}
           scoringMode={game.scoringMode}
-          coupleTaskMode={game.coupleTaskMode}
-          contentMode={game.contentMode}
-          roundCount={game.roundTarget}
           targetScore={game.targetScore}
           customTargetScore={game.customTargetScore}
           eveningName={game.eveningName}
           playerOneName={game.playerOneName}
           playerTwoName={game.playerTwoName}
-          playerOneColor={settings.playerOneColor}
-          playerTwoColor={settings.playerTwoColor}
-          playerOneAvatar={settings.playerOneAvatar}
-          playerTwoAvatar={settings.playerTwoAvatar}
+          onModeSelect={setMode}
           onLevelSelect={setLevel}
+          onContentModeChange={setContentMode}
           onFormatChange={setGameFormat}
           onScoringChange={setScoringMode}
-          onCoupleModeChange={setCoupleTaskMode}
-          onContentModeChange={setContentMode}
-          onRoundCountChange={setRoundCount}
           onTargetScoreSelect={setTargetScore}
           onCustomTargetChange={setCustomTargetScore}
           onEveningNameChange={setEveningName}
           onPlayerNamesChange={setPlayerNames}
-          onPlayerColorsChange={(c1, c2) => updateSettings({ playerOneColor: c1, playerTwoColor: c2 })}
-          onPlayerAvatarsChange={(a1, a2) => updateSettings({ playerOneAvatar: a1, playerTwoAvatar: a2 })}
-          onContinue={goToTutorial}
-          onBack={() => navigate('mode-select')}
+          onStart={startGame}
+          onBack={() => navigate('welcome')}
         />
-      )}
-
-      {game.screen === 'tutorial' && (
-        <TutorialScreen onStart={startGame} onBack={() => navigate('level-select')} />
       )}
 
       {game.screen === 'game' && (
@@ -147,12 +124,14 @@ export default function App() {
         />
       )}
 
-      <MiniRobot
-        game={game}
-        settings={settings}
-        effectiveTarget={effectiveTarget}
-        soundEnabled={settings.soundEnabled}
-      />
+      {showRobot && (
+        <MiniRobot
+          game={game}
+          settings={settings}
+          effectiveTarget={effectiveTarget}
+          soundEnabled={settings.soundEnabled}
+        />
+      )}
     </main>
   );
 }

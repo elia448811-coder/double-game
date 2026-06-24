@@ -4,8 +4,7 @@ import { ProgressBar } from '../components/ProgressBar';
 import { SpinnerWheel } from '../components/SpinnerWheel';
 import { TaskModal } from '../components/TaskModal';
 import { useSpinWheel } from '../hooks/useSpinWheel';
-import { MODE_LABELS } from '../types/game';
-import type { AppSettings, ContentMode, CoupleTask, GameMode, GameState } from '../types/game';
+import type { AppSettings, ContentMode, CoupleTask, GameState } from '../types/game';
 
 type GameScreenProps = {
   settings: AppSettings;
@@ -76,8 +75,6 @@ export function GameScreen({
     <section className="page-screen game-screen">
       <div className="game-card">
         <GameHeader
-          mode={MODE_LABELS[game.mode as GameMode]}
-          eveningName={game.eveningName}
           currentPlayerName={currentPlayerName}
           currentPlayerIndex={game.currentPlayerIndex}
           playerOneName={game.playerOneName}
@@ -92,7 +89,6 @@ export function GameScreen({
           timeRemainingSeconds={game.timeRemainingSeconds}
           stats={game.stats}
           soundEnabled={settings.soundEnabled}
-          contentMode={contentMode}
           onToggleSound={onToggleSound}
         />
 
@@ -120,15 +116,9 @@ export function GameScreen({
           onSpin={handleSpin}
         />
 
-        <div className="game-actions">
-          <button
-            type="button"
-            className="ghost-action game-action-btn pressable"
-            onClick={onEndGame}
-          >
-            סיים משחק
-          </button>
-        </div>
+        <button type="button" className="game-end-link pressable" onClick={onEndGame}>
+          סיום משחק
+        </button>
       </div>
 
       {game.currentTask && (

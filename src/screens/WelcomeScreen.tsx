@@ -1,41 +1,25 @@
-import { getFullBankStats } from '../utils/taskSelection';
-
 type WelcomeScreenProps = {
   onStart: () => void;
   onSettings: () => void;
 };
 
 export function WelcomeScreen({ onStart, onSettings }: WelcomeScreenProps) {
-  const bank = getFullBankStats('mixed');
-
   return (
     <section className="page-screen welcome-screen">
-      <div className="game-card welcome-card animate-in">
-        <header className="top-bar welcome-top">
-          <div>
-            <p className="eyebrow">Couple Spin</p>
-            <h1>ספין זוגי</h1>
-            <p className="subtitle">משחק משימות מצחיק וכיפי לזוגות</p>
-          </div>
-        </header>
+      <div className="welcome-hero animate-in">
+        <div className="welcome-hero__badge">Couple Spin</div>
+        <h1 className="welcome-hero__title">ספין זוגי</h1>
+        <p className="welcome-hero__tag">מסובבים · מקבלים משימה · צוחקים יחד</p>
 
-        <p className="welcome-tagline">מסובבים, מקבלים משימה, וצוחקים יחד</p>
-        <p className="welcome-bank">
-          🎯 {bank.tasks} משימות + {bank.questions} שאלות = {bank.total} תוכן זוגי נקי!
-        </p>
+        <button type="button" className="cta-button cta-button--hero pressable" onClick={onStart}>
+          🎡 בואו נשחק
+        </button>
 
-        <div className="welcome-actions">
-          <button type="button" className="spin-button welcome-start-btn pressable" onClick={onStart}>
-            התחילו לשחק
-          </button>
-          <button type="button" className="ghost-action welcome-settings-btn pressable" onClick={onSettings}>
-            הגדרות
-          </button>
-        </div>
+        <button type="button" className="welcome-hero__settings pressable" onClick={onSettings}>
+          ⚙️ הגדרות
+        </button>
 
-        <p className="welcome-footer">
-          כל משימה ניתנת לדילוג. משחקים רק במה שנעים לשניכם.
-        </p>
+        <p className="welcome-hero__note">450 משימות ושאלות · תמיד אפשר לדלג</p>
       </div>
     </section>
   );

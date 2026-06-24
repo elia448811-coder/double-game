@@ -1,11 +1,7 @@
 import { ACHIEVEMENTS } from '../types/game';
-import type { ContentMode } from '../types/game';
-import { CONTENT_MODE_LABELS } from '../types/game';
 import { loadHistory, loadRecords } from '../utils/storage';
 
 type GameHeaderProps = {
-  mode: string;
-  eveningName: string;
   currentPlayerName: string;
   currentPlayerIndex: 0 | 1;
   playerOneName: string;
@@ -20,7 +16,6 @@ type GameHeaderProps = {
   timeRemainingSeconds: number | null;
   stats: { totalCompleted: number; totalSkipped: number; streak: number };
   soundEnabled: boolean;
-  contentMode: ContentMode;
   onToggleSound: () => void;
 };
 
@@ -31,8 +26,6 @@ function formatTime(seconds: number): string {
 }
 
 export function GameHeader({
-  mode,
-  eveningName,
   currentPlayerName,
   currentPlayerIndex,
   playerOneName,
@@ -47,68 +40,68 @@ export function GameHeader({
   timeRemainingSeconds,
   stats,
   soundEnabled,
-  contentMode,
   onToggleSound,
 }: GameHeaderProps) {
   const scoreDisplay =
     scoringMode === 'cooperative'
-      ? `יחד: ${cooperativeScore}`
+      ? `${cooperativeScore} נק׳ משותף`
       : scoringMode === 'none'
-        ? `${stats.totalCompleted} משימות`
-        : `${playerOneName} ${scores[0]} : ${scores[1]} ${playerTwoName}`;
+        ? `${stats.totalCompleted} בוצעו`
+        : `${scores[0]} : ${scores[1]}`;
 
   return (
-    <>
-      <header className="top-bar">
-        <div>
-          <p className="eyebrow">Couple Spin</p>
-          <h1>ספין זוגי</h1>
-          <p className="subtitle">
-            {eveningName || mode} · {stats.totalCompleted} בוצעו · {stats.totalSkipped} דילוגים
-          </p>
+    <header className="game-bar">
+      <button
+        type="button"
+        className="game-bar__mute"
+        onClick={onToggleSound}
+        aria-label={soundEnabled ? 'השתק' : 'הפעל סאונד'}
+      >
+        {soundEnabled ? '🔊' : '🔇'}
+      </button>
+
+      <div className="game-bar__scores">
+        <div className={`game-bar__player ${currentPlayerIndex === 0 ? 'game-bar__player--active' : ''}`}>
+          <span className="game-bar__avatar" style={{ borderColor: playerOneColor }}>
+            {playerOneAvatar}
+          </span>
+          <span className="game-bar__name">{playerOneName}</span>
+          {scoringMode === 'competitive' && (
+            <span className="game-bar__pts" style={{ color: playerOneColor }}>
+              {scores[0]}
+            </span>
+          )}
         </div>
 
-        <div className="header-actions">
-          <button
-            type="button"
-            className="quick-mute"
-            onClick={onToggleSound}
-            aria-label={soundEnabled ? 'השתק' : 'הפעל סאונד'}
-          >
-            {soundEnabled ? '🔊' : '🔇'}
-          </button>
-          <div className="score-card" aria-label="לוח ניקוד">
-            <span>ניקוד</span>
-            <strong>{scoreDisplay}</strong>
-            {timeRemainingSeconds !== null && (
-              <span className="timer-badge">⏱ {formatTime(timeRemainingSeconds)}</span>
-            )}
-          </div>
+        <div className="game-bar__center">
+          <span className="game-bar__score-label">{scoreDisplay}</span>
+          {timeRemainingSeconds !== null && (
+            <span className="game-bar__timer">⏱ {formatTime(timeRemainingSeconds)}</span>
+          )}
         </div>
-      </header>
 
-      <div className="status-row">
-        <div className="pill active-pill turn-pill">
-          <span
-            className="turn-dot"
-            style={{ background: currentPlayerIndex === 0 ? playerOneColor : playerTwoColor }}
-          />
-          תור: {currentPlayerName}
+        <div className={`game-bar__player ${currentPlayerIndex === 1 ? 'game-bar__player--active' : ''}`}>
+          {scoringMode === 'competitive' && (
+            <span className="game-bar__pts" style={{ color: playerTwoColor }}>
+              {scores[1]}
+            </span>
+          )}
+          <span className="game-bar__name">{playerTwoName}</span>
+          <span className="game-bar__avatar" style={{ borderColor: playerTwoColor }}>
+            {playerTwoAvatar}
+          </span>
         </div>
-        <div className="pill">{CONTENT_MODE_LABELS[contentMode]}</div>
-        {stats.streak >= 2 && <div className="pill streak-pill">🔥 רצף {stats.streak}</div>}
-        <div className="pill">אפשר לדלג תמיד</div>
       </div>
 
-      <div className="player-row">
-        <div className={`player-chip ${currentPlayerIndex === 0 ? 'active' : ''}`} style={{ borderColor: playerOneColor }}>
-          <span>{playerOneAvatar}</span> {playerOneName}
-        </div>
-        <div className={`player-chip ${currentPlayerIndex === 1 ? 'active' : ''}`} style={{ borderColor: playerTwoColor }}>
-          <span>{playerTwoAvatar}</span> {playerTwoName}
-        </div>
+      <div className="game-bar__turn">
+        <span
+          className="game-bar__turn-dot"
+          style={{ background: currentPlayerIndex === 0 ? playerOneColor : playerTwoColor }}
+        />
+        תור {currentPlayerName}
+        {stats.streak >= 2 && <span className="game-bar__streak">🔥 {stats.streak}</span>}
       </div>
-    </>
+    </header>
   );
 }
 

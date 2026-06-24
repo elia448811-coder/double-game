@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { QUESTION_GROUP_LABELS } from '../data/allQuestions';
 import type { CoupleTask } from '../types/game';
 import { CATEGORY_LABELS } from '../types/game';
@@ -29,6 +29,7 @@ export function TaskModal({
   onTooHard,
   onMarkFunniest,
 }: TaskModalProps) {
+  const [extrasOpen, setExtrasOpen] = useState(false);
   const isQuestion = task.kind === 'question';
   const groupLabel =
     task.questionGroup && task.questionGroup in QUESTION_GROUP_LABELS
@@ -46,13 +47,13 @@ export function TaskModal({
 
   return (
     <div className="modal-backdrop" role="dialog" aria-modal="true" aria-labelledby="task-modal-title">
-      <div className={`task-modal ${isQuestion ? 'task-modal--question' : ''}`}>
-        <p className="modal-label">
+      <div className={`task-modal task-modal--clean ${isQuestion ? 'task-modal--question' : ''}`}>
+        <p className="task-modal__who">
           {isQuestion
-            ? '💬 שאלה זוגית — דברו יחד בפתיחות'
+            ? '💬 שאלה לשניכם'
             : isCoupleTask || task.isCoupleTask
-              ? '💑 משימה זוגית — שניכם מבצעים יחד'
-              : `המשימה של ${currentPlayerName}`}
+              ? '💑 משימה זוגית'
+              : `🎯 ${currentPlayerName}`}
         </p>
 
         <div className="category-badge">
@@ -64,57 +65,56 @@ export function TaskModal({
           {isQuestion ? groupLabel : CATEGORY_LABELS[task.category]}
         </div>
 
-        <h2 id="task-modal-title">{task.description}</h2>
+        <h2 id="task-modal-title" className="task-modal__text">
+          {task.description}
+        </h2>
 
         {!isQuestion && task.durationSeconds && (
           <p className="task-duration">⏱ {task.durationSeconds} שניות</p>
         )}
 
-        {isQuestion ? (
-          <p className="question-hint">קחו רגע, שתפו בכנות — אין תשובה נכונה או שגויה.</p>
-        ) : (
-          <div className="task-difficulty-row">
-            <button type="button" className="difficulty-btn" onClick={onTooEasy} aria-label="קל מדי">
-              קל מדי
-            </button>
-            <button type="button" className="difficulty-btn" onClick={onTooHard} aria-label="קשה מדי">
-              קשה מדי
-            </button>
-            <button
-              type="button"
-              className={`difficulty-btn ${isFunniest ? 'difficulty-btn--active' : ''}`}
-              onClick={onMarkFunniest}
-              aria-label="סמן כמצחיקה ביותר"
-            >
-              {isFunniest ? '😂 נבחרה!' : '😂 הכי מצחיקה'}
-            </button>
-          </div>
-        )}
-
-        {isQuestion && (
-          <div className="task-difficulty-row">
-            <button
-              type="button"
-              className={`difficulty-btn ${isFunniest ? 'difficulty-btn--active' : ''}`}
-              onClick={onMarkFunniest}
-              aria-label="סמן כשאלה מועדפת"
-            >
-              {isFunniest ? '⭐ נבחרה!' : '⭐ שאלה מועדפת'}
-            </button>
-          </div>
-        )}
-
-        <div className="modal-actions">
-          <button type="button" className="primary-action pressable" onClick={onComplete}>
-            {isQuestion ? 'דיברנו על זה' : 'בוצע'}
+        <div className="task-modal__main-actions">
+          <button type="button" className="cta-button cta-button--modal pressable" onClick={onComplete}>
+            {isQuestion ? '✓ דיברנו על זה' : '✓ בוצע'}
           </button>
-          <button type="button" className="secondary-action pressable" onClick={onReplaceTask}>
-            {isQuestion ? 'שאלה אחרת' : 'משימה אחרת'}
-          </button>
-          <button type="button" className="ghost-action pressable" onClick={onSkip}>
+          <button type="button" className="task-modal__skip pressable" onClick={onSkip}>
             דלג
           </button>
         </div>
+
+        <button
+          type="button"
+          className="task-modal__more-toggle"
+          onClick={() => setExtrasOpen((v) => !v)}
+          aria-expanded={extrasOpen}
+        >
+          {extrasOpen ? '▲ פחות אפשרויות' : '▼ עוד אפשרויות'}
+        </button>
+
+        {extrasOpen && (
+          <div className="task-modal__extras">
+            <button type="button" className="extra-btn pressable" onClick={onReplaceTask}>
+              {isQuestion ? 'שאלה אחרת' : 'משימה אחרת'}
+            </button>
+            {!isQuestion && (
+              <>
+                <button type="button" className="extra-btn pressable" onClick={onTooEasy}>
+                  קל מדי
+                </button>
+                <button type="button" className="extra-btn pressable" onClick={onTooHard}>
+                  קשה מדי
+                </button>
+              </>
+            )}
+            <button
+              type="button"
+              className={`extra-btn ${isFunniest ? 'extra-btn--on' : ''} pressable`}
+              onClick={onMarkFunniest}
+            >
+              {isFunniest ? '⭐ נבחר!' : isQuestion ? '⭐ שאלה מועדפת' : '😂 הכי מצחיקה'}
+            </button>
+          </div>
+        )}
       </div>
     </div>
   );

@@ -122,22 +122,27 @@ export function EndScreen({ game, settings, onNewGame, onPlayAgain, onHome }: En
 
         <StatsSummary achievementIds={game.unlockedAchievements} />
 
-        <div className="modal-actions end-card__actions">
-          <button type="button" className="primary-action pressable" onClick={onPlayAgain}>
-            שחקו שוב באותו מצב
+        <div className="end-actions">
+          <button type="button" className="cta-button pressable" onClick={onPlayAgain}>
+            🔄 שחקו שוב
           </button>
-          <button type="button" className="secondary-action pressable" onClick={handleShare} disabled={sharing}>
-            {sharing ? 'משתף...' : '📤 שתפו את הערב'}
+          <button type="button" className="end-actions__secondary pressable" onClick={handleShare} disabled={sharing}>
+            {sharing ? 'משתף...' : '📤 שתפו'}
           </button>
-          <button type="button" className="secondary-action pressable" onClick={handleSaveImage}>
-            💾 שמרו תמונת סיכום
-          </button>
-          <button type="button" className="ghost-action pressable" onClick={onNewGame}>
-            משחק חדש
-          </button>
-          <button type="button" className="ghost-action pressable" onClick={onHome}>
-            חזרה למסך הראשי
-          </button>
+          <details className="end-actions__more">
+            <summary>עוד אפשרויות</summary>
+            <div className="end-actions__more-body">
+              <button type="button" className="extra-btn pressable" onClick={handleSaveImage}>
+                💾 שמרו תמונה
+              </button>
+              <button type="button" className="extra-btn pressable" onClick={onNewGame}>
+                משחק חדש
+              </button>
+              <button type="button" className="extra-btn pressable" onClick={onHome}>
+                חזרה לראשי
+              </button>
+            </div>
+          </details>
         </div>
       </div>
     </section>
