@@ -1,11 +1,32 @@
-/** סיסמת כניסה לאתר (ריק = שער כבוי) — מוזרקת ב-build מ-PASS_W */
-export const SITE_PASS = typeof __SITE_PASS__ !== 'undefined' ? __SITE_PASS__ : '';
+/** כתובת שרת האימות — הסיסמה לא נמצאת בקוד האתר */
+const AUTH_API = (import.meta.env.VITE_AUTH_API_URL ?? '').replace(/\/$/, '');
 
-export function isSiteGateEnabled(): boolean {
-  return SITE_PASS.length > 0;
+export function getAuthApiUrl(): string {
+  return AUTH_API;
 }
 
-export function verifySitePassword(input: string): boolean {
+export function isSiteGateEnabled(): boolean {
+  return AUTH_API.length > 0;
+}
+
+export async function verifySitePassword(input: string): Promise<boolean> {
   if (!isSiteGateEnabled()) return true;
-  return input.trim() === SITE_PASS;
+
+  const password = input.trim();
+  if (!password) return false;
+
+  try {
+    const res = await fetch(`${AUTH_API}/verify`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ password }),
+    });
+
+    if (!res.ok) return false;
+
+    const data = (await res.json()) as { ok?: boolean };
+    return data.ok === true;
+  } catch {
+    return false;
+  }
 }

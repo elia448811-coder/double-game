@@ -1,18 +1,32 @@
 import { useState, type FormEvent } from 'react';
 
 type SiteGateProps = {
-  onUnlock: (password: string) => boolean;
+  onUnlock: (password: string) => Promise<boolean>;
+  checking?: boolean;
 };
 
-export function SiteGate({ onUnlock }: SiteGateProps) {
+export function SiteGate({ onUnlock, checking = false }: SiteGateProps) {
   const [password, setPassword] = useState('');
   const [error, setError] = useState(false);
+  const [networkError, setNetworkError] = useState(false);
   const [shake, setShake] = useState(false);
 
-  const submit = (e: FormEvent) => {
+  const submit = async (e: FormEvent) => {
     e.preventDefault();
-    const ok = onUnlock(password.trim());
+    setNetworkError(false);
+
+    let ok: boolean;
+    try {
+      ok = await onUnlock(password.trim());
+    } catch {
+      setNetworkError(true);
+      setShake(true);
+      window.setTimeout(() => setShake(false), 500);
+      return;
+    }
+
     if (ok) return;
+
     setError(true);
     setShake(true);
     window.setTimeout(() => setShake(false), 500);
@@ -43,18 +57,29 @@ export function SiteGate({ onUnlock }: SiteGateProps) {
             onChange={(e) => {
               setPassword(e.target.value);
               setError(false);
+              setNetworkError(false);
             }}
             placeholder="הקלידו סיסמה..."
             autoComplete="current-password"
             autoFocus
+            disabled={checking}
           />
           {error && <p className="site-gate__error">סיסמה שגויה — נסו שוב</p>}
-          <button type="submit" className="site-gate__submit pressable" disabled={!password.trim()}>
-            כניסה לאתר
+          {networkError && (
+            <p className="site-gate__error">לא הצלחנו לבדוק — בדקו חיבור לאינטרנט</p>
+          )}
+          <button
+            type="submit"
+            className="site-gate__submit pressable"
+            disabled={!password.trim() || checking}
+          >
+            {checking ? 'בודק...' : 'כניסה לאתר'}
           </button>
         </form>
 
-        <p className="site-gate__hint">הסיסמה נבדקת מול השרת · נדרשת בכל כניסה מחדש לאתר</p>
+        <p className="site-gate__hint">
+          הסיסמה נבדקת בשרת מאובטח · לא נשמרת בקוד האתר · נדרשת בכל כניסה מחדש
+        </p>
       </div>
     </div>
   );

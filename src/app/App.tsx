@@ -167,10 +167,10 @@ function AppContent() {
 
 export default function App() {
   useDeviceLayout();
-  const { gateEnabled, unlocked, unlock } = useSiteGate();
+  const { gateEnabled, unlocked, unlock, checking } = useSiteGate();
 
   if (gateEnabled && !unlocked) {
-    return <SiteGate onUnlock={unlock} />;
+    return <SiteGate onUnlock={unlock} checking={checking} />;
   }
 
   return <AppContent />;

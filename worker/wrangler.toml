@@ -1,0 +1,10 @@
+name = "couple-spin-auth"
+main = "index.js"
+compatibility_date = "2024-06-01"
+
+# כתובת האתר שמורשית לפנות ל-API (CORS)
+[vars]
+ALLOWED_ORIGIN = "https://elia448811-coder.github.io"
+
+# PASS_W — הגדר כ-Secret (לא בקוד!):
+#   npx wrangler secret put PASS_W

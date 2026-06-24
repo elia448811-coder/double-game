@@ -37,7 +37,7 @@ jobs:
         run: npm run build
         env:
           VITE_BASE_PATH: ${{ vars.VITE_BASE_PATH || '/' }}
-          PASS_W: ${{ secrets.PASS_W }}
+          VITE_AUTH_API_URL: ${{ vars.VITE_AUTH_API_URL || '' }}
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3

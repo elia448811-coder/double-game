@@ -13,7 +13,7 @@ import { fileURLToPath } from 'node:url';
 
 const root = join(fileURLToPath(import.meta.url), '..', '..');
 const distDir = join(root, 'dist');
-const buildEnv = { ...process.env, PASS_W: '' };
+const buildEnv = { ...process.env };
 const results = [];
 
 function pass(name, detail = '') {
