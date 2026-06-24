@@ -12,7 +12,8 @@ export const QUESTION_GROUP_LABELS = {
   "creative": "שאלות יצירתיות",
   "icebreaker": "שאלות פתיחה",
   "summary": "שאלות סיום וסיכום",
-  "spicy": "שאלות 18+"
+  "spicy": "שאלות 18+",
+  "meet100": "100 שאלות היכרות עמוקה ומעניינת לזוגות"
 } as const;
 
 export type QuestionGroup = keyof typeof QUESTION_GROUP_LABELS;

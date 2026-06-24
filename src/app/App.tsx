@@ -2,7 +2,10 @@ import { InstallPWABanner } from '../components/InstallPWABanner';
 import { BackgroundGlow } from '../components/BackgroundGlow';
 import { FloatingParticles } from '../components/FloatingParticles';
 import { MiniRobot } from '../components/MiniRobot';
+import { SiteGate } from '../components/SiteGate';
+import { useDeviceLayout } from '../hooks/useDeviceLayout';
 import { useGameState } from '../hooks/useGameState';
+import { useSiteGate } from '../hooks/useSiteGate';
 import { DiceRollScreen } from '../screens/DiceRollScreen';
 import { EndScreen } from '../screens/EndScreen';
 import { GameScreen } from '../screens/GameScreen';
@@ -10,8 +13,11 @@ import { QuickSetupScreen } from '../screens/QuickSetupScreen';
 import { SettingsScreen } from '../screens/SettingsScreen';
 import { WelcomeScreen } from '../screens/WelcomeScreen';
 import '../styles/globals.css';
+import '../styles/responsive.css';
+import '../styles/friendly.css';
+import '../styles/site-gate.css';
 
-export default function App() {
+function AppContent() {
   const {
     settings,
     game,
@@ -157,4 +163,15 @@ export default function App() {
       )}
     </main>
   );
+}
+
+export default function App() {
+  useDeviceLayout();
+  const { gateEnabled, unlocked, unlock } = useSiteGate();
+
+  if (gateEnabled && !unlocked) {
+    return <SiteGate onUnlock={unlock} />;
+  }
+
+  return <AppContent />;
 }

@@ -1,6 +1,6 @@
 import type { AppSettings, ContentMode, GameState } from './game';
 
-export type RobotMood = 'happy' | 'thinking' | 'judge' | 'excited' | 'neutral' | 'wink';
+export type RobotMood = 'happy' | 'thinking' | 'judge' | 'excited' | 'neutral' | 'wink' | 'cheer' | 'love';
 
 export type RobotMessage = {
   id: string;

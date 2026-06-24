@@ -1,0 +1,498 @@
+/* ══════════════════════════════════════════
+   Responsive — Mobile (phone) + Tablet (iPad)
+   Driven by data-device on <html> (useDeviceLayout)
+   ══════════════════════════════════════════ */
+
+:root {
+  --layout-page-padding: 20px;
+  --layout-card-max: 520px;
+  --layout-wheel-size: min(430px, 82vw);
+  --layout-wheel-center: 112px;
+  --layout-segment-font: 11px;
+  --layout-modal-radius: 32px;
+  --layout-safe-top: env(safe-area-inset-top, 0px);
+  --layout-safe-bottom: env(safe-area-inset-bottom, 0px);
+  --layout-safe-left: env(safe-area-inset-left, 0px);
+  --layout-safe-right: env(safe-area-inset-right, 0px);
+}
+
+html {
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+}
+
+.app-shell {
+  min-height: 100dvh;
+  padding-top: var(--layout-safe-top);
+}
+
+/* ── Tablet / iPad (768px+) ── */
+
+html[data-device='tablet'] {
+  --layout-page-padding: 28px;
+  --layout-card-max: 680px;
+  --layout-wheel-size: min(460px, 52vw);
+  --layout-wheel-center: 124px;
+  --layout-segment-font: 12px;
+}
+
+html[data-device='tablet'][data-orientation='landscape'] {
+  --layout-page-padding: 24px;
+  --layout-wheel-size: min(400px, 42vh);
+  --layout-wheel-center: 108px;
+}
+
+html[data-device='tablet'] .page-screen {
+  padding: var(--layout-page-padding);
+  padding-left: calc(var(--layout-page-padding) + var(--layout-safe-left));
+  padding-right: calc(var(--layout-page-padding) + var(--layout-safe-right));
+}
+
+html[data-device='tablet'] .flow-card,
+html[data-device='tablet'] .setup-card,
+html[data-device='tablet'] .welcome-hero {
+  max-width: var(--layout-card-max);
+}
+
+html[data-device='tablet'] .welcome-hero {
+  padding: 44px 36px 32px;
+}
+
+html[data-device='tablet'] .welcome-hero__title {
+  font-size: 56px;
+}
+
+html[data-device='tablet'] .welcome-hero__steps {
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 10px 16px;
+}
+
+html[data-device='tablet'] .welcome-hero__steps span {
+  font-size: 15px;
+}
+
+html[data-device='tablet'] .cta-button--hero {
+  max-width: 360px;
+  min-height: 64px;
+  font-size: 21px;
+}
+
+html[data-device='tablet'] .preset-row {
+  gap: 12px;
+}
+
+html[data-device='tablet'] .preset-card {
+  padding: 16px 12px;
+}
+
+html[data-device='tablet'] .choice-row {
+  gap: 12px;
+}
+
+html[data-device='tablet'] .choice-pill {
+  padding: 16px 10px;
+  font-size: 15px;
+}
+
+html[data-device='tablet'] .setup-footer {
+  position: static;
+  padding: 16px 0 0;
+  background: none;
+}
+
+html[data-device='tablet'] .setup-screen {
+  padding-bottom: 32px;
+}
+
+html[data-device='tablet'] .setup-footer .cta-button {
+  max-width: 100%;
+}
+
+html[data-device='tablet'] .wheel-frame {
+  width: var(--layout-wheel-size);
+  height: var(--layout-wheel-size);
+}
+
+html[data-device='tablet'] .wheel-center {
+  width: var(--layout-wheel-center);
+  height: var(--layout-wheel-center);
+  font-size: 15px;
+}
+
+html[data-device='tablet'] .wheel-segment span {
+  font-size: var(--layout-segment-font);
+}
+
+html[data-device='tablet'] .game-screen {
+  padding: 20px;
+  align-items: center;
+}
+
+html[data-device='tablet'] .game-screen .game-card {
+  max-width: 720px;
+  padding: 24px;
+}
+
+html[data-device='tablet'] .game-bar__name {
+  max-width: 120px;
+  font-size: 14px;
+}
+
+html[data-device='tablet'] .game-bar__avatar {
+  width: 36px;
+  height: 36px;
+  font-size: 18px;
+}
+
+html[data-device='tablet'] .dice-card {
+  max-width: 560px;
+}
+
+html[data-device='tablet'] .dice-face {
+  width: 96px;
+  height: 96px;
+  padding: 12px;
+}
+
+html[data-device='tablet'] .dice-face__dot {
+  width: 13px;
+  height: 13px;
+}
+
+html[data-device='tablet'] .dice-player__name {
+  max-width: 140px;
+  font-size: 15px;
+}
+
+html[data-device='tablet'] .dice-arena {
+  gap: 20px;
+  padding: 28px 20px;
+}
+
+html[data-device='tablet'] .end-stats-grid {
+  grid-template-columns: repeat(4, 1fr);
+}
+
+html[data-device='tablet'] .settings-card {
+  max-width: 640px;
+}
+
+html[data-device='tablet'] .mini-robot__panel {
+  width: min(420px, calc(100vw - 48px));
+  max-height: min(560px, calc(100dvh - 120px));
+}
+
+html[data-device='tablet'] .mini-robot {
+  bottom: calc(24px + var(--layout-safe-bottom));
+  left: calc(24px + var(--layout-safe-left));
+}
+
+html[data-device='tablet'][data-orientation='landscape'] .dice-screen,
+html[data-device='tablet'][data-orientation='landscape'] .welcome-screen {
+  align-items: center;
+}
+
+html[data-device='tablet'][data-orientation='landscape'] .game-screen .game-card {
+  max-width: min(920px, 100%);
+}
+
+html[data-device='tablet'][data-orientation='landscape'] .wheel-area {
+  padding: 8px 0;
+}
+
+/* ── Mobile / Phone (≤767px) ── */
+
+html[data-device='mobile'] {
+  --layout-page-padding: 16px;
+  --layout-card-max: 100%;
+  --layout-wheel-size: min(340px, calc(100vw - 40px));
+  --layout-wheel-center: 96px;
+  --layout-segment-font: 10px;
+  --layout-modal-radius: 28px;
+}
+
+html[data-device='mobile'][data-orientation='landscape'] {
+  --layout-wheel-size: min(280px, 52vh);
+  --layout-wheel-center: 80px;
+}
+
+html[data-device='mobile'] .page-screen {
+  padding: var(--layout-page-padding);
+  padding-left: calc(var(--layout-page-padding) + var(--layout-safe-left));
+  padding-right: calc(var(--layout-page-padding) + var(--layout-safe-right));
+  padding-bottom: calc(var(--layout-page-padding) + var(--layout-safe-bottom));
+  align-items: flex-start;
+}
+
+html[data-device='mobile'] .flow-screen {
+  padding-top: calc(12px + var(--layout-safe-top));
+}
+
+html[data-device='mobile'] .flow-card,
+html[data-device='mobile'] .setup-card,
+html[data-device='mobile'] .welcome-hero {
+  width: 100%;
+  max-width: 100%;
+}
+
+html[data-device='mobile'] .welcome-hero {
+  padding: 28px 18px 22px;
+}
+
+html[data-device='mobile'] .welcome-hero__title {
+  font-size: clamp(36px, 10vw, 48px);
+}
+
+html[data-device='mobile'] .welcome-hero__tag {
+  font-size: 16px;
+  margin-bottom: 24px;
+}
+
+html[data-device='mobile'] .cta-button {
+  min-height: 52px;
+  font-size: 17px;
+}
+
+html[data-device='mobile'] .cta-button--hero {
+  max-width: 100%;
+  min-height: 56px;
+}
+
+html[data-device='mobile'] .setup-screen {
+  padding-bottom: calc(100px + var(--layout-safe-bottom));
+}
+
+html[data-device='mobile'] .setup-footer {
+  padding: 12px 16px calc(12px + var(--layout-safe-bottom));
+  padding-left: calc(16px + var(--layout-safe-left));
+  padding-right: calc(16px + var(--layout-safe-right));
+}
+
+html[data-device='mobile'] .chip-scroll {
+  margin: 0 -4px;
+  padding: 0 4px 6px;
+}
+
+html[data-device='mobile'] .choice-chip {
+  min-height: 44px;
+  padding: 10px 16px;
+}
+
+html[data-device='mobile'] .choice-pill {
+  min-height: 64px;
+}
+
+html[data-device='mobile'] .preset-row {
+  grid-template-columns: 1fr;
+  gap: 8px;
+}
+
+html[data-device='mobile'] .preset-card {
+  flex-direction: row;
+  align-items: center;
+  text-align: right;
+  gap: 12px;
+  padding: 14px 16px;
+}
+
+html[data-device='mobile'] .preset-card__emoji {
+  font-size: 28px;
+}
+
+html[data-device='mobile'] .preset-card__hint {
+  margin-right: auto;
+}
+
+html[data-device='mobile'] .name-row {
+  flex-direction: column;
+  gap: 10px;
+}
+
+html[data-device='mobile'] .name-vs {
+  display: none;
+}
+
+html[data-device='mobile'] .name-input {
+  width: 100%;
+}
+
+html[data-device='mobile'] .wheel-frame {
+  width: var(--layout-wheel-size);
+  height: var(--layout-wheel-size);
+}
+
+html[data-device='mobile'] .wheel-center {
+  width: var(--layout-wheel-center);
+  height: var(--layout-wheel-center);
+  font-size: 13px;
+}
+
+html[data-device='mobile'] .wheel-segment span {
+  font-size: var(--layout-segment-font);
+}
+
+html[data-device='mobile'] .spin-button {
+  width: 100%;
+  min-height: 52px;
+}
+
+html[data-device='mobile'] .game-screen {
+  padding: 8px;
+  padding-top: calc(8px + var(--layout-safe-top));
+}
+
+html[data-device='mobile'] .game-screen .game-card {
+  padding: 14px;
+  border-radius: 22px;
+}
+
+html[data-device='mobile'] .game-bar__name {
+  max-width: 64px;
+  font-size: 12px;
+}
+
+html[data-device='mobile'] .game-end-link {
+  min-height: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+html[data-device='mobile'] .modal-backdrop {
+  align-items: flex-end;
+  padding: 0;
+}
+
+html[data-device='mobile'] .task-modal,
+html[data-device='mobile'] .task-modal--clean {
+  width: 100%;
+  max-width: 100%;
+  max-height: min(92dvh, 720px);
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  border-radius: var(--layout-modal-radius) var(--layout-modal-radius) 0 0;
+  padding: 22px 20px calc(22px + var(--layout-safe-bottom));
+  margin: 0;
+  animation: slideUpModal 0.28s ease both;
+}
+
+html[data-device='mobile'] .age-gate-modal {
+  width: min(100%, 360px);
+  margin: auto 16px;
+  border-radius: var(--layout-modal-radius);
+}
+
+html[data-device='mobile'] .age-gate-backdrop {
+  align-items: center;
+  padding: 16px;
+}
+
+html[data-device='mobile'] .task-modal__text {
+  font-size: clamp(20px, 5.5vw, 26px);
+}
+
+html[data-device='mobile'] .task-modal__main-actions .cta-button {
+  min-height: 52px;
+}
+
+html[data-device='mobile'] .dice-screen {
+  padding-bottom: calc(24px + var(--layout-safe-bottom));
+}
+
+html[data-device='mobile'] .dice-arena {
+  gap: 8px;
+  padding: 16px 10px;
+}
+
+html[data-device='mobile'] .dice-face {
+  width: 68px;
+  height: 68px;
+}
+
+html[data-device='mobile'] .end-stats-grid {
+  grid-template-columns: repeat(2, 1fr);
+  gap: 10px;
+}
+
+html[data-device='mobile'] .pwa-banner {
+  left: calc(12px + var(--layout-safe-left));
+  right: calc(12px + var(--layout-safe-right));
+  bottom: calc(12px + var(--layout-safe-bottom));
+}
+
+html[data-device='mobile'] .mini-robot {
+  bottom: calc(12px + var(--layout-safe-bottom));
+  left: calc(12px + var(--layout-safe-left));
+}
+
+html[data-device='mobile'] .mini-robot__panel {
+  width: calc(100vw - 24px - var(--layout-safe-left) - var(--layout-safe-right));
+  max-height: calc(100dvh - 88px - var(--layout-safe-top) - var(--layout-safe-bottom));
+  left: calc(12px + var(--layout-safe-left));
+}
+
+html[data-device='mobile'][data-orientation='landscape'] .setup-screen {
+  padding-bottom: calc(80px + var(--layout-safe-bottom));
+}
+
+html[data-device='mobile'][data-orientation='landscape'] .page-screen {
+  align-items: center;
+}
+
+html[data-device='mobile'][data-orientation='landscape'] .preset-row {
+  grid-template-columns: repeat(3, 1fr);
+}
+
+html[data-device='mobile'][data-orientation='landscape'] .preset-card {
+  flex-direction: column;
+  text-align: center;
+}
+
+html[data-device='mobile'][data-orientation='landscape'] .name-row {
+  flex-direction: row;
+}
+
+html[data-device='mobile'][data-orientation='landscape'] .name-vs {
+  display: block;
+}
+
+@keyframes slideUpModal {
+  from {
+    opacity: 0;
+    transform: translateY(24px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Touch polish */
+
+html[data-touch='true'] button,
+html[data-touch='true'] .choice-chip,
+html[data-touch='true'] .choice-pill,
+html[data-touch='true'] .preset-card {
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+}
+
+html[data-touch='true'] .pressable:active {
+  transform: scale(0.98);
+}
+
+/* Short screens — wheel fits without scroll */
+
+@media (max-height: 700px) {
+  html[data-device='mobile'] {
+    --layout-wheel-size: min(260px, calc(100vh - 280px));
+    --layout-wheel-center: 76px;
+  }
+
+  html[data-device='tablet'][data-orientation='landscape'] {
+    --layout-wheel-size: min(320px, calc(100vh - 240px));
+  }
+}

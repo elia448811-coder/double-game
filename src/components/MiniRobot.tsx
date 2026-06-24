@@ -13,16 +13,21 @@ type MiniRobotProps = {
 
 function RobotFace({ mood, thinking }: { mood: RobotMood; thinking: boolean }) {
   const blink = mood === 'wink';
-  const eyes = thinking ? '··' : blink ? '◕ ◔' : '◕ ◕';
+  const eyes = thinking ? '··' : blink ? '◕ ◔' : mood === 'love' ? '♥ ♥' : '◕ ◕';
+
+  let mouth = '‿';
+  if (thinking) mouth = '…';
+  else if (mood === 'judge') mouth = '⚖';
+  else if (mood === 'excited') mouth = '◡';
+  else if (mood === 'cheer') mouth = '★';
+  else if (mood === 'love') mouth = '♥';
 
   return (
     <div className={`robot-face robot-face--${mood} ${thinking ? 'robot-face--thinking' : ''}`}>
       <div className="robot-face__antenna" />
       <div className="robot-face__head">
         <div className="robot-face__eyes">{eyes}</div>
-        <div className="robot-face__mouth">
-          {thinking ? '…' : mood === 'judge' ? '⚖' : mood === 'excited' ? '◡' : '‿'}
-        </div>
+        <div className="robot-face__mouth">{mouth}</div>
       </div>
       <div className="robot-face__glow" />
     </div>
@@ -30,7 +35,8 @@ function RobotFace({ mood, thinking }: { mood: RobotMood; thinking: boolean }) {
 }
 
 function formatBotText(text: string) {
-  return text.split('\n').map((line, i) => (
+  const lines = text.split('\n');
+  return lines.map((line, i) => (
     <span key={i}>
       {line.split(/(\*\*[^*]+\*\*)/g).map((part, j) => {
         if (part.startsWith('**') && part.endsWith('**')) {
@@ -38,7 +44,7 @@ function formatBotText(text: string) {
         }
         return part;
       })}
-      {i < text.split('\n').length - 1 && <br />}
+      {i < lines.length - 1 && <br />}
     </span>
   ));
 }
@@ -49,13 +55,16 @@ function nextId() {
   return `msg-${msgId}`;
 }
 
+const JUDGE_QUICK = '⚖️ שפוט אותנו!';
+
 export function MiniRobot({ game, settings, effectiveTarget, soundEnabled }: MiniRobotProps) {
   const [open, setOpen] = useState(false);
   const [thinking, setThinking] = useState(false);
   const [input, setInput] = useState('');
   const [messages, setMessages] = useState<RobotMessage[]>([]);
   const [suggestions, setSuggestions] = useState<string[]>(getWelcomeReply().suggestions ?? []);
-  const [mood, setMood] = useState<RobotMood>('happy');
+  const [mood, setMood] = useState<RobotMood>('cheer');
+  const [welcomedScreen, setWelcomedScreen] = useState<string | null>(null);
   const chatEndRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
 
@@ -111,19 +120,38 @@ export function MiniRobot({ game, settings, effectiveTarget, soundEnabled }: Min
     [thinking, buildContext, pushRobotReply],
   );
 
+  const showWelcome = useCallback(() => {
+    const welcome = getWelcomeReply(buildContext());
+    setMessages([{ id: nextId(), role: 'robot', text: welcome.text, mood: welcome.mood }]);
+    setMood(welcome.mood);
+    setSuggestions(welcome.suggestions ?? []);
+  }, [buildContext]);
+
   const toggleOpen = () => {
     setOpen((v) => {
       const next = !v;
-      if (next && messages.length === 0) {
-        const welcome = getWelcomeReply();
-        setMessages([{ id: nextId(), role: 'robot', text: welcome.text, mood: welcome.mood }]);
-        setMood(welcome.mood);
-        setSuggestions(welcome.suggestions ?? []);
-      }
+      if (next && messages.length === 0) showWelcome();
       if (soundEnabled) sounds.click(settings.soundPack);
       return next;
     });
   };
+
+  useEffect(() => {
+    if (!open) return;
+    if (welcomedScreen === game.screen) return;
+
+    const welcome = getWelcomeReply(buildContext());
+    const isContextScreen =
+      game.screen === 'welcome' ||
+      game.screen === 'setup' ||
+      game.screen === 'dice-roll' ||
+      game.screen === 'end';
+
+    if (isContextScreen && welcomedScreen !== null) {
+      pushRobotReply(welcome.text, welcome.mood, welcome.suggestions);
+    }
+    setWelcomedScreen(game.screen);
+  }, [open, game.screen, buildContext, pushRobotReply, welcomedScreen]);
 
   useEffect(() => {
     if (open) chatEndRef.current?.scrollIntoView({ behavior: 'smooth' });
@@ -133,19 +161,29 @@ export function MiniRobot({ game, settings, effectiveTarget, soundEnabled }: Min
     if (open) inputRef.current?.focus();
   }, [open]);
 
+  const isJudgeChip = (s: string) => s.includes('שפוט') || s.includes('ציון') || s.includes('מנצח');
+
   return (
     <div className={`mini-robot ${open ? 'mini-robot--open' : ''}`}>
       {open && (
-        <div className="mini-robot__panel" role="dialog" aria-label="ספינבי — עוזר חכם">
+        <div className="mini-robot__panel" role="dialog" aria-label="ספינבי — שופט ועוזר">
           <header className="mini-robot__header">
             <RobotFace mood={mood} thinking={thinking} />
             <div>
               <strong>ספינבי</strong>
-              <span>עוזר + שופט זוגי</span>
+              <span className="mini-robot__header-sub">⚖️ השופט הכי נחמד · עוזר חכם</span>
             </div>
             <button
               type="button"
-              className="mini-robot__close"
+              className="mini-robot__judge-btn pressable"
+              onClick={() => sendMessage(JUDGE_QUICK)}
+              disabled={thinking}
+            >
+              ⚖️ שפוט
+            </button>
+            <button
+              type="button"
+              className="mini-robot__close pressable"
               onClick={() => setOpen(false)}
               aria-label="סגור"
             >
@@ -161,7 +199,7 @@ export function MiniRobot({ game, settings, effectiveTarget, soundEnabled }: Min
             ))}
             {thinking && (
               <div className="mini-robot__bubble mini-robot__bubble--robot mini-robot__typing">
-                ספינבי חושב
+                ספינבי שוקל פסק דין
                 <span className="mini-robot__dots">
                   <span />
                   <span />
@@ -178,7 +216,7 @@ export function MiniRobot({ game, settings, effectiveTarget, soundEnabled }: Min
                 <button
                   key={s}
                   type="button"
-                  className="mini-robot__chip"
+                  className={`mini-robot__chip pressable ${isJudgeChip(s) ? 'mini-robot__chip--judge' : ''}`}
                   onClick={() => sendMessage(s)}
                   disabled={thinking}
                 >
@@ -200,11 +238,11 @@ export function MiniRobot({ game, settings, effectiveTarget, soundEnabled }: Min
               type="text"
               value={input}
               onChange={(e) => setInput(e.target.value)}
-              placeholder="שאלו אותי משהו..."
+              placeholder="שאלו, בקשו שיפוט, או התלוננו..."
               disabled={thinking}
               aria-label="שאלה לספינבי"
             />
-            <button type="submit" className="mini-robot__send" disabled={thinking || !input.trim()}>
+            <button type="submit" className="mini-robot__send pressable" disabled={thinking || !input.trim()}>
               שלח
             </button>
           </form>
@@ -213,13 +251,20 @@ export function MiniRobot({ game, settings, effectiveTarget, soundEnabled }: Min
 
       <button
         type="button"
-        className="mini-robot__fab"
+        className="mini-robot__fab pressable"
         onClick={toggleOpen}
-        aria-label={open ? 'סגור את ספינבי' : 'פתח את ספינבי'}
+        aria-label={open ? 'סגור את ספינבי' : 'פתח את ספינבי — השופט הכי נחמד'}
         aria-expanded={open}
       >
         <span className="mini-robot__fab-icon">{open ? '✕' : '🤖'}</span>
-        {!open && <span className="mini-robot__fab-pulse" />}
+        {!open && (
+          <>
+            <span className="mini-robot__fab-pulse" />
+            <span className="mini-robot__fab-badge" aria-hidden>
+              ⚖️
+            </span>
+          </>
+        )}
       </button>
     </div>
   );

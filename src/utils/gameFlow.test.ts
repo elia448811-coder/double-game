@@ -76,10 +76,19 @@ describe('content mode filtering', () => {
     expect(pool.length).toBeGreaterThan(0);
   });
 
+  it('meet100 group picks only from challenge 100', () => {
+    const pool = filterTasks('mixed', 'advanced', [], true, {
+      contentMode: 'questions',
+      preferredQuestionGroup: 'meet100',
+    });
+    expect(pool.length).toBe(100);
+    expect(pool.every((t) => t.questionGroup === 'meet100')).toBe(true);
+  });
+
   it('questions mode never returns tasks', () => {
     const pool = filterTasks('mixed', 'advanced', [], true, { contentMode: 'questions' });
     expect(pool.every((t) => t.kind === 'question')).toBe(true);
-    expect(pool.length).toBe(300);
+    expect(pool.length).toBe(400);
   });
 });
 

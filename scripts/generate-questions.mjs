@@ -21,6 +21,7 @@ export const QUESTION_GROUP_LABELS = {
   icebreaker: 'שאלות פתיחה',
   summary: 'שאלות סיום וסיכום',
   spicy: 'שאלות 18+',
+  meet100: 'אתגר 100 שאלות',
 };
 
 const GROUPS = [

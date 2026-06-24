@@ -145,9 +145,9 @@ export function QuickSetupScreen({
             →
           </button>
           <div>
-            <p className="flow-kicker">שלב 1 מתוך 2</p>
-            <h1 className="flow-title setup-title">מוכנים לשחק?</h1>
-            <p className="flow-desc setup-sub">בחרו וייב, סוג תוכן ומשך — ואז קובייה</p>
+            <p className="flow-kicker">שלב 1 מתוך 2 · קל ומהיר</p>
+            <h1 className="flow-title setup-title">בואו נכין ערב מושלם 💜</h1>
+            <p className="flow-desc setup-sub">בחרו וייב, סוג תוכן ומשך — ואז 🎲 קובייה</p>
           </div>
         </header>
 
@@ -321,7 +321,7 @@ export function QuickSetupScreen({
           <button type="button" className="cta-button pressable" onClick={handleContinue}>
             🎲 המשך לקובייה
           </button>
-          <p className="setup-hint">תמיד אפשר לדלג · משחקים רק במה שנעים לשניכם</p>
+          <p className="setup-hint">💡 תמיד אפשר לדלג · ספינבי 🤖 ישמח לשפוט · רק מה שנעים לשניכם</p>
         </div>
       </div>
     </section>

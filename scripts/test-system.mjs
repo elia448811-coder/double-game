@@ -14,11 +14,11 @@ import { join } from 'node:path';
 const root = process.cwd();
 const results = [];
 
-function runStep(name, cmd, optional = false) {
+function runStep(name, cmd, optional = false, env = process.env) {
   const start = Date.now();
   process.stdout.write(`\n▶ ${name}...\n`);
   try {
-    execSync(cmd, { stdio: 'inherit', cwd: root, encoding: 'utf8' });
+    execSync(cmd, { stdio: 'inherit', cwd: root, encoding: 'utf8', env });
     const ms = Date.now() - start;
     results.push({ name, ok: true, ms });
     return true;
@@ -108,8 +108,9 @@ let allOk = true;
 if (!validateDataFiles()) allOk = false;
 if (!runStep('Lint (oxlint)', 'npm run lint')) allOk = false;
 if (!runStep('בדיקות יחידה (Vitest)', 'npm run test')) allOk = false;
+if (!runStep('בדיקות מובייל + iPad', 'npm run test:layouts')) allOk = false;
 if (!runStep('TypeScript', 'npx tsc -b --pretty false')) allOk = false;
-if (!runStep('בניית production', 'npm run build')) allOk = false;
+if (!runStep('בניית production', 'npm run build', false, { ...process.env, PASS_: '' })) allOk = false;
 
 const distIndex = join(root, 'dist', 'index.html');
 if (!existsSync(distIndex)) {

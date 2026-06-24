@@ -46,8 +46,8 @@ describe('getWelcomeReply', () => {
 describe('askRobot', () => {
   it('answers how to play', () => {
     const reply = askRobot('איך משחקים?', baseContext());
-    expect(reply.text).toContain('סובבים');
-    expect(reply.mood).toBe('happy');
+    expect(reply.text).toContain('גלגל');
+    expect(reply.mood).toBe('cheer');
   });
 
   it('confirms skip is allowed', () => {

@@ -12,25 +12,36 @@ export function WelcomeScreen({ onStart, onSettings }: WelcomeScreenProps) {
     <section className="page-screen flow-screen welcome-screen">
       <div className="welcome-hero flow-card animate-in">
         <div className="welcome-hero__glow" aria-hidden />
-        <div className="welcome-hero__badge">Couple Spin</div>
+        <div className="welcome-hero__badge">Couple Spin · ערב זוגי</div>
         <h1 className="welcome-hero__title">ספין זוגי</h1>
-        <p className="welcome-hero__tag">מסובבים · מקבלים משימה · צוחקים יחד</p>
+        <p className="welcome-hero__tag">
+          מסובבים את הגלגל · מקבלים משימה או שאלה · צוחקים יחד
+        </p>
 
         <div className="welcome-hero__steps">
-          <span>🎲 מגלגלים מי מתחיל</span>
-          <span>🎡 מסובבים את הגלגל</span>
-          <span>💜 נהנים יחד</span>
+          <span>🎲 קובייה — מי מתחיל?</span>
+          <span>🎡 גלגל — מה עושים עכשיו?</span>
+          <span>💜 כיף — תמיד אפשר לדלג</span>
         </div>
 
+        <p className="welcome-hero__robot-hint">
+          <span>🤖</span>
+          <span>
+            פגשו את <strong>ספינבי</strong> — השופט הכי נחמד (לחצו על הרובוט בפינה)
+          </span>
+        </p>
+
         <button type="button" className="cta-button cta-button--hero pressable" onClick={onStart}>
-          🎡 בואו נשחק
+          🎡 בואו נשחק!
         </button>
 
         <button type="button" className="flow-link pressable" onClick={onSettings}>
           ⚙️ הגדרות
         </button>
 
-        <p className="welcome-hero__note">{total} משימות ושאלות · כולל מצב 18+ · תמיד אפשר לדלג</p>
+        <p className="welcome-hero__note">
+          {total} משימות ושאלות · אתגר 100 שאלות · מצב 18+ · בטוח ונוח לדלג
+        </p>
       </div>
     </section>
   );

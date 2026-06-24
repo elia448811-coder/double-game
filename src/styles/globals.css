@@ -231,8 +231,8 @@ h1,
 }
 
 .wheel-frame {
-  width: min(430px, 82vw);
-  height: min(430px, 82vw);
+  width: var(--layout-wheel-size, min(430px, 82vw));
+  height: var(--layout-wheel-size, min(430px, 82vw));
   padding: 12px;
   border-radius: 50%;
   background:
@@ -1786,7 +1786,7 @@ h1,
 }
 
 .setup-card {
-  width: min(520px, 100%);
+  width: min(var(--layout-card-max, 520px), 100%);
   margin: 0 auto;
 }
 
@@ -2361,7 +2361,7 @@ h1,
 }
 
 .flow-card {
-  width: min(520px, 100%);
+  width: min(var(--layout-card-max, 520px), 100%);
   margin: 0 auto;
   padding: 24px 20px;
   border-radius: 28px;

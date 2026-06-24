@@ -1,5 +1,6 @@
 import { allContent } from '../data/allContent';
 import { getQuestionBankStats } from '../data/allQuestions';
+import { meet100Questions } from '../data/meet100Questions';
 import { matureQuestions, matureTasks } from '../data/matureContent';
 import { allTasks } from '../data/allTasks';
 import type { ContentMode, CoupleTask, GameMode, TaskCategory, TaskLevel } from '../types/game';
@@ -48,6 +49,7 @@ export function filterTasks(
   advancedEnabled: boolean,
   options: {
     preferredCategory?: TaskCategory | null;
+    preferredQuestionGroup?: string | null;
     coupleOnly?: boolean;
     categoryFilter?: TaskCategory | null;
     levelOverride?: TaskLevel;
@@ -73,6 +75,13 @@ export function filterTasks(
     if (task.level === 'advanced' && !advancedEnabled) return false;
     if (options.coupleOnly && !task.isCoupleTask) return false;
     if (options.categoryFilter && task.category !== options.categoryFilter) return false;
+    if (options.preferredQuestionGroup) {
+      return (
+        task.kind === 'question' &&
+        task.questionGroup === options.preferredQuestionGroup &&
+        modeCategories.includes(task.category)
+      );
+    }
     if (options.preferredCategory) {
       return task.category === options.preferredCategory && modeCategories.includes(task.category);
     }
@@ -139,6 +148,7 @@ export function getTaskBankStats() {
 export function getFullBankStats(contentMode: ContentMode = 'mixed', mode: GameMode = 'mixed') {
   const taskStats = getTaskBankStats();
   const questionStats = getQuestionBankStats();
+  const meet100Count = meet100Questions.length;
   const matureTaskCount = matureTasks.length;
   const matureQuestionCount = matureQuestions.length;
 
@@ -161,7 +171,7 @@ export function getFullBankStats(contentMode: ContentMode = 'mixed', mode: GameM
     return { total: taskStats.total, tasks: taskStats.total, questions: 0, byCategory: taskStats.byCategory };
   }
   if (contentMode === 'questions') {
-    const questionTotal = questionStats.total + matureQuestionCount;
+    const questionTotal = questionStats.total + meet100Count + matureQuestionCount;
     return {
       total: questionTotal,
       tasks: 0,
@@ -170,9 +180,9 @@ export function getFullBankStats(contentMode: ContentMode = 'mixed', mode: GameM
     };
   }
   return {
-    total: taskStats.total + questionStats.total + matureQuestionCount,
+    total: taskStats.total + questionStats.total + meet100Count + matureQuestionCount,
     tasks: taskStats.total,
-    questions: questionStats.total + matureQuestionCount,
+    questions: questionStats.total + meet100Count + matureQuestionCount,
     byCategory: taskStats.byCategory,
   };
 }

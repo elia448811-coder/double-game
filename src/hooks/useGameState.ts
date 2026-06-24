@@ -20,7 +20,7 @@ import {
 import { checkAchievements } from '../utils/achievements';
 import { checkEndConditions } from '../utils/gameEnd';
 import { pickEasierTask, pickHarderTask } from '../utils/taskSelection';
-import { pickTaskWithFallback } from '../utils/pickTaskWithFallback';
+import { pickTaskWithFallback, spinPickOptions } from '../utils/pickTaskWithFallback';
 import {
   loadRecords,
   loadSettings,
@@ -360,7 +360,7 @@ export function useGameState() {
           prev.usedTaskIds,
           settings.advancedTasksEnabled,
           {
-            preferredCategory: segment.category,
+            ...spinPickOptions(segment),
             coupleOnly: prev.coupleTaskMode,
             contentMode: prev.contentMode,
           },
@@ -455,7 +455,7 @@ export function useGameState() {
         (s) => s.label === prev.spinCategory,
       );
       const task = pickTaskWithFallback(prev.mode, prev.level, usedTaskIds, settings.advancedTasksEnabled, {
-        preferredCategory: segment?.category ?? null,
+        ...(segment ? spinPickOptions(segment) : { preferredCategory: null, preferredQuestionGroup: null }),
         coupleOnly: prev.coupleTaskMode,
         contentMode: prev.contentMode,
       });
@@ -470,14 +470,17 @@ export function useGameState() {
       const segment = getSpinnerSegments(prev.mode, prev.contentMode).find(
         (s) => s.label === prev.spinCategory,
       );
+      const spinOpts = segment
+        ? spinPickOptions(segment)
+        : { preferredCategory: null, preferredQuestionGroup: null };
       const task =
         pickEasierTask(prev.mode, prev.level, usedTaskIds, settings.advancedTasksEnabled, {
-          preferredCategory: segment?.category ?? null,
+          ...spinOpts,
           coupleOnly: prev.coupleTaskMode,
           contentMode: prev.contentMode,
         }) ??
         pickTaskWithFallback(prev.mode, prev.level, usedTaskIds, settings.advancedTasksEnabled, {
-          preferredCategory: segment?.category ?? null,
+          ...spinOpts,
           coupleOnly: prev.coupleTaskMode,
           contentMode: prev.contentMode,
         });
@@ -492,15 +495,18 @@ export function useGameState() {
       const segment = getSpinnerSegments(prev.mode, prev.contentMode).find(
         (s) => s.label === prev.spinCategory,
       );
+      const spinOpts = segment
+        ? spinPickOptions(segment)
+        : { preferredCategory: null, preferredQuestionGroup: null };
       const harder = pickHarderTask(prev.mode, prev.level, usedTaskIds, settings.advancedTasksEnabled, {
-        preferredCategory: segment?.category ?? null,
+        ...spinOpts,
         coupleOnly: prev.coupleTaskMode,
         contentMode: prev.contentMode,
       });
       const task =
         harder ??
         pickTaskWithFallback(prev.mode, prev.level, usedTaskIds, settings.advancedTasksEnabled, {
-          preferredCategory: segment?.category ?? null,
+          ...spinOpts,
           coupleOnly: prev.coupleTaskMode,
           contentMode: prev.contentMode,
         });

@@ -152,45 +152,50 @@ export type LocalRecords = {
   totalTasks: number;
 };
 
-export const SPINNER_SEGMENTS = [
-  { label: 'מצחיק', category: 'funny' as TaskCategory, rare: false },
-  { label: 'זוגי', category: 'romantic' as TaskCategory, rare: false },
-  { label: 'אתגר', category: 'challenge' as TaskCategory, rare: false },
-  { label: 'רגוע', category: 'calm' as TaskCategory, rare: false },
+export type SpinnerSegment = {
+  label: string;
+  category: TaskCategory | null;
+  rare: boolean;
+  questionGroup?: string;
+};
+
+export const SPINNER_SEGMENTS: SpinnerSegment[] = [
+  { label: 'מצחיק', category: 'funny', rare: false },
+  { label: 'זוגי', category: 'romantic', rare: false },
+  { label: 'אתגר', category: 'challenge', rare: false },
+  { label: 'רגוע', category: 'calm', rare: false },
   { label: 'הפתעה', category: null, rare: true },
-  { label: 'תנועה', category: 'movement' as TaskCategory, rare: false },
-  { label: 'יצירה', category: 'creative' as TaskCategory, rare: false },
-  { label: 'מחמאה', category: 'romantic' as TaskCategory, rare: false },
+  { label: 'תנועה', category: 'movement', rare: false },
+  { label: 'יצירה', category: 'creative', rare: false },
+  { label: 'מחמאה', category: 'romantic', rare: false },
 ];
 
-export const QUESTION_SPINNER_SEGMENTS = [
-  { label: 'עמוק', category: 'romantic' as TaskCategory, rare: false },
-  { label: 'מצחיק', category: 'funny' as TaskCategory, rare: false },
-  { label: 'רומנטי', category: 'romantic' as TaskCategory, rare: false },
-  { label: 'עתיד', category: 'calm' as TaskCategory, rare: false },
-  { label: 'פתיחה', category: 'funny' as TaskCategory, rare: false },
-  { label: 'תקשורת', category: 'calm' as TaskCategory, rare: false },
-  { label: 'יצירתי', category: 'creative' as TaskCategory, rare: false },
-  { label: 'סיכום', category: 'calm' as TaskCategory, rare: true },
+export const QUESTION_SPINNER_SEGMENTS: SpinnerSegment[] = [
+  { label: 'עמוק', category: 'romantic', rare: false },
+  { label: 'מצחיק', category: 'funny', rare: false },
+  { label: 'רומנטי', category: 'romantic', rare: false },
+  { label: '100 שאלות', category: 'challenge', questionGroup: 'meet100', rare: false },
+  { label: 'פתיחה', category: 'funny', rare: false },
+  { label: 'תקשורת', category: 'calm', rare: false },
+  { label: 'יצירתי', category: 'creative', rare: false },
+  { label: 'סיכום', category: 'calm', rare: true },
 ];
 
-export const SPICY_SPINNER_SEGMENTS = [
-  { label: 'משימה', category: 'spicy' as TaskCategory, rare: false },
-  { label: 'שאלה', category: 'spicy' as TaskCategory, rare: false },
-  { label: 'נגיעה', category: 'spicy' as TaskCategory, rare: false },
-  { label: 'רומנטי', category: 'spicy' as TaskCategory, rare: false },
-  { label: 'הפתעה', category: 'spicy' as TaskCategory, rare: true },
-  { label: 'שיחה', category: 'spicy' as TaskCategory, rare: false },
-  { label: 'ריקוד', category: 'spicy' as TaskCategory, rare: false },
-  { label: '18+', category: 'spicy' as TaskCategory, rare: false },
+export const SPICY_SPINNER_SEGMENTS: SpinnerSegment[] = [
+  { label: 'משימה', category: 'spicy', rare: false },
+  { label: 'שאלה', category: 'spicy', rare: false },
+  { label: 'נגיעה', category: 'spicy', rare: false },
+  { label: 'רומנטי', category: 'spicy', rare: false },
+  { label: 'הפתעה', category: 'spicy', rare: true },
+  { label: 'שיחה', category: 'spicy', rare: false },
+  { label: 'ריקוד', category: 'spicy', rare: false },
+  { label: '18+', category: 'spicy', rare: false },
 ];
-
-export type SpinnerSegment = (typeof SPINNER_SEGMENTS)[number];
 
 export function getSpinnerSegments(mode: GameMode, contentMode: ContentMode): SpinnerSegment[] {
   if (mode === 'spicy') return SPICY_SPINNER_SEGMENTS;
-  if (contentMode === 'questions') return QUESTION_SPINNER_SEGMENTS;
-  return SPINNER_SEGMENTS;
+  if (contentMode === 'questions') return [...QUESTION_SPINNER_SEGMENTS];
+  return [...SPINNER_SEGMENTS];
 }
 
 export const CONTENT_MODE_LABELS: Record<ContentMode, string> = {
@@ -201,7 +206,7 @@ export const CONTENT_MODE_LABELS: Record<ContentMode, string> = {
 
 export const CONTENT_MODE_DESCRIPTIONS: Record<ContentMode, string> = {
   tasks: '180 משימות כיפיות לביצוע',
-  questions: '320 שאלות היכרות ושיחה',
+  questions: '420 שאלות היכרות ושיחה',
   mixed: 'שילוב אקראי של משימות ושאלות',
 };
 

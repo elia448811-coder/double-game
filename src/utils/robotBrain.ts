@@ -6,14 +6,26 @@ import {
   SCORING_MODE_LABELS,
 } from '../types/game';
 import type { RobotContext, RobotReply } from '../types/robot';
+import {
+  enhancedWinnerJudge,
+  getEncouragement,
+  judgeAnswerQuality,
+  judgeChemistry,
+  judgeCurrentTask,
+  judgePerformance,
+  judgeRomanticMoment,
+  judgeWhoIsFunnier,
+  smartContextHint,
+} from './robotJudge';
 import { getFullBankStats } from './taskSelection';
 
 const DEFAULT_SUGGESTIONS = [
+  '⚖️ שפוט אותנו!',
+  'ציון לערב',
   'איך משחקים?',
   'האם אפשר לדלג?',
   'מי מנצח עכשיו?',
-  'שפוט אותנו!',
-  'מה זה משימה זוגית?',
+  'מי יותר מצחיק?',
 ];
 
 type Intent = {
@@ -42,65 +54,24 @@ function currentPlayer(ctx: RobotContext): string {
   return playerName(ctx, ctx.currentPlayerIndex);
 }
 
-function scoreLeader(ctx: RobotContext): { leader: 0 | 1 | 'tie'; diff: number } {
-  const [a, b] = ctx.scores;
-  if (a > b) return { leader: 0, diff: a - b };
-  if (b > a) return { leader: 1, diff: b - a };
-  return { leader: 'tie', diff: 0 };
-}
-
 function judgeWinner(ctx: RobotContext): RobotReply {
-  if (ctx.screen === 'end' && ctx.winner !== null) {
-    if (ctx.winner === 'tie') {
-      return {
-        mood: 'judge',
-        text: '⚖️ פסק דין סופי: תיקו מושלם! שניכם ניצחתם את הערב — וזה הכי חשוב.',
-        suggestions: ['משחק חדש?', 'איך משחקים שוב?'],
-      };
-    }
-    const name = playerName(ctx, ctx.winner);
-    const other = playerName(ctx, ctx.winner === 0 ? 1 : 0);
+  if (ctx.scoringMode === 'cooperative') {
     return {
       mood: 'judge',
-      text: `⚖️ פסק דין רשמי: ${name} מנצח/ת הערב!\n\n${other} — לא נורא, הסיבוב הבא שלך. ${ctx.stats.totalCompleted} משימות בוצעו — ערב מוצלח לשניכם.`,
-      suggestions: ['שחקו שוב', 'מי היה מצחיק יותר?'],
-    };
-  }
-
-  if (ctx.scoringMode === 'cooperative') {
-  return {
-      mood: 'judge',
       text: `⚖️ במצב שיתופי אין מנצח אחד — אתם צוות!\n\nניקוד משותף: ${ctx.cooperativeScore}${ctx.effectiveTarget ? ` / ${ctx.effectiveTarget}` : ''}.\n${ctx.cooperativeScore >= (ctx.effectiveTarget ?? 999) ? 'כמעט שם! המשיכו יחד 💪' : 'עוד קצת ותשברו שיא זוגי!'}`,
-      suggestions: ['איך עובד ניקוד שיתופי?', 'האם אפשר לדלג?'],
+      suggestions: ['ציון לערב', 'האם אפשר לדלג?'],
     };
   }
 
   if (ctx.scoringMode === 'none') {
     return {
       mood: 'judge',
-      text: `⚖️ במצב בלי ניקוד אין מנצח — רק כיף!\n\nעד כה: ${ctx.stats.totalCompleted} משימות בוצעו, ${ctx.stats.totalSkipped} דילוגים.\nהמנצח האמיתי? הערב שלכם 😄`,
-      suggestions: ['איך מפעילים ניקוד?', 'מה זה מצב כיף?'],
+      text: `⚖️ במצב בלי ניקוד אין מנצח — רק כיף!\n\nעד כה: ${ctx.stats.totalCompleted} בוצעו, ${ctx.stats.totalSkipped} דילוגים.\nהמנצח האמיתי? הערב שלכם 😄`,
+      suggestions: ['ציון לערב', 'מה זה מצב כיף?'],
     };
   }
 
-  const { leader, diff } = scoreLeader(ctx);
-  if (leader === 'tie') {
-    return {
-      mood: 'judge',
-      text: `⚖️ כרגע תיקו מושלם — ${ctx.scores[0]}:${ctx.scores[1]}!\n\nאף אחד לא מוביל, והמתח רק עולה. הסיבוב הבא יכריע.`,
-      suggestions: ['מי בתור עכשיו?', 'שפוט מי מצחיק יותר'],
-    };
-  }
-
-  const winner = playerName(ctx, leader);
-  const loser = playerName(ctx, leader === 0 ? 1 : 0);
-  const targetNote = ctx.effectiveTarget ? ` (יעד: ${ctx.effectiveTarget})` : '';
-
-  return {
-    mood: 'judge',
-    text: `⚖️ פסק דין זמני: ${winner} מוביל/ה ${ctx.scores[leader]}:${ctx.scores[leader === 0 ? 1 : 0]}${targetNote}!\n\n${diff === 1 ? 'הפרש של נקודה אחת בלבד — הכל פתוח!' : `פער של ${diff} נקודות — ${loser}, זמן להתעורר 😉`}\n\n*החלטה זו ניתנת לערעור רק בצחוק.*`,
-    suggestions: ['מי בתור?', 'האם אפשר לדלג?', 'שפוט מי צודק'],
-  };
+  return enhancedWinnerJudge(ctx);
 }
 
 function judgeFairness(ctx: RobotContext, input: string): RobotReply {
@@ -110,8 +81,8 @@ function judgeFairness(ctx: RobotContext, input: string): RobotReply {
   if (aboutSkip) {
     return {
       mood: 'judge',
-      text: `⚖️ בנושא דילוגים:\n\n1. דילוג תמיד מותר — זה חלק מהמשחק.\n2. אם משימה לא נעימה — דלגו בלי רגשות אשם.\n3. ${ctx.stats.totalSkipped} דילוגים עד כה — ${ctx.stats.totalSkipped > 5 ? 'קצת הרבה, אבל זה בסדר גמור' : 'כמות סבירה לגמרי'}.\n\nפסק דין: שניכם צודקים שרוצים להרגיש בנוח. המשיכו בכיף!`,
-      suggestions: ['מי בתור?', 'משימה קשה מדי'],
+      text: `⚖️ בנושא דילוגים:\n\n1. דילוג תמיד מותר — זה חלק מהמשחק.\n2. משימה לא נעימה? דלגו בלי רגשות אשם.\n3. ${ctx.stats.totalSkipped} דילוגים עד כה — ${ctx.stats.totalSkipped > 5 ? 'קצת הרבה, אבל זה בסדר' : 'כמות סבירה'}.\n\nפסק דין: שניכם צודקים שרוצים להרגיש בנוח.`,
+      suggestions: ['מי בתור?', 'ציון לערב'],
     };
   }
 
@@ -121,99 +92,126 @@ function judgeFairness(ctx: RobotContext, input: string): RobotReply {
     const other = playerName(ctx, favored === 0 ? 1 : 0);
     return {
       mood: 'judge',
-      text: `⚖️ שמעתי את שני הצדדים (בדמיון)...\n\n${name} צודק/ת ב-60% מהמקרה.\n${other} — גם את/ה לא כל כך רחוק/ה מהאמת.\n\nהמלצת ביניים: חיבוק, משימה קלה, והלאה.`,
-      suggestions: ['מי מנצח?', 'איך משחקים?'],
+      text: `⚖️ שמעתי את שני הצדדים...\n\n**${name}** צודק/ת ב-60%.\n**${other}** — גם את/ה קרוב/ה לאמת.\n\nהמלצת ביניים: חיבוק, משימה קלה, והלאה.`,
+      suggestions: ['מי מנצח?', 'ציון לערב'],
     };
   }
 
   return {
     mood: 'judge',
-    text: `⚖️ אני שופט, לא פסיכולוג — אבל בכיף!\n\nכלל הזהב של ספין זוגי:\n• נעים לשניכם = ממשיכים\n• לא נעים = דילוג בלי בעיה\n• ויכוח = שניכם צודקים חלקית\n\nתנו לי פרטים ואשפוט יותר לעומק.`,
-    suggestions: ['מי צודק?', 'מי דילג בלי סיבה?', 'שפוט מי מנצח'],
-  };
-}
-
-function judgeFunny(ctx: RobotContext): RobotReply {
-  if (ctx.stats.funniestTaskTitle) {
-    return {
-      mood: 'excited',
-      text: `😂 לפי הרשומות: המשימה הכי מצחיקה הערב היא:\n"${ctx.stats.funniestTaskTitle}"\n\nמי שבחר אותה — טעם מעולה!`,
-      suggestions: ['מי מנצח?', 'שפוט אותנו'],
-    };
-  }
-  return {
-    mood: 'judge',
-    text: '⚖️ עדיין לא סומנה משימה כ"הכי מצחיקה". לחצו על 😂 במשימה — ואז אוכל לשפוט בצורה מדעית (לא ממש).',
-    suggestions: ['איך מסמנים מצחיקה?', 'מי מנצח?'],
+    text: `⚖️ אני שופט נחמד — לא עורך דין!\n\nכלל הזהב:\n• נעים לשניכם = ממשיכים\n• לא נעים = דילוג\n• ויכוח = שניכם צודקים חלקית\n\nתנו פרטים ואשפוט לעומק.`,
+    suggestions: ['מי צודק?', 'שפוט מי מנצח', 'ציון לערב'],
   };
 }
 
 const INTENTS: Intent[] = [
   {
     id: 'greet',
-    patterns: ['שלום', 'היי', 'הי', 'בוקר', 'ערב', 'מה נשמע', 'מה קורה', 'הלו'],
+    patterns: ['שלום', 'היי', 'הי', 'בוקר', 'ערב', 'מה נשמע', 'מה קורה', 'הלו', 'אהלן'],
     reply: () => ({
-      mood: 'happy',
-      text: 'היי! אני ספינבי 🤖 — העוזר החכם של ספין זוגי.\n\nאני יודע לענות על שאלות, להסביר את המשחק, ולשפוט (בהומור) כשיש מחלוקת.\n\nמה תרצו לדעת?',
+      mood: 'cheer',
+      text: 'היי! 👋 אני **ספינבי** — השופט הכי נחמד של ספין זוגי.\n\nאני כאן ל:\n⚖️ שיפוט הוגן (ובעיקר מצחיק)\n💬 הסבר על המשחק\n💜 עידוד כשצריך\n\nמה תרצו?',
       suggestions: DEFAULT_SUGGESTIONS,
     }),
+  },
+  {
+    id: 'encourage',
+    patterns: ['עודד', 'עידוד', 'קשה לנו', 'משעמם', 'לא בכיף', 'תחזק', 'בוא נ'],
+    weight: 2,
+    reply: (ctx) => getEncouragement(ctx),
+  },
+  {
+    id: 'grade-evening',
+    patterns: ['ציון', 'ציון לערב', 'איך אנחנו', 'איך הערב', 'דרג', 'דירוג', 'כמה נותנים'],
+    weight: 3,
+    reply: (ctx) => judgePerformance(ctx),
+  },
+  {
+    id: 'judge-task',
+    patterns: ['שפוט את המשימה', 'המשימה', 'השאלה', 'מה דעתך על', 'ענינו טוב', 'ענינו נכון', 'ביצענו טוב'],
+    weight: 3,
+    reply: (ctx, input) => {
+      if (includesAny(input, ['ענינו', 'תשובה', 'טוב', 'נכון'])) return judgeAnswerQuality(ctx, input);
+      return judgeCurrentTask(ctx);
+    },
+  },
+  {
+    id: 'chemistry',
+    patterns: ['כימיה', 'מתאימים', 'זוג טוב', 'אהבה', 'קרובים'],
+    weight: 2,
+    reply: (ctx) => judgeChemistry(ctx),
+  },
+  {
+    id: 'romantic-judge',
+    patterns: ['רומנטי', 'רומנטיקה', '18', 'spicy', 'נועל'],
+    reply: (ctx) => judgeRomanticMoment(ctx),
   },
   {
     id: 'how-to-play',
     patterns: ['איך משחקים', 'איך לשחק', 'מה עושים', 'הסבר', 'כללים', 'איך זה עובד', 'מה המשחק'],
     weight: 2,
     reply: () => ({
-      mood: 'happy',
-      text: `📖 איך משחקים:\n\n1️⃣ בוחרים מצב (מצחיק, רומנטי, מעורב...)\n2️⃣ מגדירים פורמט ורמת קושי\n3️⃣ מסובבים את הגלגל 🎡\n4️⃣ מקבלים משימה — מבצעים, מחליפים, או מדלגים\n5️⃣ צוברים נקודות (או פשוט נהנים)\n\nאין שאלות — רק משימות! ותמיד אפשר לדלג.`,
-      suggestions: ['האם אפשר לדלג?', 'איך מנצחים?', 'מה זה הפתעה?'],
+      mood: 'cheer',
+      text: `📖 **איך משחקים — בקצרה:**\n\n1️⃣ בוחרים וייב (מצחיק / רומנטי / 100 שאלות / 18+...)\n2️⃣ 🎲 קובייה — מי מתחיל\n3️⃣ 🎡 מסובבים את הגלגל\n4️⃣ משימה או שאלה — מבצעים, מחליפים, או **דילוג** (תמיד OK!)\n5️⃣ נהנים 🎉`,
+      suggestions: ['האם אפשר לדלג?', 'מה זה 100 שאלות?', 'שפוט אותנו!'],
     }),
   },
   {
     id: 'skip',
-    patterns: ['לדלג', 'דילוג', 'דלג', 'אפשר לדלג', 'חייב', 'חייבים', 'לעשות את זה'],
+    patterns: ['לדלג', 'דילוג', 'דלג', 'אפשר לדלג', 'חייב', 'חייבים'],
     weight: 2,
     reply: () => ({
       mood: 'wink',
-      text: '✅ כן! דילוג תמיד מותר.\n\nהמשחק בנוי על כיף ובטיחות. משימה לא מתאימה? דלגו בלי רגשות אשם.\n\nאפשר גם "משימה אחרת" או "קל מדי / קשה מדי" לקבל משהו אחר.',
-      suggestions: ['מי בתור?', 'שפוט אותנו', 'כמה משימות יש?'],
+      text: '✅ **כן!** דילוג תמיד מותר.\n\nהמשחק בנוי על כיף ובטיחות. לא מתאים? דלגו בלי אשמה.\n\nיש גם "משימה אחרת" ו"קל/קשה מדי".',
+      suggestions: ['מי בתור?', 'שפוט אותנו', 'ציון לערב'],
+    }),
+  },
+  {
+    id: 'meet100',
+    patterns: ['100 שאלות', 'מאה שאלות', 'אתגר 100', 'היכרות', 'meet100'],
+    weight: 2,
+    reply: () => ({
+      mood: 'happy',
+      text: '🎯 **אתגר 100 שאלות** — 100 שאלות היכרות כיפיות!\n\nבמצב שאלות, סובבו ל"100 שאלות" בגלגל.\n\nאין תשובה נכונה — רק שיחה טובה. אני שופט: **כנות מנצחת.**',
+      suggestions: ['איך משחקים?', 'האם אפשר לדלג?'],
+    }),
+  },
+  {
+    id: 'spicy-mode',
+    patterns: ['18', 'בוגר', 'spicy', 'נועל', 'מבוגרים'],
+    reply: () => ({
+      mood: 'wink',
+      text: '🔥 **מצב 18+** — תוכן נועל לזוגות בוגרים.\n\nנדרש אישור גיל · בלי לחץ · תמיד אפשר לדלג.\n\nשופט ספינבי: **רק מה שנוח לשניכם.**',
+      suggestions: ['איך משחקים?', 'האם אפשר לדלג?'],
     }),
   },
   {
     id: 'couple-task',
     patterns: ['משימה זוגית', 'זוגית', 'שנינו', 'ביחד', 'מצב זוגי'],
     reply: (ctx) => ({
-      mood: 'happy',
+      mood: 'love',
       text: ctx.coupleTaskMode
-        ? '💑 מצב משימה זוגית פעיל! כל המשימות (או רובן) מיועדות לביצוע יחד — בלי תורות.\n\nמושלם לערב רומנטי או רגוע.'
-        : '💑 משימה זוגית = שניכם מבצעים יחד.\n\nאפשר להפעיל "מצב משימה זוגית" בהגדרות המשחק. גם בלי המצב — חלק מהמשימות מסומנות כזוגיות באופן טבעי.',
-      suggestions: ['איך משחקים?', 'מה ההבדל בין מצבים?'],
-    }),
-  },
-  {
-    id: 'surprise',
-    patterns: ['הפתעה', 'סגמנט', 'קטגוריה', 'מה יוצא', 'גלגל'],
-    reply: () => ({
-      mood: 'excited',
-      text: '🎁 "הפתעה" בספינר = קטגוריה אקראית מכל הסוגים!\n\nיש לה סיכוי מעט נמוך יותר — כדי שזה באמת ירגיש כמו הפתעה.\n\nשאר הסגמנטים: מצחיק, זוגי, אתגר, רגוע, תנועה, יצירה, מחמאה.',
-      suggestions: ['כמה משימות יש?', 'איך משחקים?'],
+        ? '💑 **מצב זוגי פעיל!** משימות לשניכם — בלי תורות. מושלם לערב קרוב.'
+        : '💑 משימה זוגית = שניכם יחד.\n\nהפעילו "רק משימות/שאלות זוגיות" בהגדרות מתקדמות.',
+      suggestions: ['איך משחקים?', 'שפוט אותנו'],
     }),
   },
   {
     id: 'modes',
-    patterns: ['מצב', 'מצחיק', 'רומנטי', 'אתגר', 'רגוע', 'מעורב', 'הבדל'],
+    patterns: ['מצב', 'מצחיק', 'רומנטי', 'אתגר', 'רגוע', 'מעורב', 'הבדל', 'וייב'],
     reply: (ctx) => ({
       mood: 'neutral',
-      text: `🎭 מצבי משחק:\n\n• ${MODE_LABELS.funny} — קליל ומצחיק\n• ${MODE_LABELS.romantic}\n• ${MODE_LABELS.challenge}\n• ${MODE_LABELS.calm}\n• ${MODE_LABELS.mixed} — הכי מגוון\n\nכרגע נבחר: ${MODE_LABELS[ctx.mode]} | רמה: ${LEVEL_LABELS[ctx.level]}`,
-      suggestions: ['איך משחקים?', 'מה זה רמה מתקדמת?'],
+      text: `🎭 **מצבים:**\n\n• ${MODE_LABELS.funny}\n• ${MODE_LABELS.romantic}\n• ${MODE_LABELS.challenge}\n• ${MODE_LABELS.calm}\n• ${MODE_LABELS.mixed}\n• ${MODE_LABELS.spicy}\n\nכרגע: **${MODE_LABELS[ctx.mode]}** · ${LEVEL_LABELS[ctx.level]}`,
+      suggestions: ['מה זה 100 שאלות?', 'איך משחקים?'],
     }),
   },
   {
     id: 'format',
-    patterns: ['פורמט', 'מהיר', '30 דק', '5 דק', 'סיבובים', 'בלי ניקוד', 'כיף'],
+    patterns: ['פורמט', 'מהיר', '30 דק', '5 דק', 'סיבובים', 'בלי ניקוד', 'כיף', 'זמן'],
     reply: (ctx) => ({
       mood: 'neutral',
-      text: `⏱️ פורמטים:\n\n• ${GAME_FORMAT_LABELS.quick}\n• ${GAME_FORMAT_LABELS.normal}\n• ${GAME_FORMAT_LABELS.full}\n• ${GAME_FORMAT_LABELS.rounds}\n• ${GAME_FORMAT_LABELS.fun}\n\nכרגע: ${GAME_FORMAT_LABELS[ctx.gameFormat]} | ניקוד: ${SCORING_MODE_LABELS[ctx.scoringMode]}`,
-      suggestions: ['איך מנצחים?', 'מה זה ניקוד שיתופי?'],
+      text: `⏱️ **משך משחק:**\n\n• מהיר (~10 דק)\n• רגיל\n• בלי לחץ — ללא ניקוד\n\nכרגע: ${GAME_FORMAT_LABELS[ctx.gameFormat]} · ${SCORING_MODE_LABELS[ctx.scoringMode]}`,
+      suggestions: ['מי מנצח?', 'ציון לערב'],
     }),
   },
   {
@@ -221,106 +219,55 @@ const INTENTS: Intent[] = [
     patterns: ['ניקוד', 'נקודות', 'נקודה', 'מנצח', 'לנצח', 'יעד', 'תחרות'],
     weight: 1,
     reply: (ctx, input) => {
-      if (includesAny(input, ['מנצח', 'מנצחת', 'מוביל', 'זוכה'])) {
-        return judgeWinner(ctx);
-      }
+      if (includesAny(input, ['מנצח', 'מנצחת', 'מוביל', 'זוכה'])) return judgeWinner(ctx);
       return {
         mood: 'neutral',
-        text: `🏆 סוגי ניקוד:\n\n• תחרותי — כל משימה = נקודה לשחקן\n• שיתופי — נקודות משותפות\n• ללא ניקוד — רק הנאה\n\nכרגע: ${SCORING_MODE_LABELS[ctx.scoringMode]}\n${ctx.effectiveTarget ? `יעד: ${ctx.effectiveTarget}` : 'בלי יעד נקודות'}`,
-        suggestions: ['מי מנצח עכשיו?', 'איך משחקים?'],
+        text: `🏆 **ניקוד:**\n\n• תחרותי — נקודה למבצע\n• שיתופי — צוות\n• ללא — רק כיף\n\nכרגע: ${SCORING_MODE_LABELS[ctx.scoringMode]}`,
+        suggestions: ['מי מנצח?', 'ציון לערב'],
       };
     },
   },
   {
-    id: 'cooperative',
-    patterns: ['שיתופי', 'ביחד נקודות', 'צוות', 'שיתוף'],
-    reply: (ctx) => ({
-      mood: 'happy',
-      text: `🤝 במצב שיתופי אתם צוות אחד!\n\nכל משימה שבוצעה מוסיפה לניקוד המשותף (${ctx.cooperativeScore}${ctx.effectiveTarget ? ` / ${ctx.effectiveTarget}` : ''}).\n\nאין מנצח אחד — ניצחון משותף!`,
-      suggestions: ['מי מנצח?', 'איך משחקים?'],
-    }),
-  },
-  {
     id: 'turn',
-    patterns: ['תור', 'מי משחק', 'מי עכשיו', 'למי התור', 'תור של מי'],
+    patterns: ['תור', 'מי משחק', 'מי עכשיו', 'למי התור', 'תור של מי', 'מי בתור'],
     weight: 2,
     reply: (ctx) => {
       if (ctx.screen !== 'game') {
-        return {
-          mood: 'neutral',
-          text: 'עדיין לא במשחק פעיל — התחילו משחק ואז אוכל לומר מי בתור 😄',
-          suggestions: ['איך משחקים?'],
-        };
+        return { mood: 'cheer', text: 'עדיין לא במשחק — לחצו **בואו נשחק** ונתחיל! 🎡', suggestions: ['איך משחקים?'] };
       }
-      if (ctx.coupleTaskMode || ctx.currentTask?.isCoupleTask) {
+      if (ctx.coupleTaskMode || ctx.currentTask?.isCoupleTask || ctx.currentTask?.kind === 'question') {
         return {
-          mood: 'happy',
-          text: `💑 משימה זוגית פעילה — שניכם ${ctx.playerOneName} ו-${ctx.playerTwoName} ביחד! אין תור בודד.`,
-          suggestions: ['האם אפשר לדלג?', 'שפוט אותנו'],
+          mood: 'love',
+          text: `💑 **${ctx.playerOneName}** ו-**${ctx.playerTwoName}** — שניכם! משימה/שאלה זוגית.`,
+          suggestions: ['שפוט את המשימה', 'ציון לערב'],
         };
       }
       return {
         mood: 'wink',
-        text: `🎯 כרגע התור של: **${currentPlayer(ctx)}**!\n\n${ctx.currentTask ? 'יש משימה פתוחה — בצעו או דלגו.' : 'לחצו "סובב" לקבלת משימה חדשה.'}`,
+        text: `🎯 התור של: **${currentPlayer(ctx)}**\n\n${ctx.currentTask ? 'יש משימה פתוחה — בצעו או דלגו.' : 'לחצו "סובב"!'}`,
         suggestions: ['מי מנצח?', 'האם אפשר לדלג?'],
       };
     },
   },
   {
     id: 'task-count',
-    patterns: ['כמה משימות', 'מאגר', 'כמה יש', 'מספר משימות', 'כמה שאלות', 'כמה תוכן'],
+    patterns: ['כמה משימות', 'מאגר', 'כמה יש', 'מספר', 'כמה שאלות', 'כמה תוכן', 'מה יש במשחק'],
     reply: (ctx) => {
       const bank = getFullBankStats(ctx.contentMode ?? 'mixed');
       return {
-        mood: 'happy',
-        text: `📚 במאגר:\n\n• ${bank.tasks} משימות כיפיות\n• ${bank.questions} שאלות היכרות ושיחה\n• **סה"כ ${bank.total}** פריטים נקיים!\n\nכרגע במשחק: ${CONTENT_MODE_LABELS[ctx.contentMode ?? 'mixed']}`,
-        suggestions: ['מה זה שאלות עומק?', 'איך משחקים?'],
+        mood: 'excited',
+        text: `📚 **המאגר:**\n\n• ${bank.tasks} משימות\n• ${bank.questions} שאלות\n• **${bank.total}** סה"כ!\n\nכולל: אתגר 100 שאלות · מצב 18+ · 11 קטגוריות\n\nכרגע: ${CONTENT_MODE_LABELS[ctx.contentMode ?? 'mixed']}`,
+        suggestions: ['מה זה 100 שאלות?', 'איך משחקים?'],
       };
     },
   },
   {
     id: 'questions-mode',
-    patterns: ['שאלות', 'שאלה', 'היכרות', 'עומק', 'סוג תוכן', 'משימות או שאלות'],
+    patterns: ['שאלות', 'שאלה', 'עומק', 'סוג תוכן'],
     reply: (ctx) => ({
       mood: 'happy',
-      text: `💬 מצבי תוכן:\n\n• משימות בלבד — 180 משימות לביצוע\n• שאלות בלבד — 320 שאלות שיחה\n• מעורב — שילוב אקראי\n• מצב 18+ 🔥 — 30 משימות + 20 שאלות נועלות\n\nכרגע: **${CONTENT_MODE_LABELS[ctx.contentMode ?? 'mixed']}**\n\n100 שאלות היכרות עמוקה + 200 שאלות בקטגוריות (מצחיק, רומנטי, עתיד, תקשורת ועוד).`,
-      suggestions: ['כמה שאלות יש?', 'האם אפשר לדלג?'],
-    }),
-  },
-  {
-    id: 'advanced-level',
-    patterns: ['מתקדם', 'קשה', 'רמה', 'קליל', 'קל מדי', 'קשה מדי'],
-    reply: (ctx, input) => {
-      if (includesAny(input, ['קל מדי', 'קשה מדי', 'קליל מדי'])) {
-        return {
-          mood: 'thinking',
-          text: '💡 במשימה פתוחה לחצו "קל מדי" או "קשה מדי" — תקבלו משימה מותאמת.\n\nאו דלגו! אין חובה.',
-          suggestions: ['האם אפשר לדלג?', 'מי בתור?'],
-        };
-      }
-      return {
-        mood: 'neutral',
-        text: `📊 רמות קושי:\n\n• קליל — משימות קלות\n• רגיל — שילוב\n• מתקדם — מאתגר יותר (אפשר לכבות בהגדרות)\n\nכרגע: ${LEVEL_LABELS[ctx.level]}\nמשימות מתקדמות: ${ctx.settings.advancedTasksEnabled ? 'פעיל' : 'כבוי'}`,
-        suggestions: ['איך משחקים?', 'כמה משימות יש?'],
-      };
-    },
-  },
-  {
-    id: 'achievements',
-    patterns: ['הישג', 'הישגים', 'תג', 'גביע'],
-    reply: () => ({
-      mood: 'excited',
-      text: '🏅 הישגים נפתחים בסיום משחק:\n\n• משחק ראשון\n• בלי דילוגים\n• רצף של 5\n• 10+ משימות\n• ניצחון שיתופי\n• משחק מהיר\n\nבדקו במסך הסיום ובהגדרות!',
-      suggestions: ['איך משחקים?', 'מי מנצח?'],
-    }),
-  },
-  {
-    id: 'settings',
-    patterns: ['הגדרות', 'סאונד', 'מוזיקה', 'עיצוב', 'פונט', 'רקע', 'pwa', 'התקנה', 'אפליקציה'],
-    reply: (ctx) => ({
-      mood: 'neutral',
-      text: `⚙️ הגדרות (מסך ההגדרות):\n\n• סאונד, מוזיקת רקע, רטט\n• עיצוב ספינר: ${ctx.settings.spinnerStyle}\n• מצב כהה/בהיר, פונט, רקע\n• שמות, צבעים, אווטארים\n• שיאים והישגים\n\n💡 אפשר גם להתקין כ-PWA מהבאנר בתחתית!`,
-      suggestions: ['איך משחקים?', 'כמה משימות יש?'],
+      text: `💬 **תוכן:**\n\n• משימות · שאלות · מעורב\n• **אתגר 100 שאלות** 🎯\n• **18+** 🔥\n\nכרגע: **${CONTENT_MODE_LABELS[ctx.contentMode ?? 'mixed']}**`,
+      suggestions: ['מה זה 100 שאלות?', 'שפוט אותנו!'],
     }),
   },
   {
@@ -330,68 +277,69 @@ const INTENTS: Intent[] = [
       mood: ctx.stats.streak >= 3 ? 'excited' : 'happy',
       text:
         ctx.stats.streak >= 2
-          ? `🔥 רצף נוכחי: ${ctx.stats.streak}! שיא: ${ctx.stats.maxStreak}.\n\n${ctx.stats.streak >= 5 ? 'מדהים — אתם בטופ! 🏆' : 'המשיכו — רצף מגניב בונה אווירה!'}`
-          : `אין רצף פעיל כרגע (דילוג מאפס). שיא הרצף שלכם הערב: ${ctx.stats.maxStreak}.`,
-      suggestions: ['מי מנצח?', 'שפוט אותנו'],
+          ? `🔥 רצף: **${ctx.stats.streak}**! שיא: ${ctx.stats.maxStreak}.\n\n${ctx.stats.streak >= 5 ? 'אגדה! 🏆' : 'המשיכו!'}`
+          : `שיא רצף הערב: ${ctx.stats.maxStreak}. דילוג מאפס רצף — זה OK.`,
+      suggestions: ['ציון לערב', 'מי מנצח?'],
     }),
   },
   {
     id: 'current-task',
     patterns: ['משימה נוכחית', 'מה המשימה', 'מה לעשות', 'מה עכשיו'],
-    reply: (ctx) => {
-      if (!ctx.currentTask) {
-        return {
-          mood: 'neutral',
-          text: ctx.screen === 'game'
-            ? 'אין משימה פתוחה — סובבו את הגלגל! 🎡'
-            : 'לא במשחק כרגע. התחילו משחק קודם!',
-          suggestions: ['איך משחקים?'],
-        };
-      }
-      return {
-        mood: 'happy',
-        text: `📋 המשימה הנוכחית (${ctx.spinCategory ?? 'כללי'}):\n\n"${ctx.currentTask.description}"\n\n${ctx.currentTask.durationSeconds ? `⏱️ ${ctx.currentTask.durationSeconds} שניות` : ''}\n\nבהצלחה! או דלגו — גם זה בסדר.`,
-        suggestions: ['האם אפשר לדלג?', 'מי בתור?'],
-      };
-    },
+    reply: (ctx) => judgeCurrentTask(ctx),
   },
   {
     id: 'judge-win',
-    patterns: ['מי מנצח', 'מי מנצחת', 'מי מוביל', 'מי באוויר', 'מי זוכה', 'תשפוט מי מנצח'],
+    patterns: ['מי מנצח', 'מי מנצחת', 'מי מוביל', 'מי זוכה', 'תשפוט מי מנצח'],
     weight: 3,
     reply: (ctx) => judgeWinner(ctx),
   },
   {
     id: 'judge-funny',
-    patterns: ['מי מצחיק', 'מצחיק יותר', 'הכי מצחיק'],
+    patterns: ['מי מצחיק', 'מצחיק יותר', 'הכי מצחיק', 'יותר מצחיק'],
     weight: 2,
-    reply: (ctx) => judgeFunny(ctx),
+    reply: (ctx) => judgeWhoIsFunnier(ctx),
   },
   {
     id: 'judge',
-    patterns: ['שפוט', 'שופט', 'פסק דין', 'תשפוט', 'תחליט', 'מחלוקת', 'ויכוח', 'צודק', 'צודקת', 'לא הוגן', 'רמאי', 'רמאות'],
-    weight: 3,
+    patterns: [
+      'שפוט',
+      'שופט',
+      'פסק דין',
+      'תשפוט',
+      'תחליט',
+      'מחלוקת',
+      'ויכוח',
+      'צודק',
+      'צודקת',
+      'לא הוגן',
+      'רמאי',
+      'שפוט אותנו',
+      'שפטו',
+    ],
+    weight: 4,
     reply: (ctx, input) => {
+      if (includesAny(input, ['ציון', 'דרג', 'איך אנחנו'])) return judgePerformance(ctx);
       if (includesAny(input, ['מנצח', 'מוביל', 'זוכה'])) return judgeWinner(ctx);
-      if (includesAny(input, ['מצחיק'])) return judgeFunny(ctx);
+      if (includesAny(input, ['מצחיק', 'צחוק'])) return judgeWhoIsFunnier(ctx);
+      if (includesAny(input, ['משימה', 'שאלה', 'ענינו'])) return judgeCurrentTask(ctx);
       return judgeFairness(ctx, input);
     },
   },
   {
     id: 'thanks',
-    patterns: ['תודה', 'תודה רבה', 'מעולה', 'אחלה', 'כיף'],
+    patterns: ['תודה', 'תודה רבה', 'מעולה', 'אחלה', 'כיף', 'אהבתי'],
     reply: () => ({
-      mood: 'happy',
-      text: 'בכיף! אני כאן תמיד — לחצו עליי בכל מסך 🤖💜',
+      mood: 'love',
+      text: 'בכיף! 💜 אני תמיד כאן — לחצו על 🤖 בכל מסך.',
       suggestions: DEFAULT_SUGGESTIONS,
     }),
   },
   {
     id: 'who-are-you',
-    patterns: ['מי אתה', 'מי את', 'מה אתה', 'ספינבי', 'רובוט'],
+    patterns: ['מי אתה', 'מי את', 'מה אתה', 'ספינבי', 'רובוט', 'בוט'],
     reply: () => ({
       mood: 'wink',
-      text: 'אני **ספינבי** 🤖 — הרובוט הרשמי של ספין זוגי!\n\nתפקידים:\n• מענה על שאלות\n• הסבר כללים\n• שיפוט הוגן (ובעיקר מצחיק)\n• תמיכה רגשית דיגיטלית בדילוגים 😄',
+      text: 'אני **ספינבי** 🤖⚖️\n\nהשופט הכי נחמד, העוזר הכי חכם, והמעודד הכי טוב של ספין זוגי.\n\nשאלו, בקשו שיפוט, או לחצו על ההצעות למטה!',
       suggestions: DEFAULT_SUGGESTIONS,
     }),
   },
@@ -407,10 +355,13 @@ function scoreIntent(intent: Intent, input: string): number {
   return score;
 }
 
-export function getWelcomeReply(): RobotReply {
+export function getWelcomeReply(ctx?: RobotContext): RobotReply {
+  const hint = ctx ? smartContextHint(ctx) : null;
+  if (hint) return hint;
+
   return {
-    mood: 'happy',
-    text: 'היי! אני **ספינבי** 🤖\n\nשאלו אותי על המשחק, הבקשו שאשפוט מחלוקת, או לחצו על הצעות למטה.',
+    mood: 'cheer',
+    text: 'היי! 👋 אני **ספינבי** — השופט והחבר הכי טוב שלכם.\n\n⚖️ שאלו אותי · בקשו שיפוט · לחצו על ההצעות\n\nאני כאן לכל דבר!',
     suggestions: DEFAULT_SUGGESTIONS,
   };
 }
@@ -419,8 +370,8 @@ export function askRobot(input: string, ctx: RobotContext): RobotReply {
   const normalized = normalize(input);
   if (!normalized) {
     return {
-      mood: 'neutral',
-      text: 'לא שמעתי שאלה — כתבו משהו ואענה!',
+      mood: 'cheer',
+      text: 'לא שמעתי — כתבו שאלה או לחצו על הצעה למטה 😊',
       suggestions: DEFAULT_SUGGESTIONS,
     };
   }
@@ -438,9 +389,15 @@ export function askRobot(input: string, ctx: RobotContext): RobotReply {
     return best.intent.reply(ctx, normalized);
   }
 
+  if (ctx.screen === 'game' && ctx.currentTask) {
+    return judgeCurrentTask(ctx);
+  }
+
   return {
     mood: 'thinking',
-    text: `הממ... לא בטוח שהבנתי "${input}".\n\nאני מומחה ב:\n• כללי המשחק\n• דילוגים ומשימות זוגיות\n• ניקוד וסיבובים\n• שיפוט מחלוקות 😄\n\nנסו לנסח אחרת, או בחרו מהרשימה:`,
+    text: `הממ... "${input}" — לא בטוח.\n\nנסו:\n⚖️ "שפוט אותנו"\n📊 "ציון לערב"\n🎯 "מי בתור?"\n\nאו לחצו הצעה:`,
     suggestions: DEFAULT_SUGGESTIONS,
   };
 }
+
+export { judgePerformance, judgeCurrentTask, smartContextHint };

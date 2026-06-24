@@ -4,12 +4,24 @@ import { filterTasks, pickRandomTask } from './taskSelection';
 
 type PickOptions = {
   preferredCategory?: TaskCategory | null;
+  preferredQuestionGroup?: string | null;
   coupleOnly?: boolean;
   categoryFilter?: TaskCategory | null;
   levelOverride?: TaskLevel;
   contentMode?: ContentMode;
 };
 
+function spinPickOptions(segment: {
+  category: TaskCategory | null;
+  questionGroup?: string;
+}): PickOptions {
+  if (segment.questionGroup) {
+    return { preferredQuestionGroup: segment.questionGroup, preferredCategory: null };
+  }
+  return { preferredCategory: segment.category, preferredQuestionGroup: null };
+}
+
+export { spinPickOptions };
 export function pickTaskWithFallback(
   mode: GameMode,
   level: TaskLevel,
@@ -29,6 +41,14 @@ export function pickTaskWithFallback(
       coupleOnly: false,
     });
     if (withoutCouple) return withoutCouple;
+  }
+
+  if (options.preferredQuestionGroup) {
+    const anyGroup = pickRandomTask(mode, level, usedIds, advancedEnabled, {
+      ...options,
+      preferredQuestionGroup: null,
+    });
+    if (anyGroup) return anyGroup;
   }
 
   if (options.preferredCategory) {
