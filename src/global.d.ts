@@ -1,2 +1,2 @@
-/** סיסמת כניסה — מוזרקת ב-build מ-process.env.PASS_ */
-declare const __SITE_PASS__: string;
+/** סיסמת כניסה — מוזרקת ב-build מ-process.env.PASS_W */
+ declare const __SITE_PASS__: string;

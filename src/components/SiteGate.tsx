@@ -54,7 +54,7 @@ export function SiteGate({ onUnlock }: SiteGateProps) {
           </button>
         </form>
 
-        <p className="site-gate__hint">הגישה נשמרת לסשן הדפדפן הנוכחי בלבד</p>
+        <p className="site-gate__hint">הסיסמה נבדקת מול השרת · נדרשת בכל כניסה מחדש לאתר</p>
       </div>
     </div>
   );

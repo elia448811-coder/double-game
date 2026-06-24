@@ -1,14 +1,9 @@
 import { useCallback, useState } from 'react';
-import {
-  isSiteGateEnabled,
-  readGateSession,
-  verifySitePassword,
-  writeGateSession,
-} from '../utils/siteGate';
+import { isSiteGateEnabled, verifySitePassword } from '../utils/siteGate';
 
 export function useSiteGate() {
   const gateEnabled = isSiteGateEnabled();
-  const [unlocked, setUnlocked] = useState(() => !gateEnabled || readGateSession());
+  const [unlocked, setUnlocked] = useState(!gateEnabled);
 
   const unlock = useCallback((password: string): boolean => {
     if (!gateEnabled) {
@@ -16,7 +11,6 @@ export function useSiteGate() {
       return true;
     }
     if (verifySitePassword(password)) {
-      writeGateSession();
       setUnlocked(true);
       return true;
     }

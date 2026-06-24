@@ -5,7 +5,7 @@ import { VitePWA } from 'vite-plugin-pwa';
 export default defineConfig(({ mode }) => {
   const env = loadEnv(mode, process.cwd(), '');
   const base = env.VITE_BASE_PATH || process.env.VITE_BASE_PATH || '/';
-  const sitePass = env.PASS_ ?? '';
+  const sitePass = env.PASS_W ?? '';
 
   return {
     base,
