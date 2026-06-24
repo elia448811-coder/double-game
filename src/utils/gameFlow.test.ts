@@ -88,7 +88,7 @@ describe('content mode filtering', () => {
   it('questions mode never returns tasks', () => {
     const pool = filterTasks('mixed', 'advanced', [], true, { contentMode: 'questions' });
     expect(pool.every((t) => t.kind === 'question')).toBe(true);
-    expect(pool.length).toBe(400);
+    expect(pool.length).toBe(412);
   });
 });
 

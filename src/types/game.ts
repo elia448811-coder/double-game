@@ -177,7 +177,7 @@ export const QUESTION_SPINNER_SEGMENTS: SpinnerSegment[] = [
   { label: '100 שאלות', category: 'challenge', questionGroup: 'meet100', rare: false },
   { label: 'פתיחה', category: 'funny', rare: false },
   { label: 'תקשורת', category: 'calm', rare: false },
-  { label: 'יצירתי', category: 'creative', rare: false },
+  { label: 'קרבה', category: 'romantic', questionGroup: 'intimacy', rare: false },
   { label: 'סיכום', category: 'calm', rare: true },
 ];
 
@@ -206,7 +206,7 @@ export const CONTENT_MODE_LABELS: Record<ContentMode, string> = {
 
 export const CONTENT_MODE_DESCRIPTIONS: Record<ContentMode, string> = {
   tasks: '180 משימות כיפיות לביצוע',
-  questions: '420 שאלות היכרות ושיחה',
+  questions: '400+ שאלות חווייתיות',
   mixed: 'שילוב אקראי של משימות ושאלות',
 };
 

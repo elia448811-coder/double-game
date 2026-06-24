@@ -17,7 +17,8 @@
     "lint": "oxlint",
     "preview": "vite preview",
     "deploy:build": "node scripts/build-production.mjs",
-    "deploy:preview": "npm run deploy:build && vite preview --host"
+    "deploy:preview": "npm run deploy:build && vite preview --host",
+    "generate:questions": "node scripts/generate-from-experience.mjs"
   },
   "dependencies": {
     "react": "^19.2.7",

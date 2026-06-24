@@ -9,8 +9,9 @@ const __dirname = dirname(fileURLToPath(import.meta.url));
 const root = join(__dirname, '..');
 
 const SOURCES = [
-  { file: 'src/data/allQuestions.ts', label: 'שאלות ראשיות' },
-  { file: 'src/data/meet100Questions.ts', label: '100 שאלות היכרות עמוקה ומעניינת לזוגות' },
+  { file: 'src/data/allQuestions.ts', label: 'שאלות חווייתיות — קטגוריות' },
+  { file: 'src/data/meet100Questions.ts', label: '100 שאלות עומק' },
+  { file: 'src/data/intimacyQuestions.ts', label: 'קרבה זוגית נקייה' },
   { file: 'src/data/matureContent.ts', label: 'שאלות 18+' },
 ];
 

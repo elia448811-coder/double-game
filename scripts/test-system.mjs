@@ -34,14 +34,9 @@ function validateDataFiles() {
   process.stdout.write('\n▶ אימות קבצי נתונים...\n');
   const errors = [];
 
-  const questionsJson = join(root, 'scripts', 'questions-texts.json');
-  if (!existsSync(questionsJson)) {
-    errors.push('חסר scripts/questions-texts.json');
-  } else {
-    const texts = JSON.parse(readFileSync(questionsJson, 'utf8'));
-    if (texts.length !== 300) errors.push(`questions-texts.json: צפוי 300, קיבל ${texts.length}`);
-    const empty = texts.filter((t) => !t || String(t).trim().length < 5);
-    if (empty.length) errors.push(`${empty.length} שאלות ריקות או קצרות מדי`);
+  const experienceTxt = join(root, 'couples_questions_experience_he.txt');
+  if (!existsSync(experienceTxt)) {
+    errors.push('חסר couples_questions_experience_he.txt');
   }
 
   const allQuestionsTs = join(root, 'src', 'data', 'allQuestions.ts');
@@ -50,7 +45,22 @@ function validateDataFiles() {
   } else {
     const src = readFileSync(allQuestionsTs, 'utf8');
     const count = (src.match(/id: 'q-/g) || []).length;
-    if (count !== 300) errors.push(`allQuestions.ts: צפוי 300, קיבל ${count}`);
+    if (count < 280) errors.push(`allQuestions.ts: מעט מדי שאלות (${count})`);
+    if (!src.includes('לב אל לב')) errors.push('allQuestions.ts: חסר תוכן חווייתי');
+  }
+
+  const meet100Ts = join(root, 'src', 'data', 'meet100Questions.ts');
+  if (!existsSync(meet100Ts)) errors.push('חסר meet100Questions.ts');
+  else {
+    const n = (readFileSync(meet100Ts, 'utf8').match(/id: 'meet-/g) || []).length;
+    if (n !== 100) errors.push(`meet100Questions.ts: צפוי 100, קיבל ${n}`);
+  }
+
+  const intimacyTs = join(root, 'src', 'data', 'intimacyQuestions.ts');
+  if (!existsSync(intimacyTs)) errors.push('חסר intimacyQuestions.ts');
+  else {
+    const n = (readFileSync(intimacyTs, 'utf8').match(/id: 'intim-/g) || []).length;
+    if (n !== 20) errors.push(`intimacyQuestions.ts: צפוי 20, קיבל ${n}`);
   }
 
   const allTasksTs = join(root, 'src', 'data', 'allTasks.ts');
@@ -93,7 +103,7 @@ function validateDataFiles() {
     return false;
   }
 
-  console.log('  ✓ 300 שאלות, משימות, מסכים ורכיבים — תקין');
+  console.log('  ✓ מאגר שאלות חווייתי, משימות, מסכים ורכיבים — תקין');
   results.push({ name: 'אימות נתונים', ok: true, ms: 0 });
   return true;
 }

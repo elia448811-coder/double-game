@@ -2,20 +2,22 @@ import { describe, expect, it } from 'vitest';
 import { allContent, getContentBankStats } from '../data/allContent';
 import { allQuestions, getQuestionBankStats } from '../data/allQuestions';
 import { allTasks } from '../data/allTasks';
-import { meet100Questions } from '../data/meet100Questions';
+import { intimacyQuestions } from '../data/intimacyQuestions';
+import { meet100Questions, MEET100_GROUP_LABEL } from '../data/meet100Questions';
 import { matureQuestions, matureTasks } from '../data/matureContent';
 import { DEFAULT_SETTINGS, getSpinnerSegments, SPINNER_SEGMENTS } from '../types/game';
 import { getFullBankStats } from './taskSelection';
 
 describe('data integrity', () => {
-  it('has base, meet100 and mature content banks', () => {
+  it('has base, meet100, intimacy and mature content banks', () => {
     expect(allTasks.length).toBe(150);
-    expect(allQuestions.length).toBe(300);
+    expect(allQuestions.length).toBe(292);
     expect(meet100Questions.length).toBe(100);
+    expect(intimacyQuestions.length).toBe(20);
     expect(matureTasks.length).toBe(30);
     expect(matureQuestions.length).toBe(20);
-    expect(allContent.length).toBe(600);
-    expect(getContentBankStats().total).toBe(600);
+    expect(allContent.length).toBe(612);
+    expect(getContentBankStats().total).toBe(612);
   });
 
   it('has unique ids across all content', () => {
@@ -46,13 +48,13 @@ describe('data integrity', () => {
     }
   });
 
-  it('question groups sum to 300', () => {
+  it('question groups sum to 292 experiential questions', () => {
     const stats = getQuestionBankStats();
-    expect(stats.total).toBe(300);
+    expect(stats.total).toBe(292);
     const groupSum = Object.values(stats.byGroup).reduce((a, b) => a + b, 0);
-    expect(groupSum).toBe(300);
+    expect(groupSum).toBe(292);
     expect(stats.byGroup.deep).toBe(100);
-    expect(stats.byGroup.funny).toBe(20);
+    expect(stats.byGroup.funny).toBe(18);
     expect(stats.byGroup.summary).toBe(20);
   });
 
@@ -60,17 +62,25 @@ describe('data integrity', () => {
     expect(meet100Questions.length).toBe(100);
     for (const q of meet100Questions) {
       expect(q.questionGroup).toBe('meet100');
-      expect(q.title).toBe('100 שאלות היכרות עמוקה ומעניינת לזוגות');
+      expect(q.title).toBe(MEET100_GROUP_LABEL);
       expect(q.kind).toBe('question');
     }
     const texts = meet100Questions.map((q) => q.description);
     expect(new Set(texts).size).toBe(100);
   });
 
+  it('intimacy bank', () => {
+    expect(intimacyQuestions.length).toBe(20);
+    for (const q of intimacyQuestions) {
+      expect(q.questionGroup).toBe('intimacy');
+      expect(q.category).toBe('romantic');
+    }
+  });
+
   it('bank stats match content modes', () => {
     expect(getFullBankStats('tasks').total).toBe(180);
-    expect(getFullBankStats('questions').total).toBe(420);
-    expect(getFullBankStats('mixed').total).toBe(600);
+    expect(getFullBankStats('questions').total).toBe(432);
+    expect(getFullBankStats('mixed').total).toBe(612);
     expect(getFullBankStats('mixed', 'spicy').total).toBe(50);
     expect(getFullBankStats('tasks', 'spicy').total).toBe(30);
     expect(getFullBankStats('questions', 'spicy').total).toBe(20);
@@ -92,8 +102,8 @@ describe('data integrity', () => {
     expect(SPINNER_SEGMENTS.length).toBe(8);
     expect(SPINNER_SEGMENTS.filter((s) => s.rare).length).toBe(1);
     expect(getSpinnerSegments('mixed', 'questions').length).toBe(8);
-    expect(getSpinnerSegments('mixed', 'questions').length).toBe(8);
     expect(getSpinnerSegments('mixed', 'questions').some((s) => s.questionGroup === 'meet100')).toBe(true);
+    expect(getSpinnerSegments('mixed', 'questions').some((s) => s.questionGroup === 'intimacy')).toBe(true);
     expect(getSpinnerSegments('spicy', 'mixed').length).toBe(8);
   });
 

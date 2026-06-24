@@ -1,6 +1,7 @@
 import { allContent } from '../data/allContent';
 import { getQuestionBankStats } from '../data/allQuestions';
 import { meet100Questions } from '../data/meet100Questions';
+import { intimacyQuestions } from '../data/intimacyQuestions';
 import { matureQuestions, matureTasks } from '../data/matureContent';
 import { allTasks } from '../data/allTasks';
 import type { ContentMode, CoupleTask, GameMode, TaskCategory, TaskLevel } from '../types/game';
@@ -149,6 +150,7 @@ export function getFullBankStats(contentMode: ContentMode = 'mixed', mode: GameM
   const taskStats = getTaskBankStats();
   const questionStats = getQuestionBankStats();
   const meet100Count = meet100Questions.length;
+  const intimacyCount = intimacyQuestions.length;
   const matureTaskCount = matureTasks.length;
   const matureQuestionCount = matureQuestions.length;
 
@@ -171,7 +173,7 @@ export function getFullBankStats(contentMode: ContentMode = 'mixed', mode: GameM
     return { total: taskStats.total, tasks: taskStats.total, questions: 0, byCategory: taskStats.byCategory };
   }
   if (contentMode === 'questions') {
-    const questionTotal = questionStats.total + meet100Count + matureQuestionCount;
+    const questionTotal = questionStats.total + meet100Count + intimacyCount + matureQuestionCount;
     return {
       total: questionTotal,
       tasks: 0,
@@ -180,9 +182,9 @@ export function getFullBankStats(contentMode: ContentMode = 'mixed', mode: GameM
     };
   }
   return {
-    total: taskStats.total + questionStats.total + meet100Count + matureQuestionCount,
+    total: taskStats.total + questionStats.total + meet100Count + intimacyCount + matureQuestionCount,
     tasks: taskStats.total,
-    questions: questionStats.total + meet100Count + matureQuestionCount,
+    questions: questionStats.total + meet100Count + intimacyCount + matureQuestionCount,
     byCategory: taskStats.byCategory,
   };
 }
