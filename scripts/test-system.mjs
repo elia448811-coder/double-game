@@ -121,6 +121,7 @@ if (!runStep('בדיקות יחידה (Vitest)', 'npm run test')) allOk = false;
 if (!runStep('בדיקות מובייל + iPad', 'npm run test:layouts')) allOk = false;
 if (!runStep('TypeScript', 'npx tsc -b --pretty false')) allOk = false;
 if (!runStep('בניית production', 'npm run build')) allOk = false;
+if (!runStep('בדיקת מנגנון אימות', 'node scripts/test-auth.mjs')) allOk = false;
 
 const distIndex = join(root, 'dist', 'index.html');
 if (!existsSync(distIndex)) {
