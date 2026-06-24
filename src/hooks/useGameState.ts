@@ -12,9 +12,9 @@ import type {
   TaskLevel,
 } from '../types/game';
 import {
-  SPINNER_SEGMENTS,
   getDefaultRoundTarget,
   getEffectiveTarget,
+  getSpinnerSegments,
   getTimeLimitForFormat,
 } from '../types/game';
 import { checkAchievements } from '../utils/achievements';
@@ -124,11 +124,25 @@ export function useGameState() {
 
   const setMode = useCallback(
     (mode: GameMode) => {
-      setGame((prev) => ({ ...prev, mode }));
+      setGame((prev) => ({
+        ...prev,
+        mode,
+        ...(mode === 'spicy'
+          ? {
+              gameFormat: 'fun' as GameFormat,
+              scoringMode: 'none' as ScoringMode,
+              targetScore: 'free' as TargetScore,
+            }
+          : {}),
+      }));
       updateSettings({ lastSelectedMode: mode });
     },
     [updateSettings],
   );
+
+  const confirmMatureAge = useCallback(() => {
+    updateSettings({ matureAgeConfirmed: true });
+  }, [updateSettings]);
 
   const setLevel = useCallback(
     (level: TaskLevel) => {
@@ -275,10 +289,6 @@ export function useGameState() {
     [finalizeGame],
   );
 
-  const goToTutorial = useCallback(() => {
-    setGame((prev) => ({ ...prev, screen: 'tutorial' }));
-  }, []);
-
   const goToDiceRoll = useCallback(() => {
     setGame((prev) => ({ ...prev, screen: 'dice-roll' }));
   }, []);
@@ -341,8 +351,9 @@ export function useGameState() {
 
   const handleSpinEnd = useCallback(
     (segmentIndex: number) => {
-      const segment = SPINNER_SEGMENTS[segmentIndex];
       setGame((prev) => {
+        const segments = getSpinnerSegments(prev.mode, prev.contentMode);
+        const segment = segments[segmentIndex];
         const task = pickTaskWithFallback(
           prev.mode,
           prev.level,
@@ -440,7 +451,9 @@ export function useGameState() {
     setGame((prev) => {
       if (!prev.currentTask) return prev;
       const usedTaskIds = [...prev.usedTaskIds, prev.currentTask.id];
-      const segment = SPINNER_SEGMENTS.find((s) => s.label === prev.spinCategory);
+      const segment = getSpinnerSegments(prev.mode, prev.contentMode).find(
+        (s) => s.label === prev.spinCategory,
+      );
       const task = pickTaskWithFallback(prev.mode, prev.level, usedTaskIds, settings.advancedTasksEnabled, {
         preferredCategory: segment?.category ?? null,
         coupleOnly: prev.coupleTaskMode,
@@ -454,7 +467,9 @@ export function useGameState() {
     setGame((prev) => {
       if (!prev.currentTask) return prev;
       const usedTaskIds = [...prev.usedTaskIds, prev.currentTask.id];
-      const segment = SPINNER_SEGMENTS.find((s) => s.label === prev.spinCategory);
+      const segment = getSpinnerSegments(prev.mode, prev.contentMode).find(
+        (s) => s.label === prev.spinCategory,
+      );
       const task =
         pickEasierTask(prev.mode, prev.level, usedTaskIds, settings.advancedTasksEnabled, {
           preferredCategory: segment?.category ?? null,
@@ -474,7 +489,9 @@ export function useGameState() {
     setGame((prev) => {
       if (!prev.currentTask) return prev;
       const usedTaskIds = [...prev.usedTaskIds, prev.currentTask.id];
-      const segment = SPINNER_SEGMENTS.find((s) => s.label === prev.spinCategory);
+      const segment = getSpinnerSegments(prev.mode, prev.contentMode).find(
+        (s) => s.label === prev.spinCategory,
+      );
       const harder = pickHarderTask(prev.mode, prev.level, usedTaskIds, settings.advancedTasksEnabled, {
         preferredCategory: segment?.category ?? null,
         coupleOnly: prev.coupleTaskMode,
@@ -594,7 +611,7 @@ export function useGameState() {
     setTargetScore,
     setCustomTargetScore,
     setRoundCount,
-    goToTutorial,
+    confirmMatureAge,
     goToDiceRoll,
     startGame,
     startSpin,

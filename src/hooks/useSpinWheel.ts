@@ -1,8 +1,8 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
+import type { SoundPack, SpinnerSegment } from '../types/game';
 import { SPINNER_SEGMENTS } from '../types/game';
 import { sounds } from '../utils/sound';
 import { startSpinTicks, stopSpinTicks } from '../utils/spinTicks';
-import type { SoundPack } from '../types/game';
 
 export const SPIN_DURATION_MS = 3800;
 const MIN_ROTATIONS = 5;
@@ -11,6 +11,7 @@ const MAX_ROTATIONS = 8;
 type SpinOptions = {
   soundEnabled: boolean;
   soundPack: SoundPack;
+  segments?: SpinnerSegment[];
   onTick?: () => void;
 };
 
@@ -37,11 +38,12 @@ export function useSpinWheel(
     isSpinningRef.current = true;
     setLanded(false);
 
-    const segmentCount = SPINNER_SEGMENTS.length;
+    const segments = optionsRef.current.segments ?? SPINNER_SEGMENTS;
+    const segmentCount = segments.length;
     const segmentAngle = 360 / segmentCount;
 
     // Rare surprise segment has slightly higher chance when spinning
-    const weights = SPINNER_SEGMENTS.map((s) => (s.rare ? 0.6 : 1));
+    const weights = segments.map((s) => (s.rare ? 0.6 : 1));
     const totalWeight = weights.reduce((a, b) => a + b, 0);
     let r = Math.random() * totalWeight;
     let targetIndex = 0;

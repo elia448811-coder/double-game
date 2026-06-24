@@ -8,11 +8,12 @@ export type TaskCategory =
   | 'challenge'
   | 'calm'
   | 'creative'
-  | 'movement';
+  | 'movement'
+  | 'spicy';
 
 export type TaskLevel = 'easy' | 'normal' | 'advanced';
 
-export type GameMode = 'funny' | 'romantic' | 'challenge' | 'calm' | 'mixed';
+export type GameMode = 'funny' | 'romantic' | 'challenge' | 'calm' | 'mixed' | 'spicy';
 
 export type Theme = 'dark' | 'light';
 
@@ -82,6 +83,7 @@ export type AppSettings = {
   roundCount: number;
   coupleTaskMode: boolean;
   lastContentMode: ContentMode;
+  matureAgeConfirmed: boolean;
 };
 
 export type GameStats = {
@@ -161,6 +163,36 @@ export const SPINNER_SEGMENTS = [
   { label: 'מחמאה', category: 'romantic' as TaskCategory, rare: false },
 ];
 
+export const QUESTION_SPINNER_SEGMENTS = [
+  { label: 'עמוק', category: 'romantic' as TaskCategory, rare: false },
+  { label: 'מצחיק', category: 'funny' as TaskCategory, rare: false },
+  { label: 'רומנטי', category: 'romantic' as TaskCategory, rare: false },
+  { label: 'עתיד', category: 'calm' as TaskCategory, rare: false },
+  { label: 'פתיחה', category: 'funny' as TaskCategory, rare: false },
+  { label: 'תקשורת', category: 'calm' as TaskCategory, rare: false },
+  { label: 'יצירתי', category: 'creative' as TaskCategory, rare: false },
+  { label: 'סיכום', category: 'calm' as TaskCategory, rare: true },
+];
+
+export const SPICY_SPINNER_SEGMENTS = [
+  { label: 'משימה', category: 'spicy' as TaskCategory, rare: false },
+  { label: 'שאלה', category: 'spicy' as TaskCategory, rare: false },
+  { label: 'נגיעה', category: 'spicy' as TaskCategory, rare: false },
+  { label: 'רומנטי', category: 'spicy' as TaskCategory, rare: false },
+  { label: 'הפתעה', category: 'spicy' as TaskCategory, rare: true },
+  { label: 'שיחה', category: 'spicy' as TaskCategory, rare: false },
+  { label: 'ריקוד', category: 'spicy' as TaskCategory, rare: false },
+  { label: '18+', category: 'spicy' as TaskCategory, rare: false },
+];
+
+export type SpinnerSegment = (typeof SPINNER_SEGMENTS)[number];
+
+export function getSpinnerSegments(mode: GameMode, contentMode: ContentMode): SpinnerSegment[] {
+  if (mode === 'spicy') return SPICY_SPINNER_SEGMENTS;
+  if (contentMode === 'questions') return QUESTION_SPINNER_SEGMENTS;
+  return SPINNER_SEGMENTS;
+}
+
 export const CONTENT_MODE_LABELS: Record<ContentMode, string> = {
   tasks: 'משימות בלבד',
   questions: 'שאלות בלבד',
@@ -168,8 +200,8 @@ export const CONTENT_MODE_LABELS: Record<ContentMode, string> = {
 };
 
 export const CONTENT_MODE_DESCRIPTIONS: Record<ContentMode, string> = {
-  tasks: '150 משימות כיפיות לביצוע',
-  questions: '300 שאלות היכרות ושיחה',
+  tasks: '180 משימות כיפיות לביצוע',
+  questions: '320 שאלות היכרות ושיחה',
   mixed: 'שילוב אקראי של משימות ושאלות',
 };
 
@@ -179,6 +211,7 @@ export const MODE_LABELS: Record<GameMode, string> = {
   challenge: 'אתגר זוגי',
   calm: 'ערב רגוע',
   mixed: 'ערב מעורב',
+  spicy: '18+ 🔥',
 };
 
 export const MODE_DESCRIPTIONS: Record<GameMode, string> = {
@@ -187,6 +220,7 @@ export const MODE_DESCRIPTIONS: Record<GameMode, string> = {
   challenge: 'משימות קצת יותר מאתגרות אבל עדיין קלילות',
   calm: 'משימות שקטות, נעימות ואווירה טובה',
   mixed: 'שילוב של כל הסוגים',
+  spicy: 'תוכן נועל ופלרטטני לזוגות בוגרים — עם אישור גיל',
 };
 
 export const LEVEL_LABELS: Record<TaskLevel, string> = {
@@ -202,6 +236,7 @@ export const CATEGORY_LABELS: Record<TaskCategory, string> = {
   calm: 'רגוע',
   creative: 'יצירתי',
   movement: 'תנועה',
+  spicy: '18+',
 };
 
 export const CATEGORY_ICONS: Record<TaskCategory, string> = {
@@ -211,6 +246,7 @@ export const CATEGORY_ICONS: Record<TaskCategory, string> = {
   calm: '🌙',
   creative: '🎨',
   movement: '💃',
+  spicy: '🔥',
 };
 
 export const GAME_FORMAT_LABELS: Record<GameFormat, string> = {
@@ -291,6 +327,7 @@ export const DEFAULT_SETTINGS: AppSettings = {
   roundCount: 12,
   coupleTaskMode: false,
   lastContentMode: 'mixed',
+  matureAgeConfirmed: false,
 };
 
 export function getEffectiveTarget(state: Pick<GameState, 'targetScore' | 'customTargetScore' | 'gameFormat' | 'roundTarget'>): number | null {

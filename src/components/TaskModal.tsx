@@ -4,6 +4,8 @@ import type { CoupleTask } from '../types/game';
 import { CATEGORY_LABELS } from '../types/game';
 import { CategoryIcon } from './CategoryIcon';
 
+const EXTRA_GROUP_LABELS: Record<string, string> = {};
+
 type TaskModalProps = {
   task: CoupleTask;
   currentPlayerName: string;
@@ -34,7 +36,10 @@ export function TaskModal({
   const groupLabel =
     task.questionGroup && task.questionGroup in QUESTION_GROUP_LABELS
       ? QUESTION_GROUP_LABELS[task.questionGroup as keyof typeof QUESTION_GROUP_LABELS]
-      : task.title;
+      : task.questionGroup && task.questionGroup in EXTRA_GROUP_LABELS
+        ? EXTRA_GROUP_LABELS[task.questionGroup]
+        : task.title;
+  const isMature = task.category === 'spicy';
 
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
@@ -50,10 +55,16 @@ export function TaskModal({
       <div className={`task-modal task-modal--clean ${isQuestion ? 'task-modal--question' : ''}`}>
         <p className="task-modal__who">
           {isQuestion
-            ? '💬 שאלה לשניכם'
+            ? isMature
+              ? '🔥 שאלה 18+ — דברו בפתיחות'
+              : '💬 שאלה לשניכם'
             : isCoupleTask || task.isCoupleTask
-              ? '💑 משימה זוגית'
-              : `🎯 ${currentPlayerName}`}
+              ? isMature
+                ? '🔥 אתגר 18+ — שניכם'
+                : '💑 משימה זוגית'
+              : isMature
+                ? `🔥 ${currentPlayerName}`
+                : `🎯 ${currentPlayerName}`}
         </p>
 
         <div className="category-badge">

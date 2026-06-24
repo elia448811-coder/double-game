@@ -20,6 +20,7 @@ export const QUESTION_GROUP_LABELS = {
   creative: 'שאלות יצירתיות',
   icebreaker: 'שאלות פתיחה',
   summary: 'שאלות סיום וסיכום',
+  spicy: 'שאלות 18+',
 };
 
 const GROUPS = [

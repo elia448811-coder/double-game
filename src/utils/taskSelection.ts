@@ -1,5 +1,6 @@
 import { allContent } from '../data/allContent';
 import { getQuestionBankStats } from '../data/allQuestions';
+import { matureQuestions, matureTasks } from '../data/matureContent';
 import { allTasks } from '../data/allTasks';
 import type { ContentMode, CoupleTask, GameMode, TaskCategory, TaskLevel } from '../types/game';
 
@@ -9,6 +10,7 @@ const MODE_CATEGORIES: Record<GameMode, TaskCategory[]> = {
   challenge: ['challenge', 'movement', 'funny'],
   calm: ['calm', 'romantic', 'creative'],
   mixed: ['funny', 'romantic', 'challenge', 'calm', 'creative', 'movement'],
+  spicy: ['spicy'],
 };
 
 const LEVEL_ORDER: TaskLevel[] = ['easy', 'normal', 'advanced'];
@@ -27,8 +29,13 @@ function levelUp(level: TaskLevel): TaskLevel {
   return LEVEL_ORDER[Math.min(LEVEL_ORDER.length - 1, i + 1)];
 }
 
-function matchesContentMode(item: CoupleTask, contentMode: ContentMode): boolean {
+function matchesContentMode(item: CoupleTask, contentMode: ContentMode, mode: GameMode): boolean {
   const kind = item.kind ?? 'task';
+  if (mode === 'spicy') {
+    if (contentMode === 'tasks') return kind === 'task';
+    if (contentMode === 'questions') return kind === 'question';
+    return true;
+  }
   if (contentMode === 'tasks') return kind === 'task';
   if (contentMode === 'questions') return kind === 'question';
   return true;
@@ -58,7 +65,9 @@ export function filterTasks(
         : ['easy', 'normal', 'advanced'];
 
   return allContent.filter((task: CoupleTask) => {
-    if (!matchesContentMode(task, contentMode)) return false;
+    if (task.category === 'spicy' && mode !== 'spicy') return false;
+    if (mode === 'spicy' && task.category !== 'spicy') return false;
+    if (!matchesContentMode(task, contentMode, mode)) return false;
     if (usedIds.includes(task.id)) return false;
     if (!allowedLevels.includes(task.level)) return false;
     if (task.level === 'advanced' && !advancedEnabled) return false;
@@ -76,13 +85,7 @@ export function pickRandomTask(
   level: TaskLevel,
   usedIds: string[],
   advancedEnabled: boolean,
-  options: {
-    preferredCategory?: TaskCategory | null;
-    coupleOnly?: boolean;
-    categoryFilter?: TaskCategory | null;
-    levelOverride?: TaskLevel;
-    contentMode?: ContentMode;
-  } = {},
+  options: Parameters<typeof filterTasks>[4] = {},
 ): CoupleTask | null {
   const pool = filterTasks(mode, level, usedIds, advancedEnabled, options);
   if (pool.length === 0) {
@@ -126,26 +129,50 @@ export function getTasksByCategory(category: TaskCategory): CoupleTask[] {
 
 export function getTaskBankStats() {
   const byCategory = {} as Record<TaskCategory, number>;
-  for (const t of allTasks) {
+  for (const t of [...allTasks, ...matureTasks]) {
     const cat = t.category;
     byCategory[cat] = (byCategory[cat] ?? 0) + 1;
   }
-  return { total: allTasks.length, byCategory };
+  return { total: allTasks.length + matureTasks.length, byCategory };
 }
 
-export function getFullBankStats(contentMode: ContentMode = 'mixed') {
+export function getFullBankStats(contentMode: ContentMode = 'mixed', mode: GameMode = 'mixed') {
   const taskStats = getTaskBankStats();
   const questionStats = getQuestionBankStats();
+  const matureTaskCount = matureTasks.length;
+  const matureQuestionCount = matureQuestions.length;
+
+  if (mode === 'spicy') {
+    if (contentMode === 'tasks') {
+      return { total: matureTaskCount, tasks: matureTaskCount, questions: 0, byCategory: { spicy: matureTaskCount } as Record<TaskCategory, number> };
+    }
+    if (contentMode === 'questions') {
+      return { total: matureQuestionCount, tasks: 0, questions: matureQuestionCount, byCategory: { spicy: matureQuestionCount } as Record<TaskCategory, number> };
+    }
+    return {
+      total: matureTaskCount + matureQuestionCount,
+      tasks: matureTaskCount,
+      questions: matureQuestionCount,
+      byCategory: { spicy: matureTaskCount + matureQuestionCount } as Record<TaskCategory, number>,
+    };
+  }
+
   if (contentMode === 'tasks') {
     return { total: taskStats.total, tasks: taskStats.total, questions: 0, byCategory: taskStats.byCategory };
   }
   if (contentMode === 'questions') {
-    return { total: questionStats.total, tasks: 0, questions: questionStats.total, byCategory: questionStats.byCategory };
+    const questionTotal = questionStats.total + matureQuestionCount;
+    return {
+      total: questionTotal,
+      tasks: 0,
+      questions: questionTotal,
+      byCategory: { ...questionStats.byCategory, spicy: matureQuestionCount } as Record<TaskCategory, number>,
+    };
   }
   return {
-    total: taskStats.total + questionStats.total,
+    total: taskStats.total + questionStats.total + matureQuestionCount,
     tasks: taskStats.total,
-    questions: questionStats.total,
+    questions: questionStats.total + matureQuestionCount,
     byCategory: taskStats.byCategory,
   };
 }

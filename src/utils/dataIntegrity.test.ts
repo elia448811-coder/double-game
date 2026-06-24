@@ -1,15 +1,19 @@
 import { describe, expect, it } from 'vitest';
-import { allContent } from '../data/allContent';
+import { allContent, getContentBankStats } from '../data/allContent';
 import { allQuestions, getQuestionBankStats } from '../data/allQuestions';
 import { allTasks } from '../data/allTasks';
-import { DEFAULT_SETTINGS, SPINNER_SEGMENTS } from '../types/game';
+import { matureQuestions, matureTasks } from '../data/matureContent';
+import { DEFAULT_SETTINGS, getSpinnerSegments, SPINNER_SEGMENTS } from '../types/game';
 import { getFullBankStats } from './taskSelection';
 
 describe('data integrity', () => {
-  it('has 150 tasks and 300 questions', () => {
+  it('has base and mature content banks', () => {
     expect(allTasks.length).toBe(150);
     expect(allQuestions.length).toBe(300);
-    expect(allContent.length).toBe(450);
+    expect(matureTasks.length).toBe(30);
+    expect(matureQuestions.length).toBe(20);
+    expect(allContent.length).toBe(500);
+    expect(getContentBankStats().total).toBe(500);
   });
 
   it('has unique ids across all content', () => {
@@ -51,9 +55,12 @@ describe('data integrity', () => {
   });
 
   it('bank stats match content modes', () => {
-    expect(getFullBankStats('tasks').total).toBe(150);
-    expect(getFullBankStats('questions').total).toBe(300);
-    expect(getFullBankStats('mixed').total).toBe(450);
+    expect(getFullBankStats('tasks').total).toBe(180);
+    expect(getFullBankStats('questions').total).toBe(320);
+    expect(getFullBankStats('mixed').total).toBe(500);
+    expect(getFullBankStats('mixed', 'spicy').total).toBe(50);
+    expect(getFullBankStats('tasks', 'spicy').total).toBe(30);
+    expect(getFullBankStats('questions', 'spicy').total).toBe(20);
   });
 
   it('questions have unique wording', () => {
@@ -68,14 +75,17 @@ describe('data integrity', () => {
     }
   });
 
-  it('spinner has 8 segments', () => {
+  it('spinner has 8 segments per context', () => {
     expect(SPINNER_SEGMENTS.length).toBe(8);
     expect(SPINNER_SEGMENTS.filter((s) => s.rare).length).toBe(1);
+    expect(getSpinnerSegments('mixed', 'questions').length).toBe(8);
+    expect(getSpinnerSegments('spicy', 'mixed').length).toBe(8);
   });
 
   it('default settings include all required fields', () => {
     expect(DEFAULT_SETTINGS.lastContentMode).toBe('mixed');
     expect(DEFAULT_SETTINGS.playerOneName).toBeTruthy();
     expect(DEFAULT_SETTINGS.roundCount).toBeGreaterThan(0);
+    expect(DEFAULT_SETTINGS.matureAgeConfirmed).toBe(false);
   });
 });

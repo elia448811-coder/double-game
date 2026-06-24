@@ -4,6 +4,7 @@ import { ProgressBar } from '../components/ProgressBar';
 import { SpinnerWheel } from '../components/SpinnerWheel';
 import { TaskModal } from '../components/TaskModal';
 import { useSpinWheel } from '../hooks/useSpinWheel';
+import { getSpinnerSegments } from '../types/game';
 import type { AppSettings, ContentMode, CoupleTask, GameState } from '../types/game';
 
 type GameScreenProps = {
@@ -46,9 +47,15 @@ export function GameScreen({
     [onSpinEnd],
   );
 
+  const segments = useMemo(
+    () => getSpinnerSegments(game.mode, contentMode),
+    [game.mode, contentMode],
+  );
+
   const { spin, rotation, landed } = useSpinWheel(handleSpinEnd, {
     soundEnabled: settings.soundEnabled,
     soundPack: settings.soundPack,
+    segments,
   });
 
   const progressCurrent = useMemo(() => {
@@ -112,6 +119,7 @@ export function GameScreen({
           landed={landed}
           spinnerStyle={settings.spinnerStyle}
           gameMode={game.mode}
+          segments={segments}
           disabled={!!game.currentTask || game.isSpinning}
           onSpin={handleSpin}
         />

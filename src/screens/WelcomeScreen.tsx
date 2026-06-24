@@ -1,9 +1,13 @@
+import { getContentBankStats } from '../data/allContent';
+
 type WelcomeScreenProps = {
   onStart: () => void;
   onSettings: () => void;
 };
 
 export function WelcomeScreen({ onStart, onSettings }: WelcomeScreenProps) {
+  const { total } = getContentBankStats();
+
   return (
     <section className="page-screen flow-screen welcome-screen">
       <div className="welcome-hero flow-card animate-in">
@@ -26,7 +30,7 @@ export function WelcomeScreen({ onStart, onSettings }: WelcomeScreenProps) {
           ⚙️ הגדרות
         </button>
 
-        <p className="welcome-hero__note">450 משימות ושאלות · תמיד אפשר לדלג</p>
+        <p className="welcome-hero__note">{total} משימות ושאלות · כולל מצב 18+ · תמיד אפשר לדלג</p>
       </div>
     </section>
   );

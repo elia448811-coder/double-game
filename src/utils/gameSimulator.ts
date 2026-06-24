@@ -196,6 +196,6 @@ export function getEffectiveTargetFor(state: GameState): number | null {
   return getEffectiveTarget(state);
 }
 
-export const ALL_MODES: GameMode[] = ['funny', 'romantic', 'challenge', 'calm', 'mixed'];
+export const ALL_MODES: GameMode[] = ['funny', 'romantic', 'challenge', 'calm', 'mixed', 'spicy'];
 export const ALL_LEVELS: TaskLevel[] = ['easy', 'normal', 'advanced'];
 export const ALL_CONTENT_MODES: ContentMode[] = ['tasks', 'questions', 'mixed'];

@@ -67,9 +67,8 @@ function validateDataFiles() {
 
   const requiredScreens = [
     'src/screens/WelcomeScreen.tsx',
-    'src/screens/ModeSelectScreen.tsx',
-    'src/screens/LevelSelectScreen.tsx',
-    'src/screens/TutorialScreen.tsx',
+    'src/screens/QuickSetupScreen.tsx',
+    'src/screens/DiceRollScreen.tsx',
     'src/screens/GameScreen.tsx',
     'src/screens/EndScreen.tsx',
     'src/screens/SettingsScreen.tsx',
@@ -82,7 +81,7 @@ function validateDataFiles() {
     'src/components/TaskModal.tsx',
     'src/components/SpinnerWheel.tsx',
     'src/components/MiniRobot.tsx',
-    'src/components/ContentModeSelector.tsx',
+    'src/components/AgeGateModal.tsx',
   ];
   for (const f of requiredComponents) {
     if (!existsSync(join(root, f))) errors.push(`חסר רכיב: ${f}`);

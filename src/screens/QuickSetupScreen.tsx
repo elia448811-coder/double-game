@@ -1,7 +1,8 @@
 import { useState } from 'react';
+import { AgeGateModal } from '../components/AgeGateModal';
 import { LevelSelector } from '../components/LevelSelector';
 import type { ContentMode, GameFormat, GameMode, ScoringMode, TargetScore, TaskLevel } from '../types/game';
-import { CONTENT_MODE_LABELS, MODE_LABELS } from '../types/game';
+import { CONTENT_MODE_LABELS, MODE_DESCRIPTIONS, MODE_LABELS } from '../types/game';
 
 type QuickSetupScreenProps = {
   mode: GameMode;
@@ -9,27 +10,31 @@ type QuickSetupScreenProps = {
   contentMode: ContentMode;
   gameFormat: GameFormat;
   scoringMode: ScoringMode;
+  coupleTaskMode: boolean;
   targetScore: TargetScore;
   customTargetScore: number;
   eveningName: string;
   playerOneName: string;
   playerTwoName: string;
+  matureAgeConfirmed: boolean;
   onModeSelect: (mode: GameMode) => void;
   onLevelSelect: (level: TaskLevel) => void;
   onContentModeChange: (mode: ContentMode) => void;
   onFormatChange: (format: GameFormat) => void;
   onScoringChange: (mode: ScoringMode) => void;
+  onCoupleModeChange: (v: boolean) => void;
   onTargetScoreSelect: (score: TargetScore) => void;
   onCustomTargetChange: (n: number) => void;
   onEveningNameChange: (name: string) => void;
   onPlayerNamesChange: (p1: string, p2: string) => void;
+  onConfirmMatureAge: () => void;
   onStart: () => void;
   onBack: () => void;
 };
 
 type VibePreset = 'quick' | 'normal' | 'chill';
 
-const MODES: GameMode[] = ['funny', 'romantic', 'challenge', 'calm', 'mixed'];
+const MODES: GameMode[] = ['funny', 'romantic', 'challenge', 'calm', 'mixed', 'spicy'];
 const CONTENT_MODES: ContentMode[] = ['tasks', 'questions', 'mixed'];
 
 const MODE_EMOJI: Record<GameMode, string> = {
@@ -38,12 +43,19 @@ const MODE_EMOJI: Record<GameMode, string> = {
   challenge: '🏆',
   calm: '🌙',
   mixed: '🎲',
+  spicy: '🔥',
 };
 
 const CONTENT_EMOJI: Record<ContentMode, string> = {
   tasks: '🎯',
   questions: '💬',
   mixed: '✨',
+};
+
+const CONTENT_SHORT: Record<ContentMode, string> = {
+  tasks: 'משימות',
+  questions: 'שאלות',
+  mixed: 'הכל',
 };
 
 const VIBE_PRESETS: {
@@ -72,26 +84,32 @@ export function QuickSetupScreen({
   contentMode,
   gameFormat,
   scoringMode,
+  coupleTaskMode,
   targetScore,
   customTargetScore,
   eveningName,
   playerOneName,
   playerTwoName,
+  matureAgeConfirmed,
   onModeSelect,
   onLevelSelect,
   onContentModeChange,
   onFormatChange,
   onScoringChange,
+  onCoupleModeChange,
   onTargetScoreSelect,
   onCustomTargetChange,
   onEveningNameChange,
   onPlayerNamesChange,
+  onConfirmMatureAge,
   onStart,
   onBack,
 }: QuickSetupScreenProps) {
   const [advancedOpen, setAdvancedOpen] = useState(false);
+  const [showAgeGate, setShowAgeGate] = useState(false);
   const vibe = deriveVibe(gameFormat, scoringMode);
   const showTarget = vibe !== 'chill';
+  const isMature = mode === 'spicy';
 
   const applyVibe = (preset: (typeof VIBE_PRESETS)[number]) => {
     onFormatChange(preset.format);
@@ -99,8 +117,28 @@ export function QuickSetupScreen({
     onTargetScoreSelect(preset.target);
   };
 
+  const handleContinue = () => {
+    if (isMature && !matureAgeConfirmed) {
+      setShowAgeGate(true);
+      return;
+    }
+    onStart();
+  };
+
+  const handleAgeConfirm = () => {
+    onConfirmMatureAge();
+    setShowAgeGate(false);
+    onStart();
+  };
+
   return (
     <section className="page-screen flow-screen setup-screen">
+      <AgeGateModal
+        open={showAgeGate}
+        onConfirm={handleAgeConfirm}
+        onCancel={() => setShowAgeGate(false)}
+      />
+
       <div className="setup-card flow-card">
         <header className="flow-header setup-header">
           <button type="button" className="icon-btn" onClick={onBack} aria-label="חזרה">
@@ -109,7 +147,7 @@ export function QuickSetupScreen({
           <div>
             <p className="flow-kicker">שלב 1 מתוך 2</p>
             <h1 className="flow-title setup-title">מוכנים לשחק?</h1>
-            <p className="flow-desc setup-sub">3 בחירות — אחר כך קובייה למי מתחיל</p>
+            <p className="flow-desc setup-sub">בחרו וייב, סוג תוכן ומשך — ואז קובייה</p>
           </div>
         </header>
 
@@ -122,15 +160,19 @@ export function QuickSetupScreen({
                   key={m}
                   type="button"
                   role="listitem"
-                  className={`choice-chip ${mode === m ? 'choice-chip--on' : ''}`}
+                  className={`choice-chip ${mode === m ? 'choice-chip--on' : ''} ${m === 'spicy' ? 'choice-chip--spicy' : ''}`}
                   onClick={() => onModeSelect(m)}
                   aria-pressed={mode === m}
+                  title={MODE_DESCRIPTIONS[m]}
                 >
                   <span className="choice-chip__emoji">{MODE_EMOJI[m]}</span>
                   {MODE_LABELS[m]}
                 </button>
               ))}
             </div>
+            {isMature && (
+              <p className="setup-mature-hint">🔞 תוכן 18+ לזוגות בוגרים · נדרש אישור גיל</p>
+            )}
           </section>
 
           <section className="setup-block">
@@ -143,32 +185,42 @@ export function QuickSetupScreen({
                   className={`choice-pill ${contentMode === cm ? 'choice-pill--on' : ''}`}
                   onClick={() => onContentModeChange(cm)}
                   aria-pressed={contentMode === cm}
+                  title={CONTENT_MODE_LABELS[cm]}
                 >
                   <span>{CONTENT_EMOJI[cm]}</span>
-                  {CONTENT_MODE_LABELS[cm].replace(' בלבד', '').replace('משימות + שאלות', 'הכל')}
+                  {isMature && cm === 'questions' ? 'שאלות 18+' : CONTENT_SHORT[cm]}
                 </button>
               ))}
             </div>
           </section>
 
-          <section className="setup-block">
-            <h2 className="setup-label">כמה זמן?</h2>
-            <div className="preset-row">
-              {VIBE_PRESETS.map((preset) => (
-                <button
-                  key={preset.id}
-                  type="button"
-                  className={`preset-card ${vibe === preset.id ? 'preset-card--on' : ''}`}
-                  onClick={() => applyVibe(preset)}
-                  aria-pressed={vibe === preset.id}
-                >
-                  <span className="preset-card__emoji">{preset.emoji}</span>
-                  <strong>{preset.label}</strong>
-                  <span className="preset-card__hint">{preset.hint}</span>
-                </button>
-              ))}
-            </div>
-          </section>
+          {!isMature && (
+            <section className="setup-block">
+              <h2 className="setup-label">כמה זמן?</h2>
+              <div className="preset-row">
+                {VIBE_PRESETS.map((preset) => (
+                  <button
+                    key={preset.id}
+                    type="button"
+                    className={`preset-card ${vibe === preset.id ? 'preset-card--on' : ''}`}
+                    onClick={() => applyVibe(preset)}
+                    aria-pressed={vibe === preset.id}
+                  >
+                    <span className="preset-card__emoji">{preset.emoji}</span>
+                    <strong>{preset.label}</strong>
+                    <span className="preset-card__hint">{preset.hint}</span>
+                  </button>
+                ))}
+              </div>
+            </section>
+          )}
+
+          {isMature && (
+            <section className="setup-block setup-block--mature">
+              <p className="setup-label">מצב 18+</p>
+              <p className="flow-desc">בלי לחץ, בלי טיימר — רק אתם והקצב. תמיד אפשר לדלג.</p>
+            </section>
+          )}
 
           <section className="setup-block setup-names">
             <h2 className="setup-label">מי משחק?</h2>
@@ -198,10 +250,24 @@ export function QuickSetupScreen({
             open={advancedOpen}
             onToggle={(e) => setAdvancedOpen((e.target as HTMLDetailsElement).open)}
           >
-            <summary className="setup-advanced__toggle">הגדרות מתקדמות</summary>
+            <summary className="setup-advanced__toggle">הגדרות נוספות</summary>
             <div className="setup-advanced__body">
-              <p className="setup-label setup-label--sm">רמת תוכן</p>
-              <LevelSelector selected={level} onSelect={onLevelSelect} />
+              {!isMature && (
+                <>
+                  <p className="setup-label setup-label--sm">רמת תוכן</p>
+                  <LevelSelector selected={level} onSelect={onLevelSelect} />
+                </>
+              )}
+
+              <label className="setup-toggle">
+                <span>💑 רק משימות/שאלות זוגיות</span>
+                <input
+                  type="checkbox"
+                  checked={coupleTaskMode}
+                  onChange={(e) => onCoupleModeChange(e.target.checked)}
+                />
+                <span className="setup-toggle__slider" />
+              </label>
 
               <label className="setup-field">
                 <span>שם לערב (אופציונלי)</span>
@@ -213,7 +279,7 @@ export function QuickSetupScreen({
                 />
               </label>
 
-              {showTarget && (
+              {showTarget && !isMature && (
                 <div className="setup-field">
                   <span>יעד נקודות</span>
                   <div className="target-row">
@@ -252,10 +318,10 @@ export function QuickSetupScreen({
         </div>
 
         <div className="setup-footer">
-          <button type="button" className="cta-button pressable" onClick={onStart}>
+          <button type="button" className="cta-button pressable" onClick={handleContinue}>
             🎲 המשך לקובייה
           </button>
-          <p className="setup-hint">הקובייה תקבע מי מתחיל · תמיד אפשר לדלג</p>
+          <p className="setup-hint">תמיד אפשר לדלג · משחקים רק במה שנעים לשניכם</p>
         </div>
       </div>
     </section>

@@ -7,6 +7,7 @@ const MODE_EMOJI: Record<GameMode, string> = {
   challenge: '🏆',
   calm: '🌙',
   mixed: '🎲',
+  spicy: '🔥',
 };
 
 type ModeCardProps = {

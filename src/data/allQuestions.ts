@@ -11,7 +11,8 @@ export const QUESTION_GROUP_LABELS = {
   "money": "שאלות על כסף ועבודה",
   "creative": "שאלות יצירתיות",
   "icebreaker": "שאלות פתיחה",
-  "summary": "שאלות סיום וסיכום"
+  "summary": "שאלות סיום וסיכום",
+  "spicy": "שאלות 18+"
 } as const;
 
 export type QuestionGroup = keyof typeof QUESTION_GROUP_LABELS;
@@ -2625,7 +2626,7 @@ export const allQuestions: CoupleQuestionTask[] = [
   {
     id: 'q-261',
     title: "שאלות פתיחה",
-    description: "איזה מצב רוח יש לך עכשיו?",
+    description: "איך את/ה מרגיש/ה עכשיו — בקצבה אחת?",
     kind: 'question',
     questionGroup: 'icebreaker',
     category: 'funny',
@@ -2635,7 +2636,7 @@ export const allQuestions: CoupleQuestionTask[] = [
   {
     id: 'q-262',
     title: "שאלות פתיחה",
-    description: "מה בא לך שיהיה הערב?",
+    description: "מה הכי טוב שקרה לך היום?",
     kind: 'question',
     questionGroup: 'icebreaker',
     category: 'funny',
@@ -2645,7 +2646,7 @@ export const allQuestions: CoupleQuestionTask[] = [
   {
     id: 'q-263',
     title: "שאלות פתיחה",
-    description: "איזו קטגוריה הכי מתאימה לך כרגע?",
+    description: "מה היית רוצה לעשות הערב?",
     kind: 'question',
     questionGroup: 'icebreaker',
     category: 'funny',
@@ -2655,7 +2656,7 @@ export const allQuestions: CoupleQuestionTask[] = [
   {
     id: 'q-264',
     title: "שאלות פתיחה",
-    description: "מה יותר מתאים לך עכשיו — צחוק או רוגע?",
+    description: "מה יותר מתאים לך עכשיו — צחוק או שיחה רגועה?",
     kind: 'question',
     questionGroup: 'icebreaker',
     category: 'funny',
@@ -2665,7 +2666,7 @@ export const allQuestions: CoupleQuestionTask[] = [
   {
     id: 'q-265',
     title: "שאלות פתיחה",
-    description: "כמה אנרגיה יש לך מ-1 עד 10?",
+    description: "מ-1 עד 10 — כמה אנרגיה יש לך?",
     kind: 'question',
     questionGroup: 'icebreaker',
     category: 'funny',
@@ -2675,7 +2676,7 @@ export const allQuestions: CoupleQuestionTask[] = [
   {
     id: 'q-266',
     title: "שאלות פתיחה",
-    description: "מה יעשה לך טוב ב-10 הדקות הקרובות?",
+    description: "מה יכול לשפר לך את ה-10 דקות הקרובות?",
     kind: 'question',
     questionGroup: 'icebreaker',
     category: 'funny',
@@ -2685,7 +2686,7 @@ export const allQuestions: CoupleQuestionTask[] = [
   {
     id: 'q-267',
     title: "שאלות פתיחה",
-    description: "מה הכי בא לך לשתות עכשיו?",
+    description: "מה בא לך לשתות או לאכול עכשיו?",
     kind: 'question',
     questionGroup: 'icebreaker',
     category: 'funny',
@@ -2695,7 +2696,7 @@ export const allQuestions: CoupleQuestionTask[] = [
   {
     id: 'q-268',
     title: "שאלות פתיחה",
-    description: "איזה שיר מתאים לפתיחה?",
+    description: "איזה שיר מתאים לרגע הזה?",
     kind: 'question',
     questionGroup: 'icebreaker',
     category: 'funny',
@@ -2705,7 +2706,7 @@ export const allQuestions: CoupleQuestionTask[] = [
   {
     id: 'q-269',
     title: "שאלות פתיחה",
-    description: "איזה צבע מתאים לאווירה שלנו?",
+    description: "איזה צבע מתאר את האווירה בינינו?",
     kind: 'question',
     questionGroup: 'icebreaker',
     category: 'funny',
@@ -2725,7 +2726,7 @@ export const allQuestions: CoupleQuestionTask[] = [
   {
     id: 'q-271',
     title: "שאלות פתיחה",
-    description: "איזה כינוי ניתן לערב הזה?",
+    description: "איך היית מכנ/ה את הערב הזה?",
     kind: 'question',
     questionGroup: 'icebreaker',
     category: 'funny',
@@ -2735,7 +2736,7 @@ export const allQuestions: CoupleQuestionTask[] = [
   {
     id: 'q-272',
     title: "שאלות פתיחה",
-    description: "מה הכי טוב שקרה לך היום?",
+    description: "מה גרם לך לחייך היום?",
     kind: 'question',
     questionGroup: 'icebreaker',
     category: 'funny',
@@ -2745,7 +2746,7 @@ export const allQuestions: CoupleQuestionTask[] = [
   {
     id: 'q-273',
     title: "שאלות פתיחה",
-    description: "מה הכי מצחיק שראית לאחרונה?",
+    description: "מה ראית או שמעת לאחרונה שעשה לך טוב?",
     kind: 'question',
     questionGroup: 'icebreaker',
     category: 'funny',
@@ -2755,7 +2756,7 @@ export const allQuestions: CoupleQuestionTask[] = [
   {
     id: 'q-274',
     title: "שאלות פתיחה",
-    description: "מה בא לך שנעשה אחרי המשחק?",
+    description: "מה היית רוצה לעשות אחרי שאנסיים?",
     kind: 'question',
     questionGroup: 'icebreaker',
     category: 'funny',
@@ -2775,7 +2776,7 @@ export const allQuestions: CoupleQuestionTask[] = [
   {
     id: 'q-276',
     title: "שאלות פתיחה",
-    description: "איזה חפץ לידנו הכי מצחיק אותך?",
+    description: "איזה חפץ לידנו הכי מצחיק?",
     kind: 'question',
     questionGroup: 'icebreaker',
     category: 'funny',
@@ -2785,7 +2786,7 @@ export const allQuestions: CoupleQuestionTask[] = [
   {
     id: 'q-277',
     title: "שאלות פתיחה",
-    description: "איזו שאלה הכי מתאימה לפתיחת ערב כזה?",
+    description: "שאלת פתיחה: מה הדבר הראשון שאמרת לי כשפגשנו?",
     kind: 'question',
     questionGroup: 'icebreaker',
     category: 'funny',
@@ -2795,7 +2796,7 @@ export const allQuestions: CoupleQuestionTask[] = [
   {
     id: 'q-278',
     title: "שאלות פתיחה",
-    description: "מי לדעתך יהיה הכי מצחיק/ה הערב?",
+    description: "מי מכם יותר נוטה לצחוק בזמן לא מתאים?",
     kind: 'question',
     questionGroup: 'icebreaker',
     category: 'funny',
@@ -2805,7 +2806,7 @@ export const allQuestions: CoupleQuestionTask[] = [
   {
     id: 'q-279',
     title: "שאלות פתיחה",
-    description: "כמה דילוגים נראה לך שיהיו?",
+    description: "מה הדבר הראשון שעשיתם יחד היום?",
     kind: 'question',
     questionGroup: 'icebreaker',
     category: 'funny',
@@ -2815,7 +2816,7 @@ export const allQuestions: CoupleQuestionTask[] = [
   {
     id: 'q-280',
     title: "שאלות פתיחה",
-    description: "מה הפרס הסמלי למנצח/ת?",
+    description: "איזה רגע קטן מהיום הזה אהבתם?",
     kind: 'question',
     questionGroup: 'icebreaker',
     category: 'funny',
@@ -2825,7 +2826,7 @@ export const allQuestions: CoupleQuestionTask[] = [
   {
     id: 'q-281',
     title: "שאלות סיום וסיכום",
-    description: "איזו שאלה הכי אהבת במשחק?",
+    description: "איזו שאלה מהערב הזה הכי אהבתם?",
     kind: 'question',
     questionGroup: 'summary',
     category: 'calm',
@@ -2835,7 +2836,7 @@ export const allQuestions: CoupleQuestionTask[] = [
   {
     id: 'q-282',
     title: "שאלות סיום וסיכום",
-    description: "איזו תשובה הפתיעה אותך?",
+    description: "איזו תשובה הפתיעה אתכם?",
     kind: 'question',
     questionGroup: 'summary',
     category: 'calm',
@@ -2845,7 +2846,7 @@ export const allQuestions: CoupleQuestionTask[] = [
   {
     id: 'q-283',
     title: "שאלות סיום וסיכום",
-    description: "מה למדת עליי היום?",
+    description: "מה למדתם עליי הערב?",
     kind: 'question',
     questionGroup: 'summary',
     category: 'calm',
@@ -2855,7 +2856,7 @@ export const allQuestions: CoupleQuestionTask[] = [
   {
     id: 'q-284',
     title: "שאלות סיום וסיכום",
-    description: "מה למדת על עצמך היום?",
+    description: "מה למדתם על עצמכם?",
     kind: 'question',
     questionGroup: 'summary',
     category: 'calm',
@@ -2885,7 +2886,7 @@ export const allQuestions: CoupleQuestionTask[] = [
   {
     id: 'q-287',
     title: "שאלות סיום וסיכום",
-    description: "מה היית רוצה להוסיף למשחק הבא?",
+    description: "מה הייתם רוצים להוסיף לערב הבא?",
     kind: 'question',
     questionGroup: 'summary',
     category: 'calm',
@@ -2895,7 +2896,7 @@ export const allQuestions: CoupleQuestionTask[] = [
   {
     id: 'q-288',
     title: "שאלות סיום וסיכום",
-    description: "איזו קטגוריה הכי התאימה לנו?",
+    description: "איזה נושא הכי התאים לכם?",
     kind: 'question',
     questionGroup: 'summary',
     category: 'calm',
@@ -2905,7 +2906,7 @@ export const allQuestions: CoupleQuestionTask[] = [
   {
     id: 'q-289',
     title: "שאלות סיום וסיכום",
-    description: "מה היה הרגע הכי זוגי במשחק?",
+    description: "מה היה הרגע הכי קרוב ביניכם?",
     kind: 'question',
     questionGroup: 'summary',
     category: 'calm',
@@ -2915,7 +2916,7 @@ export const allQuestions: CoupleQuestionTask[] = [
   {
     id: 'q-290',
     title: "שאלות סיום וסיכום",
-    description: "איזה דבר קטן ניקח מהמשחק לחיים?",
+    description: "מה קטן מהערב הזה תיקחו לחיים?",
     kind: 'question',
     questionGroup: 'summary',
     category: 'calm',
@@ -2925,7 +2926,7 @@ export const allQuestions: CoupleQuestionTask[] = [
   {
     id: 'q-291',
     title: "שאלות סיום וסיכום",
-    description: "מה היית רוצה שנעשה עכשיו?",
+    description: "מה בא לכם לעשות עכשיו?",
     kind: 'question',
     questionGroup: 'summary',
     category: 'calm',
@@ -2935,7 +2936,7 @@ export const allQuestions: CoupleQuestionTask[] = [
   {
     id: 'q-292',
     title: "שאלות סיום וסיכום",
-    description: "איזו שאלה היית רוצה לשמור לסוף?",
+    description: "איזו שאלה הייתם שומרים לסוף?",
     kind: 'question',
     questionGroup: 'summary',
     category: 'calm',
@@ -2945,7 +2946,7 @@ export const allQuestions: CoupleQuestionTask[] = [
   {
     id: 'q-293',
     title: "שאלות סיום וסיכום",
-    description: "מה הציון שלך לערב הזה?",
+    description: "איך הייתם מדרגים את הערב — מ-1 עד 10?",
     kind: 'question',
     questionGroup: 'summary',
     category: 'calm',
@@ -2985,7 +2986,7 @@ export const allQuestions: CoupleQuestionTask[] = [
   {
     id: 'q-297',
     title: "שאלות סיום וסיכום",
-    description: "מה היה הרגע שהכי קירב בינינו?",
+    description: "מתי הרגשתם הכי קרובים?",
     kind: 'question',
     questionGroup: 'summary',
     category: 'calm',
@@ -2995,7 +2996,7 @@ export const allQuestions: CoupleQuestionTask[] = [
   {
     id: 'q-298',
     title: "שאלות סיום וסיכום",
-    description: "איזה שם ניתן לסבב הזה?",
+    description: "איזה שם הייתם נותנים לערב הזה?",
     kind: 'question',
     questionGroup: 'summary',
     category: 'calm',
@@ -3005,7 +3006,7 @@ export const allQuestions: CoupleQuestionTask[] = [
   {
     id: 'q-299',
     title: "שאלות סיום וסיכום",
-    description: "איזה משפט מסכם את המשחק?",
+    description: "איזה משפט מסכם את הערב?",
     kind: 'question',
     questionGroup: 'summary',
     category: 'calm',
@@ -3015,7 +3016,7 @@ export const allQuestions: CoupleQuestionTask[] = [
   {
     id: 'q-300',
     title: "שאלות סיום וסיכום",
-    description: "מתי משחקים שוב?",
+    description: "מתי נפגשים שוב?",
     kind: 'question',
     questionGroup: 'summary',
     category: 'calm',

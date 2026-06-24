@@ -22,11 +22,13 @@ export default function App() {
     setLevel,
     setGameFormat,
     setScoringMode,
+    setCoupleTaskMode,
     setContentMode,
     setPlayerNames,
     setEveningName,
     setTargetScore,
     setCustomTargetScore,
+    confirmMatureAge,
     goToDiceRoll,
     startGame,
     startSpin,
@@ -67,20 +69,24 @@ export default function App() {
           contentMode={game.contentMode}
           gameFormat={game.gameFormat}
           scoringMode={game.scoringMode}
+          coupleTaskMode={game.coupleTaskMode}
           targetScore={game.targetScore}
           customTargetScore={game.customTargetScore}
           eveningName={game.eveningName}
           playerOneName={game.playerOneName}
           playerTwoName={game.playerTwoName}
+          matureAgeConfirmed={settings.matureAgeConfirmed}
           onModeSelect={setMode}
           onLevelSelect={setLevel}
           onContentModeChange={setContentMode}
           onFormatChange={setGameFormat}
           onScoringChange={setScoringMode}
+          onCoupleModeChange={setCoupleTaskMode}
           onTargetScoreSelect={setTargetScore}
           onCustomTargetChange={setCustomTargetScore}
           onEveningNameChange={setEveningName}
           onPlayerNamesChange={setPlayerNames}
+          onConfirmMatureAge={confirmMatureAge}
           onStart={goToDiceRoll}
           onBack={() => navigate('welcome')}
         />
@@ -128,7 +134,7 @@ export default function App() {
           settings={settings}
           onNewGame={newGame}
           onPlayAgain={playAgain}
-          onHome={newGame}
+          onHome={() => navigate('welcome')}
         />
       )}
 
