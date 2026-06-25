@@ -8,10 +8,20 @@ type AuthGuardProps = {
 
 /** Wraps the app — content is shown only after server-side password verification. */
 export function AuthGuard({ children }: AuthGuardProps) {
-  const { gateEnabled, unlocked, unlock, checking } = useSiteGate();
+  const { gateEnabled, unlocked, unlock, checking, rateLimited } = useSiteGate();
+
+  if (gateEnabled && checking && !unlocked) {
+    return (
+      <div className="site-gate site-gate--loading" dir="rtl">
+        <div className="site-gate__card">
+          <p className="site-gate__desc">בודק הרשאה...</p>
+        </div>
+      </div>
+    );
+  }
 
   if (gateEnabled && !unlocked) {
-    return <SiteGate onUnlock={unlock} checking={checking} />;
+    return <SiteGate onUnlock={unlock} checking={checking} rateLimited={rateLimited} />;
   }
 
   return <>{children}</>;

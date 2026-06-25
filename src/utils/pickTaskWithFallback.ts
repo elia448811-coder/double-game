@@ -1,4 +1,4 @@
-import { allContent } from '../data/allContent';
+import { getAllContent } from '../data/allContent';
 import type { ContentMode, CoupleTask, GameMode, TaskCategory, TaskLevel } from '../types/game';
 import { filterTasks, pickRandomTask } from './taskSelection';
 
@@ -62,11 +62,11 @@ export function pickTaskWithFallback(
   const pool = filterTasks(mode, level, [], advancedEnabled, { ...options, coupleOnly: false });
   if (pool.length > 0) return pool[Math.floor(Math.random() * pool.length)];
 
-  const modePool = allContent.filter((c) => {
+  const modePool = getAllContent().filter((c) => {
     const kind = c.kind ?? 'task';
     if (options.contentMode === 'tasks') return kind === 'task';
     if (options.contentMode === 'questions') return kind === 'question';
     return true;
   });
-  return modePool[0] ?? allContent[0];
+  return modePool[0] ?? getAllContent()[0];
 }

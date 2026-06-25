@@ -1,10 +1,27 @@
-import { useCallback, useState } from 'react';
-import { isSiteGateEnabled, verifySitePassword } from '../utils/siteGate';
+import { useCallback, useEffect, useState } from 'react';
+import { isSiteGateEnabled, restoreAuthSession, verifySitePassword } from '../utils/siteGate';
 
 export function useSiteGate() {
   const gateEnabled = isSiteGateEnabled();
   const [unlocked, setUnlocked] = useState(!gateEnabled);
-  const [checking, setChecking] = useState(false);
+  const [checking, setChecking] = useState(gateEnabled);
+  const [rateLimited, setRateLimited] = useState(false);
+
+  useEffect(() => {
+    if (!gateEnabled) return;
+
+    let cancelled = false;
+    (async () => {
+      const ok = await restoreAuthSession();
+      if (cancelled) return;
+      setUnlocked(ok);
+      setChecking(false);
+    })();
+
+    return () => {
+      cancelled = true;
+    };
+  }, [gateEnabled]);
 
   const unlock = useCallback(async (password: string): Promise<boolean> => {
     if (!gateEnabled) {
@@ -13,14 +30,19 @@ export function useSiteGate() {
     }
 
     setChecking(true);
+    setRateLimited(false);
     try {
-      const ok = await verifySitePassword(password);
-      if (ok) setUnlocked(true);
-      return ok;
+      const result = await verifySitePassword(password);
+      if (result.rateLimited) {
+        setRateLimited(true);
+        return false;
+      }
+      if (result.ok) setUnlocked(true);
+      return result.ok;
     } finally {
       setChecking(false);
     }
   }, [gateEnabled]);
 
-  return { gateEnabled, unlocked, unlock, checking };
+  return { gateEnabled, unlocked, unlock, checking, rateLimited };
 }

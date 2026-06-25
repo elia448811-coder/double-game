@@ -3,9 +3,10 @@ import { useState, type FormEvent } from 'react';
 type SiteGateProps = {
   onUnlock: (password: string) => Promise<boolean>;
   checking?: boolean;
+  rateLimited?: boolean;
 };
 
-export function SiteGate({ onUnlock, checking = false }: SiteGateProps) {
+export function SiteGate({ onUnlock, checking = false, rateLimited = false }: SiteGateProps) {
   const [password, setPassword] = useState('');
   const [error, setError] = useState(false);
   const [networkError, setNetworkError] = useState(false);
@@ -65,6 +66,9 @@ export function SiteGate({ onUnlock, checking = false }: SiteGateProps) {
             disabled={checking}
           />
           {error && <p className="site-gate__error">סיסמה שגויה — נסו שוב</p>}
+          {rateLimited && (
+            <p className="site-gate__error">יותר מדי ניסיונות — המתינו כ-15 דקות ונסו שוב</p>
+          )}
           {networkError && (
             <p className="site-gate__error">לא הצלחנו לבדוק — בדקו חיבור לאינטרנט</p>
           )}
@@ -78,7 +82,7 @@ export function SiteGate({ onUnlock, checking = false }: SiteGateProps) {
         </form>
 
         <p className="site-gate__hint">
-          הסיסמה נבדקת בשרת מאובטח · לא נשמרת בקוד האתר · נדרשת בכל כניסה מחדש
+          הסיסמה נבדקת בשרת מאובטח · לא נשמרת בקוד · סשן חתום ל-24 שעות (לכל טאב)
         </p>
       </div>
     </div>

@@ -3,9 +3,10 @@ import { allTasks } from './allTasks';
 import { intimacyQuestions } from './intimacyQuestions';
 import { meet100Questions } from './meet100Questions';
 import { matureQuestions, matureTasks } from './matureContent';
+import { getCustomCoupleTasks } from '../utils/customContent';
 import type { ContentKind, CoupleTask } from '../types/game';
 
-export const allContent: CoupleTask[] = [
+const builtInContent: CoupleTask[] = [
   ...allTasks,
   ...allQuestions,
   ...meet100Questions,
@@ -13,6 +14,14 @@ export const allContent: CoupleTask[] = [
   ...matureTasks,
   ...matureQuestions,
 ];
+
+/** מאגר מלא כולל תוכן מותאם אישית מה-localStorage */
+export function getAllContent(): CoupleTask[] {
+  return [...builtInContent, ...getCustomCoupleTasks()];
+}
+
+/** @deprecated השתמשו ב-getAllContent() — נשמר לתאימות */
+export const allContent: CoupleTask[] = builtInContent;
 
 export function isQuestion(item: CoupleTask): boolean {
   return item.kind === 'question';
@@ -23,10 +32,18 @@ export function contentKind(item: CoupleTask): ContentKind {
 }
 
 export function getContentBankStats() {
-  const tasks = allTasks.length + matureTasks.length;
+  const custom = getCustomCoupleTasks();
+  const customTasks = custom.filter((c) => (c.kind ?? 'task') === 'task').length;
+  const customQuestions = custom.filter((c) => c.kind === 'question').length;
+
+  const tasks = allTasks.length + matureTasks.length + customTasks;
   const questions =
-    allQuestions.length + meet100Questions.length + intimacyQuestions.length + matureQuestions.length;
-  return { tasks, questions, total: tasks + questions };
+    allQuestions.length +
+    meet100Questions.length +
+    intimacyQuestions.length +
+    matureQuestions.length +
+    customQuestions;
+  return { tasks, questions, total: tasks + questions, custom: custom.length };
 }
 
 export function isMatureContent(item: CoupleTask): boolean {

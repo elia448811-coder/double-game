@@ -69,6 +69,12 @@ function validateWorkerSource() {
   if (!worker.includes('timingSafeEqual')) {
     fail('worker/index.js חייב timingSafeEqual');
   }
+  if (!worker.includes('createSessionToken') || !worker.includes('/session')) {
+    fail('worker/index.js חייב session token + /session endpoint');
+  }
+  if (!worker.includes('rateByIp') || !worker.includes('rate_limited')) {
+    fail('worker/index.js חייב rate limiting');
+  }
   if (!worker.includes('env.PASS_W')) {
     fail('worker/index.js חייב env.PASS_W');
   }
@@ -82,6 +88,9 @@ function validateSiteGateSource() {
   const siteGate = read('src/utils/siteGate.ts');
   if (!siteGate.includes('/verify')) {
     fail('siteGate.ts חייב לקרוא ל-/verify');
+  }
+  if (!siteGate.includes('/session') || !siteGate.includes('sessionStorage')) {
+    fail('siteGate.ts חייב session token + sessionStorage');
   }
   if (siteGate.includes('PASS_W')) {
     fail('siteGate.ts לא צריך להכיל PASS_W');
@@ -119,6 +128,18 @@ async function probeLiveWorker() {
       fail(`Worker /verify עם סיסמה שגויה: צפוי 401/503, קיבל ${bad.status}`);
     } else {
       notes.push('Worker /verify דוחה סיסמה שגויה כצפוי');
+    }
+
+    const noToken = await fetch(`${url}/session`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ token: '' }),
+      signal: AbortSignal.timeout(8000),
+    });
+    if (noToken.status !== 401 && noToken.status !== 503) {
+      fail(`Worker /session ללא token: צפוי 401/503, קיבל ${noToken.status}`);
+    } else {
+      notes.push('Worker /session דוחה token ריק');
     }
   } catch (e) {
     fail(`Worker לא נגיש: ${e.message}`);

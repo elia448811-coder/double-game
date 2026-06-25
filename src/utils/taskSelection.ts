@@ -1,4 +1,4 @@
-import { allContent } from '../data/allContent';
+import { getAllContent } from '../data/allContent';
 import { getQuestionBankStats } from '../data/allQuestions';
 import { meet100Questions } from '../data/meet100Questions';
 import { intimacyQuestions } from '../data/intimacyQuestions';
@@ -67,7 +67,7 @@ export function filterTasks(
         ? ['easy', 'normal']
         : ['easy', 'normal', 'advanced'];
 
-  return allContent.filter((task: CoupleTask) => {
+  return getAllContent().filter((task: CoupleTask) => {
     if (task.category === 'spicy' && mode !== 'spicy') return false;
     if (mode === 'spicy' && task.category !== 'spicy') return false;
     if (!matchesContentMode(task, contentMode, mode)) return false;
@@ -134,7 +134,7 @@ export function pickHarderTask(
 }
 
 export function getTasksByCategory(category: TaskCategory): CoupleTask[] {
-  return allContent.filter((t: CoupleTask) => t.category === category);
+  return getAllContent().filter((t: CoupleTask) => t.category === category);
 }
 
 export function getTaskBankStats() {

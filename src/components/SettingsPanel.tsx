@@ -1,3 +1,4 @@
+import { CustomContentPanel } from './CustomContentPanel';
 import { loadHistory, loadRecords, loadUnlockedAchievements } from '../utils/storage';
 import { ACHIEVEMENTS, AVATAR_OPTIONS, PLAYER_COLORS } from '../types/game';
 import type { AnimationStyle, AppSettings, BgTheme, FontChoice, SoundPack, SpinnerStyle } from '../types/game';
@@ -153,6 +154,8 @@ export function SettingsPanel({ settings, onUpdate, onResetScores, onBack }: Set
           ))}
         </div>
       </div>
+
+      <CustomContentPanel matureAgeConfirmed={settings.matureAgeConfirmed} />
 
       <div className="settings-group records-box">
         <span className="settings-label">שיאים מקומיים</span>
