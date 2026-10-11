@@ -4,9 +4,17 @@ let audioCtx: AudioContext | null = null;
 
 function getCtx(): AudioContext | null {
   if (typeof window === 'undefined') return null;
-  if (!audioCtx) audioCtx = new AudioContext();
-  if (audioCtx.state === 'suspended') void audioCtx.resume();
-  return audioCtx;
+  const Audio = window.AudioContext ?? (window as Window & { webkitAudioContext?: typeof AudioContext }).webkitAudioContext;
+  if (!Audio) return null;
+  try {
+    if (!audioCtx || audioCtx.state === 'closed') audioCtx = new Audio();
+    if (audioCtx.state === 'suspended') void audioCtx.resume().catch(() => {});
+    return audioCtx;
+  } catch {
+    // Audio is optional; unavailable devices must still be able to play.
+    audioCtx = null;
+    return null;
+  }
 }
 
 function tone(
@@ -19,17 +27,21 @@ function tone(
   const ctx = getCtx();
   if (!ctx) return;
 
-  const vol = pack === 'soft' ? volume * 0.5 : pack === 'playful' ? volume * 1.2 : volume;
-  const osc = ctx.createOscillator();
-  const gain = ctx.createGain();
-  osc.type = type;
-  osc.frequency.value = freq;
-  gain.gain.setValueAtTime(vol, ctx.currentTime);
-  gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + duration);
-  osc.connect(gain);
-  gain.connect(ctx.destination);
-  osc.start();
-  osc.stop(ctx.currentTime + duration);
+  try {
+    const vol = pack === 'soft' ? volume * 0.5 : pack === 'playful' ? volume * 1.2 : volume;
+    const osc = ctx.createOscillator();
+    const gain = ctx.createGain();
+    osc.type = type;
+    osc.frequency.value = freq;
+    gain.gain.setValueAtTime(vol, ctx.currentTime);
+    gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + duration);
+    osc.connect(gain);
+    gain.connect(ctx.destination);
+    osc.start();
+    osc.stop(ctx.currentTime + duration);
+  } catch {
+    // A browser may expose the API while refusing access to audio hardware.
+  }
 }
 
 export const sounds = {
@@ -59,14 +71,18 @@ export function startBackgroundMusic(enabled: boolean) {
   if (!enabled) return;
   const ctx = getCtx();
   if (!ctx) return;
-  musicOsc = ctx.createOscillator();
-  const gain = ctx.createGain();
-  musicOsc.type = 'sine';
-  musicOsc.frequency.value = 174;
-  gain.gain.value = 0.012;
-  musicOsc.connect(gain);
-  gain.connect(ctx.destination);
-  musicOsc.start();
+  try {
+    musicOsc = ctx.createOscillator();
+    const gain = ctx.createGain();
+    musicOsc.type = 'sine';
+    musicOsc.frequency.value = 174;
+    gain.gain.value = 0.012;
+    musicOsc.connect(gain);
+    gain.connect(ctx.destination);
+    musicOsc.start();
+  } catch {
+    musicOsc = null;
+  }
 }
 
 export function stopBackgroundMusic() {

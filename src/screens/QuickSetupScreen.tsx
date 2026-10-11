@@ -175,28 +175,16 @@ export function QuickSetupScreen({
           </div>
         </header>
 
-        <nav className="setup-steps" aria-label="שלבי הכנה">
-          <div className="setup-step setup-step--on">
-            <span className="setup-step__num">1</span>
-            סוג הערב
-          </div>
-          <div className="setup-step setup-step--on">
-            <span className="setup-step__num">2</span>
-            תוכן
-          </div>
-          <div className="setup-step setup-step--on">
-            <span className="setup-step__num">3</span>
-            זמן
-          </div>
-          <div className="setup-step">
-            <span className="setup-step__num">4</span>
-            שחקנים
-          </div>
+        <nav className="setup-steps" aria-label="מעבר לבחירות הערב">
+          <a className="setup-step" href="#setup-mood"><span className="setup-step__num">1</span>סוג הערב</a>
+          <a className="setup-step" href="#setup-content"><span className="setup-step__num">2</span>תוכן</a>
+          <a className="setup-step" href="#setup-duration"><span className="setup-step__num">3</span>קצב</a>
+          <a className="setup-step" href="#setup-players"><span className="setup-step__num">4</span>שחקנים</a>
         </nav>
 
         <div className="setup-body">
           {presets.length > 0 && onApplyPreset && (
-            <section className="setup-block">
+            <section className="setup-block setup-block--quick">
               <h2 className="setup-label">התחלה מהירה</h2>
               <div className="chip-scroll" role="group" aria-label="התחלה מהירה">
                 {presets.map((preset) => (
@@ -213,8 +201,8 @@ export function QuickSetupScreen({
             </section>
           )}
 
-          <section className="setup-block">
-            <h2 className="setup-label">סוג הערב</h2>
+          <section id="setup-mood" className="setup-block setup-block--moods" aria-labelledby="setup-mood-title">
+            <h2 id="setup-mood-title" className="setup-label">איזו אווירה מתאימה לכם?</h2>
             <div className="option-grid" role="group" aria-label="סוג הערב">
               {MODES.map((m) => (
                 <button
@@ -236,7 +224,7 @@ export function QuickSetupScreen({
             )}
           </section>
 
-          <section className="setup-block">
+          <section id="setup-content" className="setup-block setup-block--compact">
             <h2 className="setup-label">סוג התוכן</h2>
             <div className="option-grid">
               {CONTENT_MODES.map((cm) => (
@@ -259,8 +247,8 @@ export function QuickSetupScreen({
           </section>
 
           {!isMature && (
-            <section className="setup-block">
-              <h2 className="setup-label">משך המשחק</h2>
+            <section id="setup-duration" className="setup-block setup-block--compact">
+              <h2 className="setup-label">הקצב שלכם</h2>
               <div className="option-grid">
                 {VIBE_PRESETS.map((preset) => (
                   <button
@@ -280,13 +268,13 @@ export function QuickSetupScreen({
           )}
 
           {isMature && (
-            <section className="setup-block setup-block--mature">
+            <section id="setup-duration" className="setup-block setup-block--mature">
               <p className="setup-label">מצב 18+</p>
               <p className="flow-desc">בלי לחץ, בלי טיימר — רק אתם והקצב. תמיד אפשר לדלג.</p>
             </section>
           )}
 
-          <section className="setup-block setup-names">
+          <section id="setup-players" className="setup-block setup-names">
             <h2 className="setup-label">מי משחק?</h2>
             <div className="name-row">
               <input
@@ -380,16 +368,15 @@ export function QuickSetupScreen({
             </div>
           </details>
         </div>
-
-        <div className="setup-footer">
-          <button type="button" className="cta-button pressable" onClick={handleContinue}>
-            הכל מוכן — ממשיכים
-          </button>
-          <p className="setup-summary">
-            {MODE_LABELS[mode]} · {CONTENT_SHORT[contentMode]} ·{' '}
-            {isMature ? 'בלי הגבלת זמן' : VIBE_PRESETS.find((p) => p.id === vibe)?.hint}
-          </p>
-        </div>
+      </div>
+      <div className="setup-footer">
+        <button type="button" className="cta-button pressable" onClick={handleContinue}>
+          הכל מוכן — ממשיכים
+        </button>
+        <p className="setup-summary">
+          {MODE_LABELS[mode]} · {CONTENT_SHORT[contentMode]} ·{' '}
+          {isMature ? 'בלי הגבלת זמן' : VIBE_PRESETS.find((p) => p.id === vibe)?.hint}
+        </p>
       </div>
     </section>
   );

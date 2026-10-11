@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react';
+import { useMemo, useState, type KeyboardEvent } from 'react';
 import { ConfettiEffect } from '../components/ConfettiEffect';
 import { StatsSummary } from '../components/GameHeader';
 import { ACHIEVEMENTS, END_PHRASES } from '../types/game';
@@ -18,6 +18,7 @@ type EndScreenProps = {
 
 export function EndScreen({ game, settings, onNewGame, onPlayAgain, onHome }: EndScreenProps) {
   const [sharing, setSharing] = useState(false);
+  const [shareNotice, setShareNotice] = useState('');
   const [eveningStars, setEveningStars] = useState<number | null>(() =>
     getLatestEveningRating(game.eveningName),
   );
@@ -55,12 +56,33 @@ export function EndScreen({ game, settings, onNewGame, onPlayAgain, onHome }: En
 
   const handleShare = async () => {
     setSharing(true);
+    setShareNotice('');
     try {
       const data = buildEndShareData(game, settings, winnerName, phrase);
       await shareGameResult(data, settings);
+    } catch (error) {
+      if (!(error instanceof DOMException && error.name === 'AbortError')) {
+        setShareNotice('השיתוף לא הצליח. אפשר לשמור תמונה דרך האפשרויות הנוספות.');
+      }
     } finally {
       setSharing(false);
     }
+  };
+
+  const updateRating = (star: number) => {
+    setEveningStars(star);
+    saveEveningRating(game.eveningName, star);
+  };
+
+  const onRatingKey = (event: KeyboardEvent<HTMLDivElement>) => {
+    if (!['ArrowLeft', 'ArrowRight', 'ArrowUp', 'ArrowDown', 'Home', 'End'].includes(event.key)) return;
+    event.preventDefault();
+    const rtl = getComputedStyle(event.currentTarget).direction === 'rtl';
+    const forward = event.key === 'ArrowDown' || event.key === (rtl ? 'ArrowLeft' : 'ArrowRight');
+    const current = (eveningStars ?? 1) - 1;
+    const index = event.key === 'Home' ? 0 : event.key === 'End' ? 4 : (current + (forward ? 1 : -1) + 5) % 5;
+    updateRating(index + 1);
+    event.currentTarget.querySelectorAll<HTMLButtonElement>('[role="radio"]')[index]?.focus();
   };
 
   const handleSaveImage = async () => {
@@ -141,7 +163,7 @@ export function EndScreen({ game, settings, onNewGame, onPlayAgain, onHome }: En
 
         <div className="evening-rating">
           <p className="setup-label">איך היה הערב?</p>
-          <div className="evening-rating__stars" role="radiogroup" aria-label="דירוג הערב">
+          <div className="evening-rating__stars" role="radiogroup" aria-label="דירוג הערב" onKeyDown={onRatingKey}>
             {[1, 2, 3, 4, 5].map((star) => (
               <button
                 key={star}
@@ -149,11 +171,9 @@ export function EndScreen({ game, settings, onNewGame, onPlayAgain, onHome }: En
                 role="radio"
                 aria-label={`${star} מתוך 5`}
                 aria-checked={eveningStars === star}
+                tabIndex={eveningStars === star || (eveningStars == null && star === 1) ? 0 : -1}
                 className={`evening-rating__star pressable ${eveningStars != null && eveningStars >= star ? 'evening-rating__star--on' : ''}`}
-                onClick={() => {
-                  setEveningStars(star);
-                  saveEveningRating(game.eveningName, star);
-                }}
+                onClick={() => updateRating(star)}
               >
                 ⭐
               </button>
@@ -186,6 +206,7 @@ export function EndScreen({ game, settings, onNewGame, onPlayAgain, onHome }: En
           <button type="button" className="end-actions__secondary pressable" onClick={handleShare} disabled={sharing}>
             {sharing ? 'משתף...' : '📤 שתפו'}
           </button>
+          {shareNotice && <p className="history-hint" role="status">{shareNotice}</p>}
           <details className="end-actions__more">
             <summary>עוד אפשרויות</summary>
             <div className="end-actions__more-body">

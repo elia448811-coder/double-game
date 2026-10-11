@@ -1,6 +1,7 @@
 import { StrictMode, useEffect } from 'react';
 import { createRoot } from 'react-dom/client';
 import { GameScreen } from '../../src/screens/GameScreen';
+import { EndScreen } from '../../src/screens/EndScreen';
 import { useGameState } from '../../src/hooks/useGameState';
 import { useDeviceLayout } from '../../src/hooks/useDeviceLayout';
 import { createTestGameState } from '../../src/utils/gameSimulator';
@@ -8,6 +9,10 @@ import { filterTasks } from '../../src/utils/taskSelection';
 import '../../src/styles/globals.css';
 import '../../src/styles/responsive.css';
 import '../../src/styles/tokens.css';
+import '../../src/styles/friendly.css';
+import '../../src/styles/premium.css';
+import '../../src/styles/cinematic.css';
+import '../../src/styles/experience.css';
 
 declare global { interface Window {
   audit: ReturnType<typeof useGameState>;
@@ -27,6 +32,8 @@ export function Fixture() {
   }, [api]);
   return <>
     <pre id="audit-state" hidden>{JSON.stringify(api.game)}</pre>
+    {api.game.screen === 'end' && <EndScreen game={api.game} settings={api.settings}
+      onPlayAgain={api.playAgain} onNewGame={api.newGame} onHome={() => api.navigate('welcome')} />}
     {api.game.screen === 'game' && <GameScreen
       settings={api.settings} game={api.game} effectiveTarget={api.effectiveTarget}
       currentPlayerName={api.currentPlayerName} contentMode={api.game.contentMode}

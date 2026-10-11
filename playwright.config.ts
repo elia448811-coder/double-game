@@ -23,6 +23,11 @@ export default defineConfig({
     { name: 'large-phone', use: { viewport: { width: 430, height: 932 }, isMobile: true, hasTouch: true } },
     { name: 'landscape-phone', use: { viewport: { width: 844, height: 390 }, isMobile: true, hasTouch: true } },
     { name: 'ipad', use: { viewport: { width: 768, height: 1024 }, hasTouch: true } },
+    { name: 'ipad-air', use: { viewport: { width: 820, height: 1180 }, hasTouch: true } },
+    { name: 'ipad-landscape', use: { viewport: { width: 1180, height: 820 }, hasTouch: true } },
+    { name: 'ipad-pro', use: { viewport: { width: 1366, height: 1024 }, hasTouch: true } },
     { name: 'desktop', use: { viewport: { width: 1365, height: 900 } } },
+    { name: 'ipad-safari-portrait', use: { browserName: 'webkit', viewport: { width: 820, height: 1180 }, isMobile: true, hasTouch: true } },
+    { name: 'ipad-safari-landscape', use: { browserName: 'webkit', viewport: { width: 1180, height: 820 }, isMobile: true, hasTouch: true } },
   ],
 });

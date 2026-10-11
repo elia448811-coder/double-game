@@ -60,3 +60,23 @@ test('an unavailable illustration never blocks the question or its actions', asy
   await page.getByRole('button', { name: '✓ בוצע', exact: true }).click();
   await expect(page.locator('.task-modal')).toBeHidden();
 });
+
+test('a failed image request retries the smaller illustration without blocking the card', async ({ page }) => {
+  let failed = false;
+  await page.route('**/double-game/**', (route) => {
+    if (!failed && route.request().resourceType() === 'image' && /w_(480|960)/.test(route.request().url())) {
+      failed = true;
+      return route.abort();
+    }
+    return route.continue();
+  });
+  await page.goto('/e2e/fixtures/game.html');
+  await page.waitForFunction(() => typeof window.auditSeed === 'function');
+  await page.evaluate(() => window.auditSeed());
+  const illustration = page.locator('.content-artwork--card img');
+  await expect.poll(() => illustration.evaluate((img: HTMLImageElement) => img.complete && img.naturalWidth > 0), { timeout: 15_000 }).toBe(true);
+  expect(failed).toBe(true);
+  await expect(illustration).not.toHaveAttribute('srcset');
+  await page.getByRole('button', { name: '✓ בוצע', exact: true }).click();
+  await expect(page.locator('.task-modal')).toBeHidden();
+});

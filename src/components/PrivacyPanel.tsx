@@ -1,4 +1,4 @@
-import { useEffect, useState, type ChangeEvent } from 'react';
+import { useEffect, useRef, useState, type ChangeEvent } from 'react';
 import { clearAllLocalData } from '../utils/storage';
 import {
   exportAllData,
@@ -18,7 +18,6 @@ import {
   type CloudStatus,
   type SyncState,
 } from '../utils/cloudSync';
-import { isFirebaseConfigured } from '../lib/firebase';
 
 type PrivacyPanelProps = { onChanged?: () => void };
 
@@ -34,11 +33,10 @@ function statusLabel(status: CloudStatus | null, checking: boolean): string {
   if (checking) return 'ענן: בודק חיבור…';
   if (!status) return 'ענן: לא נבדק';
   if (status.state === 'disabled') {
-    return status.reason === 'guest' ? 'ענן: כבוי במצב אורח' : 'ענן: לא מוגדר (חסרים משתני Firebase)';
+    return status.reason === 'guest' ? 'ענן: כבוי במצב אורח' : 'גיבוי בענן אינו זמין כרגע';
   }
   if (status.state === 'error') return `ענן: שגיאה — ${status.message}`;
-  const shortUid = `${status.uid.slice(0, 6)}…`;
-  return `ענן: מחובר (${status.projectId ?? 'firebase'} · ${shortUid})`;
+  return 'החיבור לענן פעיל';
 }
 
 function syncLabel(state: SyncState): string {
@@ -52,6 +50,7 @@ function syncLabel(state: SyncState): string {
 }
 
 export function PrivacyPanel({ onChanged }: PrivacyPanelProps) {
+  const importInput = useRef<HTMLInputElement>(null);
   const [guest, setGuest] = useState(isGuestMode);
   const [discrete, setDiscrete] = useState(isDiscreteMode);
   const [message, setMessage] = useState('');
@@ -116,6 +115,7 @@ export function PrivacyPanel({ onChanged }: PrivacyPanelProps) {
   };
 
   const clearHistory = () => {
+    if (!window.confirm('למחוק את ההיסטוריה מהמכשיר?')) return;
     localStorage.removeItem('couple-spin-history');
     setMessage('ההיסטוריה נמחקה.');
     scheduleCloudPush();
@@ -123,6 +123,7 @@ export function PrivacyPanel({ onChanged }: PrivacyPanelProps) {
   };
 
   const clearCustom = () => {
+    if (!window.confirm('למחוק את כל השאלות והמשימות שהוספתם?')) return;
     localStorage.removeItem('couple-spin-custom-content');
     setMessage('התוכן המותאם נמחק.');
     scheduleCloudPush();
@@ -130,6 +131,7 @@ export function PrivacyPanel({ onChanged }: PrivacyPanelProps) {
   };
 
   const clearEverything = () => {
+    if (!window.confirm('למחוק את כל המידע המקומי מהמכשיר?')) return;
     clearAllLocalData();
     PRIVACY_KEYS.forEach((key) => localStorage.removeItem(key));
     setGuest(false);
@@ -143,11 +145,10 @@ export function PrivacyPanel({ onChanged }: PrivacyPanelProps) {
     <section className="privacy-panel settings-panel" dir="rtl" aria-labelledby="privacy-title">
       <h2 id="privacy-title" className="flow-title">פרטיות ומידע</h2>
       <p className="flow-desc">
-        הנתונים נשמרים מקומית. עם Firebase מוגדר — גיבוי וסנכרון לענן (לא במצב אורח).
+        הנתונים נשמרים במכשיר. כשמחוברים לחשבון, אפשר לגבות ולסנכרן אותם עם הענן. במצב אורח הסנכרון כבוי.
       </p>
       <p className="history-hint" role="status" aria-live="polite">
         {statusLabel(cloudStatus, checkingCloud)}
-        {isFirebaseConfigured() ? '' : ' · הוסיפו VITE_FIREBASE_* ב־Vercel'}
       </p>
       <p className="history-hint" aria-live="polite">{syncLabel(syncState)}</p>
       <div className="settings-actions">
@@ -192,12 +193,12 @@ export function PrivacyPanel({ onChanged }: PrivacyPanelProps) {
       </label>
       <div className="settings-actions">
         <button type="button" className="flow-link pressable" onClick={downloadExport}>
-          ייצוא JSON
+          ייצוא נתונים
         </button>
-        <label className="flow-link pressable">
-          ייבוא JSON
-          <input type="file" accept="application/json,.json" onChange={importFile} hidden />
-        </label>
+        <button type="button" className="flow-link pressable" onClick={() => importInput.current?.click()}>
+          ייבוא נתונים
+        </button>
+        <input ref={importInput} type="file" accept="application/json,.json" onChange={importFile} hidden aria-label="קובץ נתונים לייבוא" />
         <button type="button" className="flow-link pressable" onClick={clearHistory}>
           מחיקת היסטוריה בלבד
         </button>

@@ -122,91 +122,95 @@ export function GameScreen({
           </div>
         )}
 
-        <div className="game-bar-extras" aria-live="polite">
-          <span>
-            סיבוב {game.stats.roundNumber + 1}
-            {effectiveTarget != null ? ` · יעד ${effectiveTarget}` : ''}
-          </span>
-          <button type="button" className="icon-btn pressable" onClick={onPause} aria-label="השהייה" disabled={spectatorMode}>
-            ⏸
-          </button>
-        </div>
-
-        <GameHeader
-          currentPlayerName={currentPlayerName}
-          currentPlayerIndex={game.currentPlayerIndex}
-          playerOneName={game.playerOneName}
-          playerTwoName={game.playerTwoName}
-          playerOneAvatar={settings.playerOneAvatar}
-          playerTwoAvatar={settings.playerTwoAvatar}
-          playerOneColor={settings.playerOneColor}
-          playerTwoColor={settings.playerTwoColor}
-          scores={game.scores}
-          cooperativeScore={game.cooperativeScore}
-          scoringMode={game.scoringMode}
-          timeRemainingSeconds={game.timeRemainingSeconds}
-          stats={game.stats}
-          soundEnabled={settings.soundEnabled}
-          onToggleSound={onToggleSound}
-        />
-
-        <ProgressBar
-          current={progressCurrent}
-          target={effectiveTarget}
-          label={
-            game.gameFormat === 'rounds'
-              ? 'סיבובים'
-              : game.scoringMode === 'none'
-                ? contentMode === 'questions'
-                  ? 'שאלות שנענו'
-                  : 'משימות שבוצעו'
-                : 'התקדמות ליעד'
-          }
-        />
-
-        {game.poolEmpty && (
-          <p className="site-gate__error" role="status">
-            אין עוד תוכן שמתאים למסננים — נסו להחליף מצב או לאפס דילוגים
-          </p>
-        )}
-
-        <SpinnerWheel
-          isSpinning={game.isSpinning}
-          rotation={rotation}
-          landed={landed}
-          spinnerStyle={settings.spinnerStyle}
-          gameMode={game.mode}
-          segments={segments}
-          disabled={spectatorMode || !!game.currentTask || game.isSpinning || landed || !!game.uiBlocked || !!game.paused}
-          onSpin={handleSpin}
-        />
-
-        <div className="game-end-confirm__actions">
-          {!spectatorMode && hasUndo() && (
-            <button type="button" className="secondary-action pressable" onClick={onUndo}>
-              בטל פעולה
+        <div className="game-overview">
+          <div className="game-bar-extras" aria-live="polite">
+            <span>
+              סיבוב {game.stats.roundNumber + 1}
+              {effectiveTarget != null ? ` · יעד ${effectiveTarget}` : ''}
+            </span>
+            <button type="button" className="icon-btn pressable" onClick={onPause} aria-label="השהייה" disabled={spectatorMode}>
+              ⏸
             </button>
+          </div>
+
+          <GameHeader
+            currentPlayerName={currentPlayerName}
+            currentPlayerIndex={game.currentPlayerIndex}
+            playerOneName={game.playerOneName}
+            playerTwoName={game.playerTwoName}
+            playerOneAvatar={settings.playerOneAvatar}
+            playerTwoAvatar={settings.playerTwoAvatar}
+            playerOneColor={settings.playerOneColor}
+            playerTwoColor={settings.playerTwoColor}
+            scores={game.scores}
+            cooperativeScore={game.cooperativeScore}
+            scoringMode={game.scoringMode}
+            timeRemainingSeconds={game.timeRemainingSeconds}
+            stats={game.stats}
+            soundEnabled={settings.soundEnabled}
+            onToggleSound={onToggleSound}
+          />
+
+          <ProgressBar
+            current={progressCurrent}
+            target={effectiveTarget}
+            label={
+              game.gameFormat === 'rounds'
+                ? 'סיבובים'
+                : game.scoringMode === 'none'
+                  ? contentMode === 'questions'
+                    ? 'שאלות שנענו'
+                    : 'משימות שבוצעו'
+                  : 'התקדמות ליעד'
+            }
+          />
+
+          {game.poolEmpty && (
+            <p className="site-gate__error" role="status">
+              אין עוד תוכן שמתאים למסננים — נסו להחליף מצב או לאפס דילוגים
+            </p>
           )}
         </div>
 
-        {!spectatorMode && !confirmEnd && (
-          <button type="button" className="game-end-link pressable" onClick={() => setConfirmEnd(true)}>
-            סיום משחק
-          </button>
-        )}
-        {!spectatorMode && confirmEnd && (
-          <div className="game-end-confirm">
-            <p>לסיים את המשחק עכשיו?</p>
-            <div className="game-end-confirm__actions">
-              <button type="button" className="primary-action pressable" onClick={onEndGame}>
-                כן, סיימו
+        <div className="game-play-area">
+          <SpinnerWheel
+            isSpinning={game.isSpinning}
+            rotation={rotation}
+            landed={landed}
+            spinnerStyle={settings.spinnerStyle}
+            gameMode={game.mode}
+            segments={segments}
+            disabled={spectatorMode || !!game.currentTask || game.isSpinning || landed || !!game.uiBlocked || !!game.paused}
+            onSpin={handleSpin}
+          />
+
+          <div className="game-end-confirm__actions">
+            {!spectatorMode && hasUndo() && (
+              <button type="button" className="secondary-action pressable" onClick={onUndo}>
+                בטל פעולה
               </button>
-              <button type="button" className="secondary-action pressable" onClick={() => setConfirmEnd(false)}>
-                המשך לשחק
-              </button>
-            </div>
+            )}
           </div>
-        )}
+
+          {!spectatorMode && !confirmEnd && (
+            <button type="button" className="game-end-link pressable" onClick={() => setConfirmEnd(true)}>
+              סיום משחק
+            </button>
+          )}
+          {!spectatorMode && confirmEnd && (
+            <div className="game-end-confirm">
+              <p>לסיים את המשחק עכשיו?</p>
+              <div className="game-end-confirm__actions">
+                <button type="button" className="primary-action pressable" onClick={onEndGame}>
+                  כן, סיימו
+                </button>
+                <button type="button" className="secondary-action pressable" onClick={() => setConfirmEnd(false)}>
+                  המשך לשחק
+                </button>
+              </div>
+            </div>
+          )}
+        </div>
       </div>
 
       {game.paused && !spectatorMode && (

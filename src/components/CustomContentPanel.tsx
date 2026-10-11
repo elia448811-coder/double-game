@@ -1,4 +1,5 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
+import { RadioGroup } from './RadioGroup';
 import { LEVEL_LABELS, type ContentKind, type TaskCategory, type TaskLevel } from '../types/game';
 import {
   getCachedCategories,
@@ -21,9 +22,10 @@ const LEVELS: TaskLevel[] = ['easy', 'normal', 'advanced'];
 
 type CustomContentPanelProps = {
   matureAgeConfirmed: boolean;
+  dataRevision?: number;
 };
 
-export function CustomContentPanel({ matureAgeConfirmed }: CustomContentPanelProps) {
+export function CustomContentPanel({ matureAgeConfirmed, dataRevision = 0 }: CustomContentPanelProps) {
   const [items, setItems] = useState<CustomContentItem[]>(() => loadCustomContent());
   const [kind, setKind] = useState<ContentKind>('question');
   const [category, setCategory] = useState<TaskCategory>('romantic');
@@ -38,6 +40,10 @@ export function CustomContentPanel({ matureAgeConfirmed }: CustomContentPanelPro
     .filter((c) => c !== 'spicy' || matureAgeConfirmed);
 
   const refresh = () => setItems(loadCustomContent());
+
+  useEffect(() => {
+    setItems(loadCustomContent());
+  }, [dataRevision]);
 
   const handleAdd = () => {
     setFormError('');
@@ -74,47 +80,12 @@ export function CustomContentPanel({ matureAgeConfirmed }: CustomContentPanelPro
       </p>
 
       <div className="custom-content-form">
-        <span className="settings-label">סוג</span>
-        <div className="target-score-options">
-          {CONTENT_KINDS.map((k) => (
-            <button
-              key={k.value}
-              type="button"
-              className={`target-score-btn ${kind === k.value ? 'target-score-btn--selected' : ''}`}
-              onClick={() => setKind(k.value)}
-            >
-              {k.label}
-            </button>
-          ))}
-        </div>
-
-        <span className="settings-label">קטגוריה</span>
-        <div className="target-score-options custom-content-categories">
-          {visibleCategories.map((c) => (
-            <button
-              key={c}
-              type="button"
-              className={`target-score-btn ${category === c ? 'target-score-btn--selected' : ''}`}
-              onClick={() => setCategory(c)}
-            >
-              {getCategoryIcon(c)} {getCategoryLabel(c)}
-            </button>
-          ))}
-        </div>
-
-        <span className="settings-label">רמה</span>
-        <div className="target-score-options">
-          {LEVELS.map((l) => (
-            <button
-              key={l}
-              type="button"
-              className={`target-score-btn ${level === l ? 'target-score-btn--selected' : ''}`}
-              onClick={() => setLevel(l)}
-            >
-              {LEVEL_LABELS[l]}
-            </button>
-          ))}
-        </div>
+        <RadioGroup label="סוג" value={kind} options={CONTENT_KINDS} onChange={setKind} />
+        <RadioGroup label="קטגוריה" value={category}
+          options={visibleCategories.map((item) => ({ value: item, label: `${getCategoryIcon(item)} ${getCategoryLabel(item)}` }))}
+          onChange={setCategory} className="custom-content-categories" />
+        <RadioGroup label="רמה" value={level}
+          options={LEVELS.map((item) => ({ value: item, label: LEVEL_LABELS[item] }))} onChange={setLevel} />
 
         {kind === 'question' && (
           <label className="settings-field">
@@ -123,7 +94,7 @@ export function CustomContentPanel({ matureAgeConfirmed }: CustomContentPanelPro
               type="text"
               value={questionGroup}
               onChange={(e) => setQuestionGroup(e.target.value)}
-              placeholder="למשל: meet100, intimacy, שלי..."
+              placeholder="למשל: טיולים, חלומות, זיכרונות..."
             />
           </label>
         )}

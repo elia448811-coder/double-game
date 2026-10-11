@@ -127,7 +127,7 @@ export function UserAccountPanel({ onChanged }: UserAccountPanelProps) {
         <h2 id="account-title" className="settings-label">
           חשבון משתמש
         </h2>
-        <p className="custom-content-panel__hint">Firebase לא מוגדר — אין חשבון ענן.</p>
+        <p className="custom-content-panel__hint">חיבור לחשבון אינו זמין כרגע.</p>
       </section>
     );
   }
