@@ -171,6 +171,9 @@ html[data-theme='light'] :is(.flow-title, .setup-title) {
   color: var(--cs-text);
 }
 
+html[data-theme='light'] :is(.flow-kicker, .eyebrow) { color: var(--cs-text-muted); }
+html[data-theme='light'] .setup-label { color: var(--cs-gold); }
+
 html[data-theme='light'] :is(.progress-bar__header, .settings-label, .modal-label, .flow-link, .task-modal__more-toggle,
   .setup-summary, .mini-robot__header-sub, .end-actions__more summary) {
   color: var(--cs-text-muted);
