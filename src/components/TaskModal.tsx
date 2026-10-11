@@ -15,9 +15,9 @@ type TaskModalProps = {
   isFunniest: boolean;
   onComplete: () => void;
   onSkip: () => void;
-  onReplaceTask: () => void;
-  onTooEasy: () => void;
-  onTooHard: () => void;
+  onReplaceTask: () => void | boolean;
+  onTooEasy: () => void | boolean;
+  onTooHard: () => void | boolean;
   onMarkFunniest: () => void;
   onHideForever?: () => void;
   onToggleFavorite?: () => void;
@@ -52,6 +52,7 @@ export function TaskModal({
 }: TaskModalProps) {
   const [extrasOpen, setExtrasOpen] = useState(false);
   const [confirmSkip, setConfirmSkip] = useState(false);
+  const [actionNotice, setActionNotice] = useState('');
   const lockedRef = useRef(false);
   const trapRef = useFocusTrap(true);
   const isQuestion = task.kind === 'question';
@@ -67,6 +68,7 @@ export function TaskModal({
     lockedRef.current = false;
     setConfirmSkip(false);
     setExtrasOpen(false);
+    setActionNotice('');
   }, [task.id]);
 
   useEffect(() => {
@@ -212,15 +214,21 @@ export function TaskModal({
 
         {!readOnly && extrasOpen && (
           <div className="task-modal__extras">
-            <button type="button" className="extra-btn pressable" onClick={onReplaceTask}>
+            <button type="button" className="extra-btn pressable" onClick={() => {
+              if (onReplaceTask() === false) setActionNotice(`אין כרגע ${isQuestion ? 'שאלה נוספת' : 'משימה נוספת'} שמתאימה לבחירות שלכם.`);
+            }}>
               {isQuestion ? 'שאלה אחרת' : 'משימה אחרת'}
             </button>
             {!isQuestion && (
               <>
-                <button type="button" className="extra-btn pressable" onClick={onTooEasy}>
+                <button type="button" className="extra-btn pressable" onClick={() => {
+                  if (onTooEasy() === false) setActionNotice('אין כרגע משימה קשה יותר שמתאימה לבחירות שלכם.');
+                }}>
                   קל מדי
                 </button>
-                <button type="button" className="extra-btn pressable" onClick={onTooHard}>
+                <button type="button" className="extra-btn pressable" onClick={() => {
+                  if (onTooHard() === false) setActionNotice('אין כרגע משימה קלה יותר שמתאימה לבחירות שלכם.');
+                }}>
                   קשה מדי
                 </button>
               </>
@@ -245,6 +253,7 @@ export function TaskModal({
             )}
           </div>
         )}
+        {actionNotice && <p role="status">{actionNotice}</p>}
       </div>
     </div>
   );

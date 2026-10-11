@@ -32,12 +32,26 @@ function advanceTurn(prev: GameState): 0 | 1 {
       : 0;
 }
 
+function suspendClock(state: GameState): Partial<GameState> {
+  return state.timeDeadlineMs == null ? {} : {
+    timeRemainingSeconds: Math.max(0, Math.ceil((state.timeDeadlineMs - Date.now()) / 1000)),
+    timeDeadlineMs: null,
+  };
+}
+
+function resumeClock(state: GameState): Partial<GameState> {
+  return state.timeLimitSeconds != null && state.timeDeadlineMs == null && !state.paused && !state.currentTask
+    ? { timeDeadlineMs: Date.now() + (state.timeRemainingSeconds ?? state.timeLimitSeconds) * 1000 }
+    : {};
+}
+
 function maybeFinish(
   prev: GameState,
   patch: Partial<GameState> & { stats: GameState['stats'] },
   finishEventId: string,
 ): { state: GameState; effects: GameEffect[] } {
   const next = { ...prev, ...patch, uiBlocked: false };
+  Object.assign(next, resumeClock(next));
   const { end, winner } = checkEndConditions(next, next.scores, next.cooperativeScore, next.stats);
   if (!end) {
     return { state: next as GameState, effects: [{ type: 'persist_snapshot' }] };
@@ -68,8 +82,12 @@ export type ReduceResult = { state: GameState; effects: GameEffect[] };
 
 export function gameReducer(state: GameState, event: GameEvent): ReduceResult {
   switch (event.type) {
-    case 'NAVIGATE':
-      return { state: { ...state, screen: event.screen, uiBlocked: false }, effects: [] };
+    case 'NAVIGATE': {
+      const leaving = state.screen === 'game' && event.screen !== 'game';
+      const next = { ...state, ...(leaving ? suspendClock(state) : {}), screen: event.screen,
+        isSpinning: leaving ? false : state.isSpinning, paused: leaving ? true : state.paused, uiBlocked: false };
+      return { state: next, effects: leaving ? [{ type: 'persist_snapshot' }] : [] };
+    }
 
     case 'SET_MODE':
       return {
@@ -208,26 +226,28 @@ export function gameReducer(state: GameState, event: GameEvent): ReduceResult {
               ? event.roundCount
               : getDefaultRoundTarget(state.gameFormat, event.roundCount),
         },
-        effects: [{ type: 'sound', name: 'start' }, { type: 'clear_snapshot' }],
+        effects: [{ type: 'sound', name: 'start' }, { type: 'persist_snapshot' }],
       };
     }
 
     case 'START_SPIN':
-      if (state.uiBlocked || state.paused || state.isSpinning || state.currentTask) {
+      if (state.screen !== 'game' || state.uiBlocked || state.paused || state.isSpinning || state.currentTask) {
         return { state, effects: [] };
       }
       return {
         state: { ...state, isSpinning: true, currentTask: null, wheelLanded: false, uiBlocked: true, poolEmpty: false },
-        effects: [{ type: 'sound', name: 'spin' }],
+        effects: [],
       };
 
     case 'SPIN_LANDED': {
+      if (state.screen !== 'game' || !state.isSpinning) return { state, effects: [] };
       if (isTaskHidden(event.task.id)) {
         return { state: { ...state, isSpinning: false, wheelLanded: true, uiBlocked: false, poolEmpty: true }, effects: [] };
       }
       return {
         state: {
           ...state,
+          ...suspendClock(state),
           isSpinning: false,
           wheelLanded: true,
           currentTask: event.task,
@@ -240,7 +260,7 @@ export function gameReducer(state: GameState, event: GameEvent): ReduceResult {
     }
 
     case 'TASK_COMPLETED': {
-      if (!state.currentTask || state.uiBlocked || state.screen === 'end') return { state, effects: [] };
+      if (!state.currentTask || state.uiBlocked || state.paused || state.screen !== 'game') return { state, effects: [] };
       const newScores = [...state.scores] as [number, number];
       let cooperativeScore = state.cooperativeScore;
       if (state.scoringMode === 'competitive') newScores[state.currentPlayerIndex] += 1;
@@ -274,7 +294,7 @@ export function gameReducer(state: GameState, event: GameEvent): ReduceResult {
     }
 
     case 'TASK_SKIPPED': {
-      if (!state.currentTask || state.screen === 'end') return { state, effects: [] };
+      if (!state.currentTask || state.uiBlocked || state.paused || state.screen !== 'game') return { state, effects: [] };
       const stats = {
         ...state.stats,
         totalSkipped: state.stats.totalSkipped + 1,
@@ -298,6 +318,7 @@ export function gameReducer(state: GameState, event: GameEvent): ReduceResult {
     }
 
     case 'TASK_REPLACED':
+      if (!state.currentTask || state.paused || state.screen !== 'game' || event.next.id === state.currentTask.id) return { state, effects: [] };
       return {
         state: {
           ...state,
@@ -345,17 +366,19 @@ export function gameReducer(state: GameState, event: GameEvent): ReduceResult {
     }
 
     case 'PAUSE':
-      if (state.screen !== 'game') return { state, effects: [] };
-      return { state: { ...state, paused: true }, effects: [{ type: 'persist_snapshot' }] };
+      if (state.screen !== 'game' || state.paused) return { state, effects: [] };
+      return { state: { ...state, ...suspendClock(state), paused: true }, effects: [{ type: 'persist_snapshot' }] };
 
-    case 'RESUME':
-      return { state: { ...state, paused: false }, effects: [] };
+    case 'RESUME': {
+      const next = { ...state, paused: false };
+      return { state: { ...next, ...resumeClock(next) }, effects: [{ type: 'persist_snapshot' }] };
+    }
 
     case 'UNDO_LAST':
       return { state, effects: [] }; // handled in hook via undo stack
 
     case 'RESTORE_SNAPSHOT':
-      return { state: { ...event.snapshot, paused: false, uiBlocked: false }, effects: [] };
+      return { state: { ...event.snapshot }, effects: [] };
 
     case 'NEW_GAME':
       return {
@@ -424,8 +447,13 @@ export function gameReducer(state: GameState, event: GameEvent): ReduceResult {
           usedTaskIds: [],
           currentTask: null,
           winner: null,
+          isSpinning: false,
+          wheelLanded: false,
+          uiBlocked: false,
+          poolEmpty: false,
+          lastAction: null,
         },
-        effects: [],
+        effects: [{ type: 'persist_snapshot' }],
       };
 
     case 'SET_TIMER_REMAINING':

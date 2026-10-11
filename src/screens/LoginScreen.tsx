@@ -104,7 +104,10 @@ export function LoginScreen({ onAuthenticated }: LoginScreenProps) {
               autoFocus
               disabled={busy}
               dir="ltr"
-              maxLength={24}
+              maxLength={mode === 'register' ? 24 : 254}
+              autoCapitalize="none"
+              autoCorrect="off"
+              spellCheck={false}
             />
           </div>
 

@@ -16,9 +16,9 @@ import { GAME_PRESETS, type GameEffect, type GamePreset } from '../utils/gameEve
 import { emptyStats, gameReducer } from '../utils/gameReducer';
 import { pickEasierTask, pickHarderTask } from '../utils/taskSelection';
 import { pickTaskWithFallback, spinPickOptions } from '../utils/pickTaskWithFallback';
-import { clearSnapshot, loadSnapshot, saveSnapshot } from '../utils/gameSnapshot';
-import { hasUndo, popUndo, pushUndo } from '../utils/undoStack';
-import { isGuestMode, isTaskHidden } from '../utils/privacy';
+import { clearSnapshot, loadSnapshot, prepareLocalResume, saveSnapshot } from '../utils/gameSnapshot';
+import { clearUndo, hasUndo, popUndo, pushUndo } from '../utils/undoStack';
+import { isGuestMode } from '../utils/privacy';
 import {
   pullCloudSnapshot,
   scheduleCloudPush,
@@ -127,7 +127,7 @@ export function useGameState() {
     const snap = loadSnapshot();
     return snap ?? createInitialGameState(loadSettings());
   });
-  const [resumeAvailable] = useState(() => Boolean(loadSnapshot()));
+  const [resumeAvailable, setResumeAvailable] = useState(() => Boolean(loadSnapshot()));
   const [cloudResume, setCloudResume] = useState<GameState | null>(null);
   const timerRef = useRef<ReturnType<typeof setInterval> | null>(null);
   const gameRef = useRef(game);
@@ -157,22 +157,21 @@ export function useGameState() {
 
   const dispatch = useCallback(
     (event: Parameters<typeof gameReducer>[1]) => {
-      setGame((prev) => {
-        if (event.type === 'TASK_COMPLETED' || event.type === 'TASK_SKIPPED' || event.type === 'START_SPIN') {
-          pushUndo(prev);
-        }
-        const { state, effects } = gameReducer(prev, event);
-        queueMicrotask(() =>
-          runEffects(effects, {
-            soundEnabled: settings.soundEnabled,
-            soundPack: settings.soundPack,
-            vibrationEnabled: settings.vibrationEnabled,
-            game: state,
-            setSettings,
-          }),
-        );
-        return state;
+      const prev = gameRef.current;
+      const { state, effects } = gameReducer(prev, event);
+      if (state === prev) return;
+      if (event.type === 'TASK_COMPLETED' || event.type === 'TASK_SKIPPED' || event.type === 'START_SPIN') pushUndo(prev);
+      if (event.type === 'START_GAME' || event.type === 'NEW_GAME' || event.type === 'PLAY_AGAIN' || event.type === 'RESET_SCORES') clearUndo();
+      gameRef.current = state;
+      setGame(state);
+      runEffects(effects, {
+        soundEnabled: settings.soundEnabled,
+        soundPack: settings.soundPack,
+        vibrationEnabled: settings.vibrationEnabled,
+        game: state,
+        setSettings,
       });
+      setResumeAvailable(Boolean(loadSnapshot()));
     },
     [settings.soundEnabled, settings.soundPack, settings.vibrationEnabled],
   );
@@ -191,25 +190,17 @@ export function useGameState() {
     if (game.screen !== 'game' || game.timeDeadlineMs == null || game.currentTask || game.paused) return;
 
     const tick = () => {
-      setGame((prev) => {
-        if (prev.currentTask || prev.paused || prev.timeDeadlineMs == null || prev.screen === 'end') return prev;
-        const remaining = Math.max(0, Math.ceil((prev.timeDeadlineMs - Date.now()) / 1000));
-        if (remaining <= 0) {
-          const { state, effects } = gameReducer(prev, { type: 'TIMER_EXPIRED', finishEventId: newId() });
-          queueMicrotask(() =>
-            runEffects(effects, {
-              soundEnabled: settings.soundEnabled,
-              soundPack: settings.soundPack,
-              vibrationEnabled: settings.vibrationEnabled,
-              game: state,
-              setSettings,
-            }),
-          );
-          return state;
-        }
-        if (remaining === prev.timeRemainingSeconds) return prev;
-        return { ...prev, timeRemainingSeconds: remaining };
-      });
+      const prev = gameRef.current;
+      if (prev.currentTask || prev.paused || prev.timeDeadlineMs == null || prev.screen !== 'game') return;
+      const remaining = Math.max(0, Math.ceil((prev.timeDeadlineMs - Date.now()) / 1000));
+      if (remaining <= 0) {
+        dispatch({ type: 'TIMER_EXPIRED', finishEventId: newId() });
+        return;
+      }
+      if (remaining !== prev.timeRemainingSeconds) {
+        dispatch({ type: 'SET_TIMER_REMAINING', seconds: remaining });
+        saveSnapshot(gameRef.current, false);
+      }
     };
 
     tick();
@@ -222,7 +213,7 @@ export function useGameState() {
       if (timerRef.current) clearInterval(timerRef.current);
       document.removeEventListener('visibilitychange', onVis);
     };
-  }, [game.screen, game.timeDeadlineMs, game.currentTask, game.paused, settings.soundEnabled, settings.soundPack, settings.vibrationEnabled]);
+  }, [game.screen, game.timeDeadlineMs, game.currentTask, game.paused, dispatch]);
 
   const updateSettings = useCallback((partial: Partial<AppSettings>) => {
     setSettings((prev) => {
@@ -243,26 +234,15 @@ export function useGameState() {
   }, [dispatch]);
 
   const pickForSegment = useCallback(
-    (prev: GameState, segmentLabel: string | null) => {
+    (prev: GameState, segmentLabel: string | null, excludeIds: string[] = []) => {
       const segment = getSpinnerSegments(prev.mode, prev.contentMode).find((s) => s.label === segmentLabel);
       const opts = {
         ...(segment ? spinPickOptions(segment) : { preferredCategory: null, preferredQuestionGroup: null }),
         coupleOnly: prev.coupleTaskMode,
         contentMode: prev.contentMode,
+        excludeIds,
       };
-      let task = pickTaskWithFallback(prev.mode, prev.level, prev.usedTaskIds, settings.advancedTasksEnabled, opts);
-      let guard = 0;
-      while (task && isTaskHidden(task.id) && guard < 20) {
-        task = pickTaskWithFallback(
-          prev.mode,
-          prev.level,
-          [...prev.usedTaskIds, task.id],
-          settings.advancedTasksEnabled,
-          opts,
-        );
-        guard += 1;
-      }
-      return task;
+      return pickTaskWithFallback(prev.mode, prev.level, prev.usedTaskIds, settings.advancedTasksEnabled, opts);
     },
     [settings.advancedTasksEnabled],
   );
@@ -295,6 +275,7 @@ export function useGameState() {
     startSpin: () => dispatch({ type: 'START_SPIN' }),
     handleSpinEnd: (segmentIndex: number) => {
       const prev = gameRef.current;
+      if (prev.screen !== 'game' || !prev.isSpinning) return;
       const segments = getSpinnerSegments(prev.mode, prev.contentMode);
       const segment = segments[segmentIndex];
       const task = pickForSegment(prev, segment?.label ?? null);
@@ -308,47 +289,52 @@ export function useGameState() {
     skipTask: () => dispatch({ type: 'TASK_SKIPPED', finishEventId: newId() }),
     replaceTask: () => {
       const prev = gameRef.current;
-      if (!prev.currentTask) return;
-      const next = pickForSegment(prev, prev.spinCategory);
+      if (!prev.currentTask) return false;
+      const next = pickForSegment({ ...prev, usedTaskIds: [...prev.usedTaskIds, prev.currentTask.id] }, prev.spinCategory, [prev.currentTask.id]);
       if (!next) {
         dispatch({ type: 'SET_POOL_EMPTY', empty: true });
-        return;
+        return false;
       }
       dispatch({ type: 'TASK_REPLACED', usedId: prev.currentTask.id, next });
+      return true;
     },
     taskTooEasy: () => {
       const prev = gameRef.current;
-      if (!prev.currentTask) return;
+      if (!prev.currentTask) return false;
       const used = [...prev.usedTaskIds, prev.currentTask.id];
       const segment = getSpinnerSegments(prev.mode, prev.contentMode).find((s) => s.label === prev.spinCategory);
       const spinOpts = segment
         ? spinPickOptions(segment)
         : { preferredCategory: null, preferredQuestionGroup: null };
       const task =
-        pickEasierTask(prev.mode, prev.level, used, settings.advancedTasksEnabled, {
+        pickHarderTask(prev.mode, prev.currentTask.level, used, settings.advancedTasksEnabled, {
           ...spinOpts,
           coupleOnly: prev.coupleTaskMode,
           contentMode: prev.contentMode,
-        }) ?? pickForSegment({ ...prev, usedTaskIds: used }, prev.spinCategory);
-      if (!task) return;
+          excludeIds: [prev.currentTask.id],
+        });
+      if (!task) return false;
       dispatch({ type: 'TASK_REPLACED', usedId: prev.currentTask.id, next: task });
+      return true;
     },
     taskTooHard: () => {
       const prev = gameRef.current;
-      if (!prev.currentTask) return;
+      if (!prev.currentTask) return false;
       const used = [...prev.usedTaskIds, prev.currentTask.id];
       const segment = getSpinnerSegments(prev.mode, prev.contentMode).find((s) => s.label === prev.spinCategory);
       const spinOpts = segment
         ? spinPickOptions(segment)
         : { preferredCategory: null, preferredQuestionGroup: null };
       const task =
-        pickHarderTask(prev.mode, prev.level, used, settings.advancedTasksEnabled, {
+        pickEasierTask(prev.mode, prev.currentTask.level, used, settings.advancedTasksEnabled, {
           ...spinOpts,
           coupleOnly: prev.coupleTaskMode,
           contentMode: prev.contentMode,
-        }) ?? pickForSegment({ ...prev, usedTaskIds: used }, prev.spinCategory);
-      if (!task) return;
+          excludeIds: [prev.currentTask.id],
+        });
+      if (!task) return false;
       dispatch({ type: 'TASK_REPLACED', usedId: prev.currentTask.id, next: task });
+      return true;
     },
     markFunniest: (task: CoupleTask) => dispatch({ type: 'MARK_FUNNIEST', task }),
     endGame: () =>
@@ -369,14 +355,14 @@ export function useGameState() {
     undoLast: () => {
       if (!hasUndo()) return;
       const prev = popUndo();
-      if (prev) dispatch({ type: 'RESTORE_SNAPSHOT', snapshot: prev });
+      if (prev) dispatch({ type: 'RESTORE_SNAPSHOT', snapshot: prepareLocalResume(prev) });
     },
     restoreSnapshot: () => {
       const snap = loadSnapshot();
       if (snap) dispatch({ type: 'RESTORE_SNAPSHOT', snapshot: snap });
     },
     restoreCloudSnapshot: () => {
-      if (cloudResume) dispatch({ type: 'RESTORE_SNAPSHOT', snapshot: cloudResume });
+      if (cloudResume) dispatch({ type: 'RESTORE_SNAPSHOT', snapshot: prepareLocalResume(cloudResume) });
     },
     applyRemoteSnapshot: (snapshot: GameState, version: number) => {
       if (version <= remoteVersionRef.current) return;

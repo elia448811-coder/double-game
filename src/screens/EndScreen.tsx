@@ -147,6 +147,7 @@ export function EndScreen({ game, settings, onNewGame, onPlayAgain, onHome }: En
                 key={star}
                 type="button"
                 role="radio"
+                aria-label={`${star} מתוך 5`}
                 aria-checked={eveningStars === star}
                 className={`evening-rating__star pressable ${eveningStars != null && eveningStars >= star ? 'evening-rating__star--on' : ''}`}
                 onClick={() => {

@@ -142,16 +142,18 @@ describe('checkEndConditions', () => {
 });
 
 describe('pickTaskWithFallback', () => {
-  it('never returns null', () => {
+  it('returns an eligible couple task when available', () => {
     const task = pickTaskWithFallback('mixed', 'normal', [], true, { coupleOnly: true });
     expect(task).toBeTruthy();
-    expect(task.id).toBeTruthy();
+    expect(task?.id).toBeTruthy();
   });
 
   it('avoids used tasks when possible', () => {
     const first = pickTaskWithFallback('funny', 'easy', [], true);
-    const second = pickTaskWithFallback('funny', 'easy', [first.id], true);
-    expect(second.id).not.toBe(first.id);
+    expect(first).toBeTruthy();
+    const second = pickTaskWithFallback('funny', 'easy', [first!.id], true);
+    expect(second).toBeTruthy();
+    expect(second?.id).not.toBe(first?.id);
   });
 
   it('filters couple tasks when coupleOnly', () => {

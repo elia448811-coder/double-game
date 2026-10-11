@@ -127,6 +127,52 @@ body {
   text-wrap: balance;
 }
 
+.category-badge { color: var(--cinema-cream); }
+
+html[data-theme='light'] {
+  --cs-gradient-surface: linear-gradient(145deg, #fff, #f5efff);
+  --cs-gold: #805500;
+  --cinema-cream: #1b0d3d;
+}
+
+html[data-theme='light'] body {
+  background: linear-gradient(145deg, #f6efff, #e7d9f4);
+  color: var(--cs-text);
+}
+
+html[data-theme='light'] :is(.hub-hero, .hub-card, .flow-card, .game-card, .task-modal, .age-gate-modal, .site-gate__card) {
+  background: var(--cs-gradient-surface);
+  border-color: var(--cs-border);
+  color: var(--cs-text);
+}
+
+html[data-theme='light'] :is(.flow-title, .setup-title) {
+  background: none;
+  color: var(--cs-text);
+}
+
+html[data-theme='light'] :is(.progress-bar__header, .settings-label, .modal-label, .flow-link, .task-modal__more-toggle,
+  .setup-summary, .mini-robot__header-sub, .end-actions__more summary) {
+  color: var(--cs-text-muted);
+}
+
+html[data-theme='light'] :is(.icon-btn, .target-score-btn, .extra-btn, .secondary-action, .ghost-action,
+  .task-modal__skip, .choice-chip, .target-chip, .setup-toggle, .mini-robot__chip, .game-bar__mute) {
+  color: var(--cs-text);
+  border-color: var(--cs-border);
+  background-color: rgba(99, 63, 153, .08);
+}
+
+html[data-theme='light'] :is(.settings-field input, .name-input, .setup-field input, .setup-field__input) {
+  color: var(--cs-text);
+  background: var(--cs-surface);
+  border-color: var(--cs-border);
+}
+
+html[data-theme='light'] .progress-bar__track { background: rgba(99, 63, 153, .12); }
+html[data-theme='light'] .setup-footer { background: linear-gradient(180deg, transparent, #f5efff 30%); }
+html[data-theme='light'] .category-badge { background: rgba(99, 63, 153, .1); }
+
 button, input, select, textarea { font: inherit; }
 button:focus-visible, input:focus-visible, select:focus-visible, textarea:focus-visible {
   outline: 3px solid rgba(255, 205, 224, .92);

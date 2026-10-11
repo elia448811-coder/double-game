@@ -205,12 +205,11 @@ export function QuickSetupScreen({
           {presets.length > 0 && onApplyPreset && (
             <section className="setup-block">
               <h2 className="setup-label">התחלה מהירה</h2>
-              <div className="chip-scroll" role="list">
+              <div className="chip-scroll" role="group" aria-label="התחלה מהירה">
                 {presets.map((preset) => (
                   <button
                     key={preset.id}
                     type="button"
-                    role="listitem"
                     className="choice-chip pressable"
                     onClick={() => onApplyPreset(preset)}
                   >
@@ -223,12 +222,11 @@ export function QuickSetupScreen({
 
           <section className="setup-block">
             <h2 className="setup-label">סוג הערב</h2>
-            <div className="option-grid" role="list">
+            <div className="option-grid" role="group" aria-label="סוג הערב">
               {MODES.map((m) => (
                 <button
                   key={m}
                   type="button"
-                  role="listitem"
                   className={`option-card pressable ${mode === m ? 'option-card--on' : ''}`}
                   onClick={() => onModeSelect(m)}
                   aria-pressed={mode === m}

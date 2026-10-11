@@ -33,4 +33,6 @@ dist-ssr
 test-users.local.json
 *.local.json
 service-account.local.json
+playwright-report/
+test-results/
 *-firebase-adminsdk*.json

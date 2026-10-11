@@ -65,8 +65,8 @@ describe('content mode filtering', () => {
     it(`pickTaskWithFallback works for ${mode}`, () => {
       const task = pickTaskWithFallback('mixed', 'normal', [], true, { contentMode: mode });
       expect(task).toBeTruthy();
-      if (mode === 'tasks') expect(task.kind).not.toBe('question');
-      if (mode === 'questions') expect(task.kind).toBe('question');
+      if (mode === 'tasks') expect(task?.kind).not.toBe('question');
+      if (mode === 'questions') expect(task?.kind).toBe('question');
     });
   }
 
@@ -185,7 +185,7 @@ describe('game flow simulation', () => {
 
   it('spicy mode returns only mature content', () => {
     const task = pickTaskWithFallback('spicy', 'normal', [], true, { contentMode: 'mixed' });
-    expect(task.category).toBe('spicy');
+    expect(task?.category).toBe('spicy');
     const pool = filterTasks('spicy', 'advanced', [], true, { contentMode: 'mixed' });
     expect(pool.length).toBe(150);
     expect(pool.every((t) => t.category === 'spicy')).toBe(true);

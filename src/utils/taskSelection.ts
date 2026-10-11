@@ -70,6 +70,8 @@ export function filterTasks(
     categoryFilter?: TaskCategory | null;
     levelOverride?: TaskLevel;
     contentMode?: ContentMode;
+    excludeIds?: string[];
+    exactLevel?: TaskLevel;
   } = {},
 ): CoupleTask[] {
   const modeCategories = getCategoriesForMode(mode);
@@ -89,6 +91,8 @@ export function filterTasks(
     if (mode === 'spicy' && task.category !== 'spicy') return false;
     if (!matchesContentMode(task, contentMode, mode)) return false;
     if (usedIds.includes(task.id)) return false;
+    if (options.excludeIds?.includes(task.id)) return false;
+    if (options.exactLevel && task.level !== options.exactLevel) return false;
     if (!allowedLevels.includes(task.level)) return false;
     if (task.level === 'advanced' && !advancedEnabled) return false;
     if (options.coupleOnly && !task.isCoupleTask) return false;
@@ -130,9 +134,11 @@ export function pickEasierTask(
   advancedEnabled: boolean,
   options: Parameters<typeof pickRandomTask>[4] = {},
 ): CoupleTask | null {
+  if (level === 'easy') return null;
   return pickRandomTask(mode, level, usedIds, advancedEnabled, {
     ...options,
     levelOverride: levelDown(level),
+    exactLevel: levelDown(level),
   });
 }
 
@@ -147,6 +153,7 @@ export function pickHarderTask(
   return pickRandomTask(mode, level, usedIds, advancedEnabled, {
     ...options,
     levelOverride: levelUp(level),
+    exactLevel: levelUp(level),
   });
 }
 

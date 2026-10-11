@@ -310,17 +310,6 @@
   gap: clamp(12px, 3vw, 28px);
 }
 
-/* Larger wheel presence */
-.game-screen {
-  --layout-wheel-size: min(480px, 88vw);
-}
-
-@media (min-width: 768px) {
-  .game-screen {
-    --layout-wheel-size: min(520px, 52vw);
-  }
-}
-
 .game-screen .spin-button {
   min-height: 58px;
   font-size: 1.15rem;

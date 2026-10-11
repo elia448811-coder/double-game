@@ -8,6 +8,13 @@ export const SPIN_DURATION_MS = 3800;
 const MIN_ROTATIONS = 5;
 const MAX_ROTATIONS = 8;
 
+export function calculateSpinRotation(current: number, index: number, count: number, random = Math.random()): number {
+  const turns = MIN_ROTATIONS + Math.floor(random * (MAX_ROTATIONS - MIN_ROTATIONS + 1));
+  const targetAngle = 360 - (index + 0.5) * (360 / count);
+  const delta = (targetAngle - current % 360 + 360) % 360;
+  return current + turns * 360 + delta;
+}
+
 type SpinOptions = {
   soundEnabled: boolean;
   soundPack: SoundPack;
@@ -24,11 +31,17 @@ export function useSpinWheel(
   const isSpinningRef = useRef(false);
   const rotationRef = useRef(0);
   const optionsRef = useRef(options);
+  const onSpinEndRef = useRef(onSpinEnd);
+  const spinTimerRef = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
+  const landedTimerRef = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
   optionsRef.current = options;
+  onSpinEndRef.current = onSpinEnd;
 
   useEffect(() => {
     return () => {
       stopSpinTicks();
+      clearTimeout(spinTimerRef.current);
+      clearTimeout(landedTimerRef.current);
       isSpinningRef.current = false;
     };
   }, []);
@@ -40,9 +53,8 @@ export function useSpinWheel(
 
     const segments = optionsRef.current.segments ?? SPINNER_SEGMENTS;
     const segmentCount = segments.length;
-    const segmentAngle = 360 / segmentCount;
 
-    // Rare surprise segment has slightly higher chance when spinning
+    // Surprise segments appear less often.
     const weights = segments.map((s) => (s.rare ? 0.6 : 1));
     const totalWeight = weights.reduce((a, b) => a + b, 0);
     let r = Math.random() * totalWeight;
@@ -55,14 +67,7 @@ export function useSpinWheel(
       }
     }
 
-    const extraRotations = MIN_ROTATIONS + Math.random() * (MAX_ROTATIONS - MIN_ROTATIONS);
-    const currentAngle = rotationRef.current % 360;
-    const segmentCenter = targetIndex * segmentAngle + segmentAngle / 2;
-    const targetAngle = 360 - segmentCenter;
-    let delta = targetAngle - currentAngle;
-    if (delta < 0) delta += 360;
-
-    const totalRotation = rotationRef.current + extraRotations * 360 + delta;
+    const totalRotation = calculateSpinRotation(rotationRef.current, targetIndex, segmentCount);
     rotationRef.current = totalRotation;
     setRotation(totalRotation);
 
@@ -71,25 +76,33 @@ export function useSpinWheel(
       startSpinTicks(true, optionsRef.current.soundPack);
     }
 
-    setTimeout(() => {
+    spinTimerRef.current = setTimeout(() => {
       stopSpinTicks();
       isSpinningRef.current = false;
       setLanded(true);
       if (optionsRef.current.soundEnabled) {
         sounds.stop(optionsRef.current.soundPack);
       }
-      onSpinEnd(targetIndex);
-      setTimeout(() => setLanded(false), 1200);
+      onSpinEndRef.current(targetIndex);
+      landedTimerRef.current = setTimeout(() => setLanded(false), 1200);
     }, SPIN_DURATION_MS);
-  }, [onSpinEnd]);
+  }, []);
 
   const resetRotation = useCallback(() => {
+    clearTimeout(spinTimerRef.current);
+    clearTimeout(landedTimerRef.current);
+    stopSpinTicks();
+    isSpinningRef.current = false;
     rotationRef.current = 0;
     setRotation(0);
     setLanded(false);
   }, []);
 
-  return { spin, rotation, landed, resetRotation };
+  const cancelSpin = useCallback(() => {
+    if (isSpinningRef.current) resetRotation();
+  }, [resetRotation]);
+
+  return { spin, rotation, landed, resetRotation, cancelSpin };
 }
 
 export function useButtonFeedback(soundEnabled: boolean, soundPack: SoundPack, vibrate: boolean) {

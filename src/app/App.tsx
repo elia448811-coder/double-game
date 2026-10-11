@@ -3,11 +3,9 @@ import { InstallPWABanner } from '../components/InstallPWABanner';
 import { BackgroundGlow } from '../components/BackgroundGlow';
 import { FloatingParticles } from '../components/FloatingParticles';
 import { LogoutButton } from '../components/LogoutButton';
-import { MiniRobot } from '../components/MiniRobot';
 import { SyncStatusBanner } from '../components/SyncStatusBanner';
 import { useToast } from '../contexts/ToastContext';
 import { useCoupleRoom } from '../hooks/useCoupleRoom';
-import { useDeviceLayout } from '../hooks/useDeviceLayout';
 import { useGameState } from '../hooks/useGameState';
 import { TutorialScreen } from '../screens/TutorialScreen';
 import { WelcomeScreen } from '../screens/WelcomeScreen';
@@ -28,6 +26,8 @@ import '../styles/premium.css';
 import '../styles/cinematic.css';
 
 const go = (navigate: (s: Screen) => void, screen: Screen) => () => navigate(screen);
+
+const MiniRobot = lazy(() => import('../components/MiniRobot').then((m) => ({ default: m.MiniRobot })));
 
 const QuickSetupScreen = lazy(() =>
   import('../screens/QuickSetupScreen').then((m) => ({ default: m.QuickSetupScreen })),
@@ -100,8 +100,10 @@ function AppContent() {
   } = useGameState();
 
   const couple = useCoupleRoom();
+  const { signalGameStarted, syncGameToRoom, peekRemoteGame } = couple;
   const { showToast } = useToast();
   const syncTimerRef = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
+  const settingsReturnRef = useRef<'welcome' | 'game'>('welcome');
   const [surpriseNote, setSurpriseNote] = useState<string | null>(null);
   const [pendingJoinCode] = useState(() => parseJoinCodeFromUrl());
   const onboardingCheckedRef = useRef(false);
@@ -164,9 +166,9 @@ function AppContent() {
         return;
       }
       startGame(firstPlayer);
-      void couple.signalGameStarted();
+      void signalGameStarted();
     },
-    [startGame, couple.signalGameStarted, couple.room, couple.connected, couple.allReady, showToast],
+    [startGame, signalGameStarted, couple.room, couple.connected, couple.allReady, showToast],
   );
 
   useEffect(() => {
@@ -175,17 +177,17 @@ function AppContent() {
     if (game.screen === 'welcome' || game.screen === 'settings') return;
     clearTimeout(syncTimerRef.current);
     syncTimerRef.current = setTimeout(() => {
-      void couple.syncGameToRoom(game);
+      void syncGameToRoom(game);
     }, 450);
     return () => clearTimeout(syncTimerRef.current);
-  }, [game, couple.role, couple.room?.roomId, couple.syncGameToRoom]);
+  }, [game, couple.role, couple.room?.roomId, syncGameToRoom]);
 
   useEffect(() => {
     if (couple.role !== 'partner') return;
-    const remote = couple.peekRemoteGame();
+    const remote = peekRemoteGame();
     if (!remote) return;
     applyRemoteSnapshot(remote, couple.lastEventVersion);
-  }, [couple.role, couple.lastEventVersion, couple.peekRemoteGame, applyRemoteSnapshot]);
+  }, [couple.role, couple.lastEventVersion, peekRemoteGame, applyRemoteSnapshot]);
 
   const hubStats = {
     totalGames: loadRecords().totalGames,
@@ -252,7 +254,7 @@ function AppContent() {
             )}
             <WelcomeScreen
               onStart={go(navigate, 'setup')}
-              onSettings={go(navigate, 'settings')}
+              onSettings={() => { settingsReturnRef.current = 'welcome'; navigate('settings'); }}
               onTutorial={go(navigate, 'tutorial')}
               onSurprise={handleSurpriseEvening}
               onOpenAdmin={go(navigate, 'admin')}
@@ -354,6 +356,8 @@ function AppContent() {
             onResume={resumeGame}
             onUndo={undoLast}
             onExitToHome={go(navigate, 'welcome')}
+            onOpenSettings={() => { settingsReturnRef.current = 'game'; navigate('settings'); }}
+            onRestart={playAgain}
           />
         )}
 
@@ -372,7 +376,10 @@ function AppContent() {
             settings={settings}
             onUpdate={updateSettings}
             onResetScores={resetScores}
-            onBack={go(navigate, 'welcome')}
+            onBack={() => {
+              navigate(settingsReturnRef.current);
+              if (settingsReturnRef.current === 'game') resumeGame();
+            }}
             onOpenAdmin={go(navigate, 'admin')}
             buildVersion={buildVersion}
           />
@@ -381,17 +388,18 @@ function AppContent() {
         {game.screen === 'admin' && <AdminScreen onBack={go(navigate, 'settings')} />}
       </Suspense>
 
+      <Suspense fallback={null}>
       <MiniRobot
         game={game}
         settings={settings}
         effectiveTarget={effectiveTarget}
         soundEnabled={settings.soundEnabled}
       />
+      </Suspense>
     </main>
   );
 }
 
 export default function App() {
-  useDeviceLayout();
   return <AppContent />;
 }

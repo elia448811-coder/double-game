@@ -110,8 +110,7 @@ export function taskAllowedByBoundaries(
   task: { description: string; title?: string; category?: string },
   shared: ContentBoundary[] = sharedBoundaries(),
 ): boolean {
-  const bounds = loadBoundaries();
-  const configured = bounds.playerOne.length > 0 || bounds.playerTwo.length > 0;
+  const configured = readJson(BOUNDARIES_KEY) !== null;
   if (!configured) return true;
 
   const required = inferTaskBoundaries(`${task.title ?? ''} ${task.description}`);

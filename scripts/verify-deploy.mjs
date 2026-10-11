@@ -1,11 +1,15 @@
 #!/usr/bin/env node
 /**
- * בדיקה שההפצה ב-GitHub Pages עלתה תקין.
+ * בדיקה שההפצה בכתובת שנבחרה עלתה תקין.
  * שימוש: node scripts/verify-deploy.mjs
  */
 import { execSync } from 'node:child_process';
 
-const BASE = (process.env.DEPLOY_URL || 'https://elia448811-coder.github.io/double-game').replace(/\/$/, '');
+if (!process.env.DEPLOY_URL) {
+  console.error('יש להגדיר DEPLOY_URL לכתובת ההפצה הנבדקת.');
+  process.exit(1);
+}
+const BASE = process.env.DEPLOY_URL.replace(/\/$/, '');
 const errors = [];
 const notes = [];
 

@@ -118,13 +118,13 @@ let allOk = true;
 if (!validateDataFiles()) allOk = false;
 if (!runStep('Lint (oxlint)', 'npm run lint')) allOk = false;
 if (!runStep('בדיקות יחידה (Vitest)', 'npm run test')) allOk = false;
-if (!runStep('בדיקות מובייל + iPad', 'npm run test:layouts')) allOk = false;
 if (!runStep('TypeScript', 'npx tsc -b --pretty false')) allOk = false;
 if (!runStep('בניית production', 'npm run build')) allOk = false;
+if (!runStep('גודל קבצי טעינה', 'npm run check:bundle')) allOk = false;
 if (!runStep('בדיקת מנגנון אימות', 'node scripts/test-auth.mjs')) allOk = false;
-if (!runStep('בדיקת הפצה חיה', 'node scripts/verify-deploy.mjs', true)) {
-  /* optional locally if offline */
-}
+if (!runStep('זרימות משחק ותצוגה בשבעה גדלי מסך', 'npm run test:e2e')) allOk = false;
+if (process.env.DEPLOY_URL && !runStep('בדיקת הפצה חיה', 'node scripts/verify-deploy.mjs')) allOk = false;
+else if (!process.env.DEPLOY_URL) console.log('בדיקת אתר חי לא הורצה: יש להגדיר DEPLOY_URL בנפרד.');
 
 const distIndex = join(root, 'dist', 'index.html');
 if (!existsSync(distIndex)) {

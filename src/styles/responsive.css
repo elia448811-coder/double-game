@@ -427,6 +427,16 @@ html[data-device='mobile'] .mini-robot {
   left: calc(12px + var(--layout-safe-left));
 }
 
+html[data-device='mobile'] .app-shell:has(.setup-screen) .mini-robot {
+  bottom: calc(112px + var(--layout-safe-bottom));
+}
+
+html[data-device='mobile'] input:is([type='text'], [type='email'], [type='password'], [type='number']),
+html[data-device='mobile'] textarea,
+html[data-device='mobile'] select {
+  font-size: 16px;
+}
+
 html[data-device='mobile'] .mini-robot__panel {
   width: calc(100vw - 24px - var(--layout-safe-left) - var(--layout-safe-right));
   max-height: calc(100dvh - 88px - var(--layout-safe-top) - var(--layout-safe-bottom));

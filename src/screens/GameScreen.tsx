@@ -21,9 +21,9 @@ type GameScreenProps = {
   onSpinEnd: (segmentIndex: number) => void;
   onComplete: () => void;
   onSkip: () => void;
-  onReplaceTask: () => void;
-  onTooEasy: () => void;
-  onTooHard: () => void;
+  onReplaceTask: () => void | boolean;
+  onTooEasy: () => void | boolean;
+  onTooHard: () => void | boolean;
   onMarkFunniest: (task: CoupleTask) => void;
   onEndGame: () => void;
   onToggleSound: () => void;
@@ -31,6 +31,8 @@ type GameScreenProps = {
   onResume: () => void;
   onUndo: () => void;
   onExitToHome: () => void;
+  onOpenSettings: () => void;
+  onRestart: () => void;
   spectatorMode?: boolean;
 };
 
@@ -54,6 +56,8 @@ export function GameScreen({
   onResume,
   onUndo,
   onExitToHome,
+  onOpenSettings,
+  onRestart,
   spectatorMode = false,
 }: GameScreenProps) {
   const handleSpinEnd = useCallback(
@@ -66,12 +70,16 @@ export function GameScreen({
     [game.mode, contentMode],
   );
 
-  const { spin, rotation, landed } = useSpinWheel(handleSpinEnd, {
+  const { spin, rotation, landed, cancelSpin } = useSpinWheel(handleSpinEnd, {
     soundEnabled: settings.soundEnabled,
     soundPack: settings.soundPack,
     segments,
   });
   const [confirmEnd, setConfirmEnd] = useState(false);
+
+  useEffect(() => {
+    if (!game.isSpinning) cancelSpin();
+  }, [game.isSpinning, cancelSpin]);
 
   const progressCurrent = useMemo(() => {
     if (game.gameFormat === 'rounds') return game.stats.roundNumber;
@@ -88,14 +96,15 @@ export function GameScreen({
   ]);
 
   const [taskRating, setTaskRating] = useState<'up' | 'down' | null>(null);
+  const currentTaskId = game.currentTask?.id;
 
   useEffect(() => {
-    if (!game.currentTask) {
+    if (!currentTaskId) {
       setTaskRating(null);
       return;
     }
-    setTaskRating(getTaskFeedback(game.currentTask.id));
-  }, [game.currentTask?.id]);
+    setTaskRating(getTaskFeedback(currentTaskId));
+  }, [currentTaskId]);
 
   const handleSpin = () => {
     if (spectatorMode) return;
@@ -118,7 +127,7 @@ export function GameScreen({
             סיבוב {game.stats.roundNumber + 1}
             {effectiveTarget != null ? ` · יעד ${effectiveTarget}` : ''}
           </span>
-          <button type="button" className="icon-btn pressable" onClick={onPause} aria-label="השהייה">
+          <button type="button" className="icon-btn pressable" onClick={onPause} aria-label="השהייה" disabled={spectatorMode}>
             ⏸
           </button>
         </div>
@@ -200,17 +209,15 @@ export function GameScreen({
         )}
       </div>
 
-      {game.paused && (
+      {game.paused && !spectatorMode && (
         <PauseModal
           onContinue={onResume}
-          onSettings={() => {
-            onResume();
-            onExitToHome();
-          }}
-          onRestart={onEndGame}
+          onSettings={onOpenSettings}
+          onRestart={onRestart}
           onExit={onExitToHome}
         />
       )}
+      {game.paused && spectatorMode && <p role="status">המשחק מושהה אצל השותף/ה.</p>}
 
       {game.currentTask && !game.paused && (
         <TaskModal
