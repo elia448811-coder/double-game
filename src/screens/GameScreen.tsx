@@ -168,7 +168,7 @@ export function GameScreen({
           spinnerStyle={settings.spinnerStyle}
           gameMode={game.mode}
           segments={segments}
-          disabled={spectatorMode || !!game.currentTask || game.isSpinning || !!game.uiBlocked || !!game.paused}
+          disabled={spectatorMode || !!game.currentTask || game.isSpinning || landed || !!game.uiBlocked || !!game.paused}
           onSpin={handleSpin}
         />
 

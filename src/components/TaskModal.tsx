@@ -66,9 +66,11 @@ export function TaskModal({
   useEffect(() => {
     lockedRef.current = false;
     setConfirmSkip(false);
+    setExtrasOpen(false);
   }, [task.id]);
 
   useEffect(() => {
+    if (readOnly) return;
     const onKey = (e: KeyboardEvent) => {
       if (e.repeat || e.altKey || e.ctrlKey || e.metaKey) return;
       if (e.key === 'Escape') {
@@ -83,6 +85,7 @@ export function TaskModal({
       // Enter רק כשלא על אלמנט אינטראקטיבי — מונע כפל פעולות
       if (e.key === 'Enter' && !isInteractiveTarget(e.target)) {
         e.preventDefault();
+        if (confirmSkip) return;
         if (!lockedRef.current) {
           lockedRef.current = true;
           onComplete();
@@ -91,10 +94,16 @@ export function TaskModal({
     };
     window.addEventListener('keydown', onKey);
     return () => window.removeEventListener('keydown', onKey);
-  }, [onComplete, confirmSkip]);
+  }, [onComplete, confirmSkip, readOnly]);
+
+  const doComplete = () => {
+    if (readOnly || lockedRef.current) return;
+    lockedRef.current = true;
+    onComplete();
+  };
 
   const doSkip = () => {
-    if (lockedRef.current) return;
+    if (readOnly || lockedRef.current) return;
     lockedRef.current = true;
     setConfirmSkip(false);
     onSkip();
@@ -108,7 +117,7 @@ export function TaskModal({
         role="dialog"
         aria-modal="true"
         aria-labelledby="task-modal-title"
-        aria-describedby={confirmSkip ? 'task-skip-confirm' : undefined}
+        aria-describedby={!readOnly && confirmSkip ? 'task-skip-confirm-text' : undefined}
         tabIndex={-1}
       >
         <p className="task-modal__who">
@@ -143,8 +152,8 @@ export function TaskModal({
         )}
 
         {!readOnly && confirmSkip ? (
-          <div className="task-modal__skip-confirm" id="task-skip-confirm" role="alertdialog" aria-labelledby="task-skip-confirm">
-            <p>לדלג על המשימה?</p>
+          <div className="task-modal__skip-confirm" role="alertdialog" aria-labelledby="task-skip-confirm-text">
+            <p id="task-skip-confirm-text">{isQuestion ? 'לדלג על השאלה?' : 'לדלג על המשימה?'}</p>
             <div className="task-modal__main-actions">
               <button type="button" className="cta-button cta-button--modal pressable" onClick={doSkip}>
                 כן, דלג
@@ -156,7 +165,7 @@ export function TaskModal({
           </div>
         ) : !readOnly ? (
           <div className="task-modal__main-actions">
-            <button type="button" className="cta-button cta-button--modal pressable" onClick={onComplete}>
+            <button type="button" className="cta-button cta-button--modal pressable" onClick={doComplete}>
               {isQuestion ? '✓ דיברנו על זה' : '✓ בוצע'}
             </button>
             <button type="button" className="task-modal__skip pressable" onClick={doSkip}>

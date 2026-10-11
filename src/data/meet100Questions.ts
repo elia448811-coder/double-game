@@ -11,7 +11,7 @@ export const meet100Questions: Meet100QuestionTask[] = [
   {
     id: 'meet-001',
     title: "עוד 100 שאלות עומק — להכיר באמת",
-    description: "עוד שכבה של אמת: מה הדבר שהכי חשוב לך שבן או בת הזוג שלך יבינו עליך?",
+    description: "איזה פרט עליך יכול לעזור לי להבין אותך יותר לעומק?",
     kind: 'question',
     questionGroup: 'meet100',
     category: 'challenge',
@@ -21,7 +21,7 @@ export const meet100Questions: Meet100QuestionTask[] = [
   {
     id: 'meet-002',
     title: "עוד 100 שאלות עומק — להכיר באמת",
-    description: "בכנות נעימה, מתי את/ה מרגיש/ה הכי אהוב/ה?",
+    description: "מתי לאחרונה הרגשת שיש אהבה סביבך, ומה תרם לזה?",
     kind: 'question',
     questionGroup: 'meet100',
     category: 'challenge',
@@ -31,7 +31,7 @@ export const meet100Questions: Meet100QuestionTask[] = [
   {
     id: 'meet-003',
     title: "עוד 100 שאלות עומק — להכיר באמת",
-    description: "שאלה שמקרבת: מה הדבר הקטן שהכי יכול לשפר לך יום קשה?",
+    description: "מה יכול להפוך יום קשה שלך לקצת יותר קל?",
     kind: 'question',
     questionGroup: 'meet100',
     category: 'challenge',
@@ -41,7 +41,7 @@ export const meet100Questions: Meet100QuestionTask[] = [
   {
     id: 'meet-004',
     title: "עוד 100 שאלות עומק — להכיר באמת",
-    description: "בלי שיפוט, מה גורם לך להרגיש בטוח/ה בקשר?",
+    description: "איזו התנהגות עקבית שלי עוזרת לך לבטוח בקשר?",
     kind: 'question',
     questionGroup: 'meet100',
     category: 'challenge',
@@ -51,7 +51,7 @@ export const meet100Questions: Meet100QuestionTask[] = [
   {
     id: 'meet-005',
     title: "עוד 100 שאלות עומק — להכיר באמת",
-    description: "עמוק אבל נעים: מה הדבר שהכי קשה לך להסביר לאחרים על עצמך?",
+    description: "איזה חלק בעצמך קשה לך להסביר לאנשים?",
     kind: 'question',
     questionGroup: 'meet100',
     category: 'challenge',
@@ -61,7 +61,7 @@ export const meet100Questions: Meet100QuestionTask[] = [
   {
     id: 'meet-006',
     title: "עוד 100 שאלות עומק — להכיר באמת",
-    description: "תשובה מהלב: איזה צד באופי שלך אנשים לא תמיד רואים?",
+    description: "איזה צד באופי שלך מתגלה רק למי שקרוב אליך?",
     kind: 'question',
     questionGroup: 'meet100',
     category: 'challenge',
@@ -71,7 +71,7 @@ export const meet100Questions: Meet100QuestionTask[] = [
   {
     id: 'meet-007',
     title: "עוד 100 שאלות עומק — להכיר באמת",
-    description: "בינינו באמת, מה הדבר שהכי קל לפגוע בך בו?",
+    description: "לאיזו רגישות שלך חשוב לך שאתייחס בעדינות?",
     kind: 'question',
     questionGroup: 'meet100',
     category: 'challenge',
@@ -81,7 +81,7 @@ export const meet100Questions: Meet100QuestionTask[] = [
   {
     id: 'meet-008',
     title: "עוד 100 שאלות עומק — להכיר באמת",
-    description: "רגע של פתיחות: איך אפשר לדעת שאת/ה באמת שמח/ה?",
+    description: "איך נראית השמחה שלך כשמכירים אותך מקרוב?",
     kind: 'question',
     questionGroup: 'meet100',
     category: 'challenge',
@@ -91,7 +91,7 @@ export const meet100Questions: Meet100QuestionTask[] = [
   {
     id: 'meet-009',
     title: "עוד 100 שאלות עומק — להכיר באמת",
-    description: "שאלה למחשבה: איך אפשר לדעת שמשהו יושב עליך?",
+    description: "איך אפשר לזהות שמשהו מטריד אותך גם בלי שאמרת?",
     kind: 'question',
     questionGroup: 'meet100',
     category: 'challenge',
@@ -101,7 +101,7 @@ export const meet100Questions: Meet100QuestionTask[] = [
   {
     id: 'meet-010',
     title: "עוד 100 שאלות עומק — להכיר באמת",
-    description: "כשיש מקום לדבר, מה את/ה צריך/ה ממני כשאת/ה בלחץ?",
+    description: "כשיש לך לחץ, מה כדאי לי לעשות קודם?",
     kind: 'question',
     questionGroup: 'meet100',
     category: 'challenge',
@@ -111,7 +111,7 @@ export const meet100Questions: Meet100QuestionTask[] = [
   {
     id: 'meet-011',
     title: "עוד 100 שאלות עומק — להכיר באמת",
-    description: "עוד שכבה של אמת: מה גורם לך להרגיש שלא מקשיבים לך?",
+    description: "איזה הרגל בשיחה עלול לגרום לך להרגיש שלא שמעו אותך?",
     kind: 'question',
     questionGroup: 'meet100',
     category: 'challenge',
@@ -121,7 +121,7 @@ export const meet100Questions: Meet100QuestionTask[] = [
   {
     id: 'meet-012',
     title: "עוד 100 שאלות עומק — להכיר באמת",
-    description: "בכנות נעימה, מה הדרך הכי טובה להרגיע אותך?",
+    description: "איזו דרך להרגיע אותך עבדה טוב בעבר?",
     kind: 'question',
     questionGroup: 'meet100',
     category: 'challenge',
@@ -131,7 +131,7 @@ export const meet100Questions: Meet100QuestionTask[] = [
   {
     id: 'meet-013',
     title: "עוד 100 שאלות עומק — להכיר באמת",
-    description: "שאלה שמקרבת: מה דבר אחד שאת/ה רוצה שאעריך אצלך יותר?",
+    description: "איזה מאמץ שלך היית רוצה שאכיר בו יותר?",
     kind: 'question',
     questionGroup: 'meet100',
     category: 'challenge',
@@ -141,7 +141,7 @@ export const meet100Questions: Meet100QuestionTask[] = [
   {
     id: 'meet-014',
     title: "עוד 100 שאלות עומק — להכיר באמת",
-    description: "בלי שיפוט, מה מחמאה שנשארה איתך הרבה זמן?",
+    description: "איזו מחמאה שקיבלת שינתה את הדרך שבה ראית את עצמך?",
     kind: 'question',
     questionGroup: 'meet100',
     category: 'challenge',
@@ -151,7 +151,7 @@ export const meet100Questions: Meet100QuestionTask[] = [
   {
     id: 'meet-015',
     title: "עוד 100 שאלות עומק — להכיר באמת",
-    description: "עמוק אבל נעים: מה הדבר שהכי מחזק לך את הביטחון?",
+    description: "איזו הצלחה קטנה מחזקת אצלך את הביטחון?",
     kind: 'question',
     questionGroup: 'meet100',
     category: 'challenge',
@@ -161,7 +161,7 @@ export const meet100Questions: Meet100QuestionTask[] = [
   {
     id: 'meet-016',
     title: "עוד 100 שאלות עומק — להכיר באמת",
-    description: "תשובה מהלב: מה מוריד לך את הביטחון בלי שאנשים שמים לב?",
+    description: "איזו הערה תמימה לכאורה יכולה לערער אותך?",
     kind: 'question',
     questionGroup: 'meet100',
     category: 'challenge',
@@ -171,7 +171,7 @@ export const meet100Questions: Meet100QuestionTask[] = [
   {
     id: 'meet-017',
     title: "עוד 100 שאלות עומק — להכיר באמת",
-    description: "בינינו באמת, מה את/ה מפחד/ת שאנשים יחשבו עליך?",
+    description: "איזו תפיסה שגויה של אחרים לגביך מעסיקה אותך?",
     kind: 'question',
     questionGroup: 'meet100',
     category: 'challenge',
@@ -181,7 +181,7 @@ export const meet100Questions: Meet100QuestionTask[] = [
   {
     id: 'meet-018',
     title: "עוד 100 שאלות עומק — להכיר באמת",
-    description: "רגע של פתיחות: מה הדבר שאת/ה הכי גאה שעברת?",
+    description: "איזו תקופה הצלחת לעבור ויש לך גאווה על הדרך שעשית?",
     kind: 'question',
     questionGroup: 'meet100',
     category: 'challenge',
@@ -191,7 +191,7 @@ export const meet100Questions: Meet100QuestionTask[] = [
   {
     id: 'meet-019',
     title: "עוד 100 שאלות עומק — להכיר באמת",
-    description: "שאלה למחשבה: איזה שינוי עשית בעצמך ואת/ה גאה בו?",
+    description: "איזה שינוי שעשית בעצמך משמח אותך במיוחד?",
     kind: 'question',
     questionGroup: 'meet100',
     category: 'challenge',
@@ -201,7 +201,7 @@ export const meet100Questions: Meet100QuestionTask[] = [
   {
     id: 'meet-020',
     title: "עוד 100 שאלות עומק — להכיר באמת",
-    description: "כשיש מקום לדבר, מה דבר שהיית רוצה להיות יותר טוב/ה בו?",
+    description: "איזו יכולת היית רוצה לפתח יותר?",
     kind: 'question',
     questionGroup: 'meet100',
     category: 'challenge',
@@ -211,7 +211,7 @@ export const meet100Questions: Meet100QuestionTask[] = [
   {
     id: 'meet-021',
     title: "עוד 100 שאלות עומק — להכיר באמת",
-    description: "עוד שכבה של אמת: מה בעיניך הופך קשר לזוגיות טובה באמת?",
+    description: "מה מבדיל בעיניך זוגיות טובה מקשר שנוח להישאר בו?",
     kind: 'question',
     questionGroup: 'meet100',
     category: 'challenge',
@@ -221,7 +221,7 @@ export const meet100Questions: Meet100QuestionTask[] = [
   {
     id: 'meet-022',
     title: "עוד 100 שאלות עומק — להכיר באמת",
-    description: "בכנות נעימה, מה הדבר שהכי חשוב לך בזמן ויכוח?",
+    description: "בזמן ויכוח, מה עוזר לך להרגיש שאנחנו עדיין באותו צד?",
     kind: 'question',
     questionGroup: 'meet100',
     category: 'challenge',
@@ -231,7 +231,7 @@ export const meet100Questions: Meet100QuestionTask[] = [
   {
     id: 'meet-023',
     title: "עוד 100 שאלות עומק — להכיר באמת",
-    description: "שאלה שמקרבת: מה הדבר שהכי אסור לעשות לך בזמן ריב?",
+    description: "איזו התנהגות בזמן ריב פוגעת בך במיוחד?",
     kind: 'question',
     questionGroup: 'meet100',
     category: 'challenge',
@@ -241,7 +241,7 @@ export const meet100Questions: Meet100QuestionTask[] = [
   {
     id: 'meet-024',
     title: "עוד 100 שאלות עומק — להכיר באמת",
-    description: "בלי שיפוט, איך את/ה מעדיף/ה לפתור אי הבנות?",
+    description: "כשאנחנו מבינים משהו אחרת, איך כדאי לברר למה התכוונו?",
     kind: 'question',
     questionGroup: 'meet100',
     category: 'challenge',
@@ -251,7 +251,7 @@ export const meet100Questions: Meet100QuestionTask[] = [
   {
     id: 'meet-025',
     title: "עוד 100 שאלות עומק — להכיר באמת",
-    description: "עמוק אבל נעים: מה גורם לך להתרחק רגשית?",
+    description: "איך בדרך כלל מתחיל אצלך ריחוק רגשי?",
     kind: 'question',
     questionGroup: 'meet100',
     category: 'challenge',
@@ -261,7 +261,7 @@ export const meet100Questions: Meet100QuestionTask[] = [
   {
     id: 'meet-026',
     title: "עוד 100 שאלות עומק — להכיר באמת",
-    description: "תשובה מהלב: מה מקרב אותך חזרה אחרי ריחוק?",
+    description: "מה יכול לעזור לך לחזור לקרבה אחרי תקופה של ריחוק?",
     kind: 'question',
     questionGroup: 'meet100',
     category: 'challenge',
@@ -271,7 +271,7 @@ export const meet100Questions: Meet100QuestionTask[] = [
   {
     id: 'meet-027',
     title: "עוד 100 שאלות עומק — להכיר באמת",
-    description: "בינינו באמת, מתי את/ה מרגיש/ה שאנחנו צוות?",
+    description: "איזו החלטה שקיבלנו יחד גרמה לך להרגיש שאנחנו צוות?",
     kind: 'question',
     questionGroup: 'meet100',
     category: 'challenge',
@@ -281,7 +281,7 @@ export const meet100Questions: Meet100QuestionTask[] = [
   {
     id: 'meet-028',
     title: "עוד 100 שאלות עומק — להכיר באמת",
-    description: "רגע של פתיחות: מה הדבר הכי חשוב לך שנשמור עליו בקשר?",
+    description: "איזה חלק בקשר שלנו היית רוצה לטפח גם כשהחיים משתנים?",
     kind: 'question',
     questionGroup: 'meet100',
     category: 'challenge',
@@ -291,7 +291,7 @@ export const meet100Questions: Meet100QuestionTask[] = [
   {
     id: 'meet-029',
     title: "עוד 100 שאלות עומק — להכיר באמת",
-    description: "שאלה למחשבה: מה מבחינתך סימן שזוגיות בריאה?",
+    description: "איזה סימן יומיומי מעיד בעיניך על זוגיות בריאה?",
     kind: 'question',
     questionGroup: 'meet100',
     category: 'challenge',
@@ -301,7 +301,7 @@ export const meet100Questions: Meet100QuestionTask[] = [
   {
     id: 'meet-030',
     title: "עוד 100 שאלות עומק — להכיר באמת",
-    description: "כשיש מקום לדבר, מה דבר קטן שיכול לגרום לך להרגיש לבד גם כשאנחנו יחד?",
+    description: "מה יכול לגרום לך להרגיש לבד בזמן שאנחנו באותו חדר?",
     kind: 'question',
     questionGroup: 'meet100',
     category: 'challenge',
@@ -311,7 +311,7 @@ export const meet100Questions: Meet100QuestionTask[] = [
   {
     id: 'meet-031',
     title: "עוד 100 שאלות עומק — להכיר באמת",
-    description: "עוד שכבה של אמת: מה למדת מהבית שלך על אהבה?",
+    description: "איזה ביטוי של אהבה זכור לך מהבית שבו גדלת?",
     kind: 'question',
     questionGroup: 'meet100',
     category: 'challenge',
@@ -321,7 +321,7 @@ export const meet100Questions: Meet100QuestionTask[] = [
   {
     id: 'meet-032',
     title: "עוד 100 שאלות עומק — להכיר באמת",
-    description: "בכנות נעימה, מה למדת מהבית שלך על ריבים?",
+    description: "איך התנהלו ריבים בבית שבו גדלת, ומה לקחת מזה איתך?",
     kind: 'question',
     questionGroup: 'meet100',
     category: 'challenge',
@@ -331,7 +331,7 @@ export const meet100Questions: Meet100QuestionTask[] = [
   {
     id: 'meet-033',
     title: "עוד 100 שאלות עומק — להכיר באמת",
-    description: "שאלה שמקרבת: איזה הרגל מהבית שלך היית רוצה לשמור?",
+    description: "איזה הרגל מהילדות עדיין נותן לך תחושת בית?",
     kind: 'question',
     questionGroup: 'meet100',
     category: 'challenge',
@@ -341,7 +341,7 @@ export const meet100Questions: Meet100QuestionTask[] = [
   {
     id: 'meet-034',
     title: "עוד 100 שאלות עומק — להכיר באמת",
-    description: "בלי שיפוט, איזה הרגל מהבית שלך היית רוצה לשנות?",
+    description: "מאיזה דפוס משפחתי היית רוצה להשתחרר?",
     kind: 'question',
     questionGroup: 'meet100',
     category: 'challenge',
@@ -351,7 +351,7 @@ export const meet100Questions: Meet100QuestionTask[] = [
   {
     id: 'meet-035',
     title: "עוד 100 שאלות עומק — להכיר באמת",
-    description: "עמוק אבל נעים: מה חשוב לך באווירה של בית?",
+    description: "איזו אווירה היית רוצה ליצור בבית שלנו?",
     kind: 'question',
     questionGroup: 'meet100',
     category: 'challenge',
@@ -361,7 +361,7 @@ export const meet100Questions: Meet100QuestionTask[] = [
   {
     id: 'meet-036',
     title: "עוד 100 שאלות עומק — להכיר באמת",
-    description: "תשובה מהלב: איך נראה בעיניך בית רגוע?",
+    description: "איך נראה בשבילך רגע של רוגע בבית?",
     kind: 'question',
     questionGroup: 'meet100',
     category: 'challenge',
@@ -371,7 +371,7 @@ export const meet100Questions: Meet100QuestionTask[] = [
   {
     id: 'meet-037',
     title: "עוד 100 שאלות עומק — להכיר באמת",
-    description: "בינינו באמת, מה גורם לך להרגיש שייכות?",
+    description: "איפה או עם מי יש לך תחושת שייכות?",
     kind: 'question',
     questionGroup: 'meet100',
     category: 'challenge',
@@ -381,7 +381,7 @@ export const meet100Questions: Meet100QuestionTask[] = [
   {
     id: 'meet-038',
     title: "עוד 100 שאלות עומק — להכיר באמת",
-    description: "רגע של פתיחות: מה גורם לך להרגיש שלא מבינים אותך?",
+    description: "מתי יש פער בין הכוונה שלך לבין מה שאחרים מבינים?",
     kind: 'question',
     questionGroup: 'meet100',
     category: 'challenge',
@@ -391,7 +391,7 @@ export const meet100Questions: Meet100QuestionTask[] = [
   {
     id: 'meet-039',
     title: "עוד 100 שאלות עומק — להכיר באמת",
-    description: "שאלה למחשבה: איזה ערך הכי חשוב לך בחיים?",
+    description: "איזה ערך מנחה אותך בהחלטות בחיים?",
     kind: 'question',
     questionGroup: 'meet100',
     category: 'challenge',
@@ -401,7 +401,7 @@ export const meet100Questions: Meet100QuestionTask[] = [
   {
     id: 'meet-040',
     title: "עוד 100 שאלות עומק — להכיר באמת",
-    description: "כשיש מקום לדבר, איזה ערך הכי חשוב לך בזוגיות?",
+    description: "איך היית רוצה שהערכים שלך יבואו לידי ביטוי בזוגיות?",
     kind: 'question',
     questionGroup: 'meet100',
     category: 'challenge',
@@ -411,7 +411,7 @@ export const meet100Questions: Meet100QuestionTask[] = [
   {
     id: 'meet-041',
     title: "עוד 100 שאלות עומק — להכיר באמת",
-    description: "עוד שכבה של אמת: מה החלום הכי אישי שלך?",
+    description: "איזה חלום אישי כמעט שלא יצא לך לשתף?",
     kind: 'question',
     questionGroup: 'meet100',
     category: 'challenge',
@@ -421,7 +421,7 @@ export const meet100Questions: Meet100QuestionTask[] = [
   {
     id: 'meet-042',
     title: "עוד 100 שאלות עומק — להכיר באמת",
-    description: "בכנות נעימה, מה חלום זוגי שהיית רוצה שנגשים יחד?",
+    description: "מה יהיה הצעד הראשון לקראת חלום משותף שלנו?",
     kind: 'question',
     questionGroup: 'meet100',
     category: 'challenge',
@@ -431,7 +431,7 @@ export const meet100Questions: Meet100QuestionTask[] = [
   {
     id: 'meet-043',
     title: "עוד 100 שאלות עומק — להכיר באמת",
-    description: "שאלה שמקרבת: איפה היית רוצה לראות אותנו בעוד שנה?",
+    description: "מה היית רוצה שיהיה שונה בחיים שלנו בעוד שנה?",
     kind: 'question',
     questionGroup: 'meet100',
     category: 'challenge',
@@ -441,7 +441,7 @@ export const meet100Questions: Meet100QuestionTask[] = [
   {
     id: 'meet-044',
     title: "עוד 100 שאלות עומק — להכיר באמת",
-    description: "בלי שיפוט, מה היית רוצה שנבנה יחד בעתיד?",
+    description: "איזה דבר משותף היית רוצה שנבנה בלי למהר?",
     kind: 'question',
     questionGroup: 'meet100',
     category: 'challenge',
@@ -451,7 +451,7 @@ export const meet100Questions: Meet100QuestionTask[] = [
   {
     id: 'meet-045',
     title: "עוד 100 שאלות עומק — להכיר באמת",
-    description: "עמוק אבל נעים: מה הדבר שהכי מפחיד אותך לגבי העתיד?",
+    description: "איזו אי ודאות לגבי העתיד מעסיקה אותך?",
     kind: 'question',
     questionGroup: 'meet100',
     category: 'challenge',
@@ -461,7 +461,7 @@ export const meet100Questions: Meet100QuestionTask[] = [
   {
     id: 'meet-046',
     title: "עוד 100 שאלות עומק — להכיר באמת",
-    description: "תשובה מהלב: מה נותן לך תקווה לגבי העתיד?",
+    description: "מה נותן לך תקווה כשחושבים על העתיד?",
     kind: 'question',
     questionGroup: 'meet100',
     category: 'challenge',
@@ -471,7 +471,7 @@ export const meet100Questions: Meet100QuestionTask[] = [
   {
     id: 'meet-047',
     title: "עוד 100 שאלות עומק — להכיר באמת",
-    description: "בינינו באמת, מה חשוב לך שלא נאבד עם השנים?",
+    description: "איזו תכונה של הקשר שלנו חשוב לך לשמר לאורך השנים?",
     kind: 'question',
     questionGroup: 'meet100',
     category: 'challenge',
@@ -481,7 +481,7 @@ export const meet100Questions: Meet100QuestionTask[] = [
   {
     id: 'meet-048',
     title: "עוד 100 שאלות עומק — להכיר באמת",
-    description: "רגע של פתיחות: איזה הרגל זוגי היית רוצה שיהיה לנו קבוע?",
+    description: "איזה טקס קטן היית רוצה שיהפוך להרגל זוגי קבוע?",
     kind: 'question',
     questionGroup: 'meet100',
     category: 'challenge',
@@ -491,7 +491,7 @@ export const meet100Questions: Meet100QuestionTask[] = [
   {
     id: 'meet-049',
     title: "עוד 100 שאלות עומק — להכיר באמת",
-    description: "שאלה למחשבה: מה היית רוצה שנעשה פעם בשבוע?",
+    description: "למה היית רוצה שנקדיש זמן קבוע מדי שבוע?",
     kind: 'question',
     questionGroup: 'meet100',
     category: 'challenge',
@@ -501,7 +501,7 @@ export const meet100Questions: Meet100QuestionTask[] = [
   {
     id: 'meet-050',
     title: "עוד 100 שאלות עומק — להכיר באמת",
-    description: "כשיש מקום לדבר, מה דבר אחד שיכול לשפר לנו את השגרה?",
+    description: "איזה חלק בשגרה אפשר לפשט כדי להקל על שנינו?",
     kind: 'question',
     questionGroup: 'meet100',
     category: 'challenge',
@@ -511,7 +511,7 @@ export const meet100Questions: Meet100QuestionTask[] = [
   {
     id: 'meet-051',
     title: "עוד 100 שאלות עומק — להכיר באמת",
-    description: "עוד שכבה של אמת: מה את/ה צריך/ה כשיש לך יום רע?",
+    description: "אחרי יום רע, מה היית רוצה שיקרה כשניפגש?",
     kind: 'question',
     questionGroup: 'meet100',
     category: 'challenge',
@@ -521,7 +521,7 @@ export const meet100Questions: Meet100QuestionTask[] = [
   {
     id: 'meet-052',
     title: "עוד 100 שאלות עומק — להכיר באמת",
-    description: "בכנות נעימה, מה עדיף לך כשקשה לך: לדבר, שקט, חיבוק, או זמן לבד?",
+    description: "כשקשה לך, מה מתאים לך: שיחה, שקט, חיבוק, זמן לבד או משהו אחר?",
     kind: 'question',
     questionGroup: 'meet100',
     category: 'challenge',
@@ -531,7 +531,7 @@ export const meet100Questions: Meet100QuestionTask[] = [
   {
     id: 'meet-053',
     title: "עוד 100 שאלות עומק — להכיר באמת",
-    description: "שאלה שמקרבת: מה גורם לך להרגיש שמישהו באמת איתך?",
+    description: "מה גורם לך להרגיש שמישהו נמצא לצדך באמת?",
     kind: 'question',
     questionGroup: 'meet100',
     category: 'challenge',
@@ -541,7 +541,7 @@ export const meet100Questions: Meet100QuestionTask[] = [
   {
     id: 'meet-054',
     title: "עוד 100 שאלות עומק — להכיר באמת",
-    description: "בלי שיפוט, מה דבר קטן שאני יכול/ה לעשות שיראה לך שאכפת לי?",
+    description: "איזו פעולה קטנה שלי יכולה להראות לך שאכפת לי?",
     kind: 'question',
     questionGroup: 'meet100',
     category: 'challenge',
@@ -551,7 +551,7 @@ export const meet100Questions: Meet100QuestionTask[] = [
   {
     id: 'meet-055',
     title: "עוד 100 שאלות עומק — להכיר באמת",
-    description: "עמוק אבל נעים: מה הדבר שהכי משמח אותך בלי הרבה מאמץ?",
+    description: "מה מצליח לשמח אותך גם כשאין הרבה זמן או אנרגיה?",
     kind: 'question',
     questionGroup: 'meet100',
     category: 'challenge',
@@ -561,7 +561,7 @@ export const meet100Questions: Meet100QuestionTask[] = [
   {
     id: 'meet-056',
     title: "עוד 100 שאלות עומק — להכיר באמת",
-    description: "תשובה מהלב: מה גורם לך להרגיש מוערך/ת?",
+    description: "איך היית רוצה שאביע הערכה למאמץ שלך?",
     kind: 'question',
     questionGroup: 'meet100',
     category: 'challenge',
@@ -571,7 +571,7 @@ export const meet100Questions: Meet100QuestionTask[] = [
   {
     id: 'meet-057',
     title: "עוד 100 שאלות עומק — להכיר באמת",
-    description: "בינינו באמת, מה גורם לך להרגיש שקופים מולך?",
+    description: "מתי יש לך תחושה שהצרכים שלך נשארים בלי מענה?",
     kind: 'question',
     questionGroup: 'meet100',
     category: 'challenge',
@@ -581,7 +581,7 @@ export const meet100Questions: Meet100QuestionTask[] = [
   {
     id: 'meet-058',
     title: "עוד 100 שאלות עומק — להכיר באמת",
-    description: "רגע של פתיחות: מה את/ה לא אומר/ת בדרך כלל אבל כן מרגיש/ה?",
+    description: "מה עובר לך בראש לפעמים ולא יוצא לך לומר בקול?",
     kind: 'question',
     questionGroup: 'meet100',
     category: 'challenge',
@@ -591,7 +591,7 @@ export const meet100Questions: Meet100QuestionTask[] = [
   {
     id: 'meet-059',
     title: "עוד 100 שאלות עומק — להכיר באמת",
-    description: "שאלה למחשבה: מה קשה לך לבקש ממני?",
+    description: "איזו בקשה ממני היית רוצה להרגיש בנוח להביע?",
     kind: 'question',
     questionGroup: 'meet100',
     category: 'challenge',
@@ -601,7 +601,7 @@ export const meet100Questions: Meet100QuestionTask[] = [
   {
     id: 'meet-060',
     title: "עוד 100 שאלות עומק — להכיר באמת",
-    description: "כשיש מקום לדבר, מה היית רוצה שיהיה בינינו יותר פשוט?",
+    description: "באיזה עניין היית רוצה שנרגיש חופשיים יותר זה עם זה?",
     kind: 'question',
     questionGroup: 'meet100',
     category: 'challenge',
@@ -611,7 +611,7 @@ export const meet100Questions: Meet100QuestionTask[] = [
   {
     id: 'meet-061',
     title: "עוד 100 שאלות עומק — להכיר באמת",
-    description: "עוד שכבה של אמת: מה הדבר שהכי הפתיע אותך בי לטובה?",
+    description: "מה גילית בי לטובה שלא ציפית לו בהתחלה?",
     kind: 'question',
     questionGroup: 'meet100',
     category: 'challenge',
@@ -621,7 +621,7 @@ export const meet100Questions: Meet100QuestionTask[] = [
   {
     id: 'meet-062',
     title: "עוד 100 שאלות עומק — להכיר באמת",
-    description: "בכנות נעימה, מה הדבר שאת/ה הכי אוהב/ת באיך שאנחנו יחד?",
+    description: "מה אהוב עליך בדרך שבה אנחנו מבלים יחד?",
     kind: 'question',
     questionGroup: 'meet100',
     category: 'challenge',
@@ -631,7 +631,7 @@ export const meet100Questions: Meet100QuestionTask[] = [
   {
     id: 'meet-063',
     title: "עוד 100 שאלות עומק — להכיר באמת",
-    description: "שאלה שמקרבת: איזה רגע שלנו היית רוצה לזכור תמיד?",
+    description: "איזה רגע משותף היית רוצה לתעד במילים כדי לזכור אותו?",
     kind: 'question',
     questionGroup: 'meet100',
     category: 'challenge',
@@ -641,7 +641,7 @@ export const meet100Questions: Meet100QuestionTask[] = [
   {
     id: 'meet-064',
     title: "עוד 100 שאלות עומק — להכיר באמת",
-    description: "בלי שיפוט, מתי הרגשת שהקשר בינינו התחזק?",
+    description: "איזו התמודדות משותפת גרמה לך להרגיש שהקשר התחזק?",
     kind: 'question',
     questionGroup: 'meet100',
     category: 'challenge',
@@ -651,7 +651,7 @@ export const meet100Questions: Meet100QuestionTask[] = [
   {
     id: 'meet-065',
     title: "עוד 100 שאלות עומק — להכיר באמת",
-    description: "עמוק אבל נעים: מה הדבר הכי קטן שעשיתי והיה לך משמעותי?",
+    description: "איזה מעשה קטן שלי זכור לך בזכות המשמעות שלו?",
     kind: 'question',
     questionGroup: 'meet100',
     category: 'challenge',
@@ -661,7 +661,7 @@ export const meet100Questions: Meet100QuestionTask[] = [
   {
     id: 'meet-066',
     title: "עוד 100 שאלות עומק — להכיר באמת",
-    description: "תשובה מהלב: מה את/ה חושב/ת שאני לא יודע/ת עליך מספיק?",
+    description: "איזה חלק בסיפור החיים שלך הייתי יכול להכיר טוב יותר?",
     kind: 'question',
     questionGroup: 'meet100',
     category: 'challenge',
@@ -671,7 +671,7 @@ export const meet100Questions: Meet100QuestionTask[] = [
   {
     id: 'meet-067',
     title: "עוד 100 שאלות עומק — להכיר באמת",
-    description: "בינינו באמת, מה היית רוצה לשתף איתי יותר?",
+    description: "על איזה חלק ביומיום שלך היית רוצה לשתף אותי יותר?",
     kind: 'question',
     questionGroup: 'meet100',
     category: 'challenge',
@@ -681,7 +681,7 @@ export const meet100Questions: Meet100QuestionTask[] = [
   {
     id: 'meet-068',
     title: "עוד 100 שאלות עומק — להכיר באמת",
-    description: "רגע של פתיחות: מה היית רוצה שאשאל אותך יותר?",
+    description: "איזו שאלה היית רוצה שאשאל אותך לעיתים קרובות יותר?",
     kind: 'question',
     questionGroup: 'meet100',
     category: 'challenge',
@@ -691,7 +691,7 @@ export const meet100Questions: Meet100QuestionTask[] = [
   {
     id: 'meet-069',
     title: "עוד 100 שאלות עומק — להכיר באמת",
-    description: "שאלה למחשבה: איזה נושא היית רוצה שיהיה לנו קל יותר לדבר עליו?",
+    description: "באיזה נושא היית רוצה שיהיה לנו קל יותר לדבר בכנות?",
     kind: 'question',
     questionGroup: 'meet100',
     category: 'challenge',
@@ -701,7 +701,7 @@ export const meet100Questions: Meet100QuestionTask[] = [
   {
     id: 'meet-070',
     title: "עוד 100 שאלות עומק — להכיר באמת",
-    description: "כשיש מקום לדבר, מה יעזור לך להיפתח יותר?",
+    description: "מה יכול להפוך שיתוף אישי לנוח יותר עבורך?",
     kind: 'question',
     questionGroup: 'meet100',
     category: 'challenge',
@@ -711,7 +711,7 @@ export const meet100Questions: Meet100QuestionTask[] = [
   {
     id: 'meet-071',
     title: "עוד 100 שאלות עומק — להכיר באמת",
-    description: "עוד שכבה של אמת: מה הדבר שהכי מצחיק אותך בי?",
+    description: "איזה סוג של הומור שלי הכי מדבר אליך?",
     kind: 'question',
     questionGroup: 'meet100',
     category: 'challenge',
@@ -721,7 +721,7 @@ export const meet100Questions: Meet100QuestionTask[] = [
   {
     id: 'meet-072',
     title: "עוד 100 שאלות עומק — להכיר באמת",
-    description: "בכנות נעימה, מה הדבר הכי חמוד שאני עושה בלי לשים לב?",
+    description: "איזה פרט קטן בהתנהגות שלי מעורר אצלך חיבה?",
     kind: 'question',
     questionGroup: 'meet100',
     category: 'challenge',
@@ -731,7 +731,7 @@ export const meet100Questions: Meet100QuestionTask[] = [
   {
     id: 'meet-073',
     title: "עוד 100 שאלות עומק — להכיר באמת",
-    description: "שאלה שמקרבת: איזה צד בי את/ה הכי מעריך/ה?",
+    description: "איזו תכונה שלי התגלתה לך עם הזמן וזכתה להערכה שלך?",
     kind: 'question',
     questionGroup: 'meet100',
     category: 'challenge',
@@ -741,7 +741,7 @@ export const meet100Questions: Meet100QuestionTask[] = [
   {
     id: 'meet-074',
     title: "עוד 100 שאלות עומק — להכיר באמת",
-    description: "בלי שיפוט, מה משהו בי שגורם לך להרגיש רגוע/ה?",
+    description: "מה בדרך שבה אני נוכח לידך עוזר לך להירגע?",
     kind: 'question',
     questionGroup: 'meet100',
     category: 'challenge',
@@ -751,7 +751,7 @@ export const meet100Questions: Meet100QuestionTask[] = [
   {
     id: 'meet-075',
     title: "עוד 100 שאלות עומק — להכיר באמת",
-    description: "עמוק אבל נעים: מה משהו בי שגורם לך להרגיש שמח/ה?",
+    description: "מה בהתנהגות שלי מכניס שמחה ליום שלך?",
     kind: 'question',
     questionGroup: 'meet100',
     category: 'challenge',
@@ -761,7 +761,7 @@ export const meet100Questions: Meet100QuestionTask[] = [
   {
     id: 'meet-076',
     title: "עוד 100 שאלות עומק — להכיר באמת",
-    description: "תשובה מהלב: מה את/ה חושב/ת שאני עושה טוב בקשר?",
+    description: "איזה דבר שאני עושה בקשר היית רוצה שאמשיך לעשות?",
     kind: 'question',
     questionGroup: 'meet100',
     category: 'challenge',
@@ -771,7 +771,7 @@ export const meet100Questions: Meet100QuestionTask[] = [
   {
     id: 'meet-077',
     title: "עוד 100 שאלות עומק — להכיר באמת",
-    description: "בינינו באמת, מה היית רוצה שאעשה אחרת בצורה עדינה?",
+    description: "איזה שינוי קטן בהתנהגות שלי יכול להקל עליך?",
     kind: 'question',
     questionGroup: 'meet100',
     category: 'challenge',
@@ -781,7 +781,7 @@ export const meet100Questions: Meet100QuestionTask[] = [
   {
     id: 'meet-078',
     title: "עוד 100 שאלות עומק — להכיר באמת",
-    description: "רגע של פתיחות: מה דבר אחד שאת/ה רוצה שנלמד לעשות טוב יותר יחד?",
+    description: "איזו מיומנות היית רוצה שנפתח יחד כזוג?",
     kind: 'question',
     questionGroup: 'meet100',
     category: 'challenge',
@@ -791,7 +791,7 @@ export const meet100Questions: Meet100QuestionTask[] = [
   {
     id: 'meet-079',
     title: "עוד 100 שאלות עומק — להכיר באמת",
-    description: "שאלה למחשבה: מה בעיניך הכוח הכי גדול שלנו כזוג?",
+    description: "איזו חוזקה שלנו עוזרת לנו להתמודד יחד עם קשיים?",
     kind: 'question',
     questionGroup: 'meet100',
     category: 'challenge',
@@ -801,7 +801,7 @@ export const meet100Questions: Meet100QuestionTask[] = [
   {
     id: 'meet-080',
     title: "עוד 100 שאלות עומק — להכיר באמת",
-    description: "כשיש מקום לדבר, מה בעיניך האתגר הכי גדול שלנו כזוג?",
+    description: "איזה אתגר משותף היית רוצה שנקדיש לו תשומת לב?",
     kind: 'question',
     questionGroup: 'meet100',
     category: 'challenge',
@@ -811,7 +811,7 @@ export const meet100Questions: Meet100QuestionTask[] = [
   {
     id: 'meet-081',
     title: "עוד 100 שאלות עומק — להכיר באמת",
-    description: "עוד שכבה של אמת: איך את/ה אוהב/ת לקבל אהבה?",
+    description: "באיזו דרך הכי קל לך להרגיש אהבה ממני?",
     kind: 'question',
     questionGroup: 'meet100',
     category: 'challenge',
@@ -821,7 +821,7 @@ export const meet100Questions: Meet100QuestionTask[] = [
   {
     id: 'meet-082',
     title: "עוד 100 שאלות עומק — להכיר באמת",
-    description: "בכנות נעימה, איך את/ה בדרך כלל נותן/ת אהבה?",
+    description: "איך בדרך כלל באה לידי ביטוי האהבה שלך?",
     kind: 'question',
     questionGroup: 'meet100',
     category: 'challenge',
@@ -831,7 +831,7 @@ export const meet100Questions: Meet100QuestionTask[] = [
   {
     id: 'meet-083',
     title: "עוד 100 שאלות עומק — להכיר באמת",
-    description: "שאלה שמקרבת: מה מבחינתך מחווה קטנה אבל משמעותית?",
+    description: "איזו מחווה פשוטה נושאת עבורך משמעות גדולה?",
     kind: 'question',
     questionGroup: 'meet100',
     category: 'challenge',
@@ -841,7 +841,7 @@ export const meet100Questions: Meet100QuestionTask[] = [
   {
     id: 'meet-084',
     title: "עוד 100 שאלות עומק — להכיר באמת",
-    description: "בלי שיפוט, מה יותר חשוב לך: מילים טובות, זמן יחד, עזרה, קרבה חמה ונעימה, או מתנות קטנות?",
+    description: "מה הכי משמעותי עבורך בקבלת אהבה: מילים, זמן יחד, עזרה, מגע, מתנות או משהו אחר?",
     kind: 'question',
     questionGroup: 'meet100',
     category: 'challenge',
@@ -851,7 +851,7 @@ export const meet100Questions: Meet100QuestionTask[] = [
   {
     id: 'meet-085',
     title: "עוד 100 שאלות עומק — להכיר באמת",
-    description: "עמוק אבל נעים: מה גורם לך להרגיש שמכבדים אותך?",
+    description: "איך נראה כבוד הדדי במצב שבו אנחנו לא מסכימים?",
     kind: 'question',
     questionGroup: 'meet100',
     category: 'challenge',
@@ -861,7 +861,7 @@ export const meet100Questions: Meet100QuestionTask[] = [
   {
     id: 'meet-086',
     title: "עוד 100 שאלות עומק — להכיר באמת",
-    description: "תשובה מהלב: מה גבול אישי שחשוב לך שיכבדו?",
+    description: "איזה מרחב אישי חשוב לך לשמור לעצמך?",
     kind: 'question',
     questionGroup: 'meet100',
     category: 'challenge',
@@ -871,7 +871,7 @@ export const meet100Questions: Meet100QuestionTask[] = [
   {
     id: 'meet-087',
     title: "עוד 100 שאלות עומק — להכיר באמת",
-    description: "בינינו באמת, מה דבר שאת/ה צריך/ה בו יותר סבלנות ממני?",
+    description: "באיזה עניין נחוצה לך יותר סבלנות ממני?",
     kind: 'question',
     questionGroup: 'meet100',
     category: 'challenge',
@@ -881,7 +881,7 @@ export const meet100Questions: Meet100QuestionTask[] = [
   {
     id: 'meet-088',
     title: "עוד 100 שאלות עומק — להכיר באמת",
-    description: "רגע של פתיחות: מה דבר שאני צריך/ה לדעת כשאת/ה שותק/ת?",
+    description: "כשאין לך רצון לדבר, איך היית רוצה שאתייחס לזה?",
     kind: 'question',
     questionGroup: 'meet100',
     category: 'challenge',
@@ -891,7 +891,7 @@ export const meet100Questions: Meet100QuestionTask[] = [
   {
     id: 'meet-089',
     title: "עוד 100 שאלות עומק — להכיר באמת",
-    description: "שאלה למחשבה: מה סימן קטן שמראה שאת/ה צריך/ה יחס?",
+    description: "איך אפשר לזהות שיש לך צורך בתשומת לב?",
     kind: 'question',
     questionGroup: 'meet100',
     category: 'challenge',
@@ -901,7 +901,7 @@ export const meet100Questions: Meet100QuestionTask[] = [
   {
     id: 'meet-090',
     title: "עוד 100 שאלות עומק — להכיר באמת",
-    description: "כשיש מקום לדבר, מה סימן קטן שמראה שאת/ה צריך/ה מרחב?",
+    description: "איך אפשר לזהות שיש לך צורך במרחב לעצמך?",
     kind: 'question',
     questionGroup: 'meet100',
     category: 'challenge',
@@ -911,7 +911,7 @@ export const meet100Questions: Meet100QuestionTask[] = [
   {
     id: 'meet-091',
     title: "עוד 100 שאלות עומק — להכיר באמת",
-    description: "עוד שכבה של אמת: איזה חלק בעצמך את/ה עדיין לומד/ת לקבל?",
+    description: "איזה חלק בעצמך עוד לא קל לך לקבל?",
     kind: 'question',
     questionGroup: 'meet100',
     category: 'challenge',
@@ -921,7 +921,7 @@ export const meet100Questions: Meet100QuestionTask[] = [
   {
     id: 'meet-092',
     title: "עוד 100 שאלות עומק — להכיר באמת",
-    description: "בכנות נעימה, מה דבר שהיית רוצה שאהיה גאה בך עליו?",
+    description: "על איזה הישג שלך היית רוצה שאביע גאווה?",
     kind: 'question',
     questionGroup: 'meet100',
     category: 'challenge',
@@ -931,7 +931,7 @@ export const meet100Questions: Meet100QuestionTask[] = [
   {
     id: 'meet-093',
     title: "עוד 100 שאלות עומק — להכיר באמת",
-    description: "שאלה שמקרבת: מה את/ה רוצה לשפר בעצמך בלי להרגיש ששופטים אותך?",
+    description: "איזה שינוי אישי היית רוצה לעשות עם תמיכה ממני?",
     kind: 'question',
     questionGroup: 'meet100',
     category: 'challenge',
@@ -941,7 +941,7 @@ export const meet100Questions: Meet100QuestionTask[] = [
   {
     id: 'meet-094',
     title: "עוד 100 שאלות עומק — להכיר באמת",
-    description: "בלי שיפוט, מה את/ה רוצה שאזכור עליך ברגעים קשים?",
+    description: "איזה דבר עליך חשוב שאזכור ברגע שקשה לך?",
     kind: 'question',
     questionGroup: 'meet100',
     category: 'challenge',
@@ -951,7 +951,7 @@ export const meet100Questions: Meet100QuestionTask[] = [
   {
     id: 'meet-095',
     title: "עוד 100 שאלות עומק — להכיר באמת",
-    description: "עמוק אבל נעים: מה המשפט שהכי היית רוצה לשמוע ממני כשקשה לך?",
+    description: "אילו מילים ממני יכולות לחזק אותך ביום קשה?",
     kind: 'question',
     questionGroup: 'meet100',
     category: 'challenge',
@@ -961,7 +961,7 @@ export const meet100Questions: Meet100QuestionTask[] = [
   {
     id: 'meet-096',
     title: "עוד 100 שאלות עומק — להכיר באמת",
-    description: "תשובה מהלב: מה הדבר שהכי חשוב לך שאף פעם לא נזלזל בו?",
+    description: "לאיזה דבר שיקר לך חשוב שנתייחס ברצינות תמיד?",
     kind: 'question',
     questionGroup: 'meet100',
     category: 'challenge',
@@ -971,7 +971,7 @@ export const meet100Questions: Meet100QuestionTask[] = [
   {
     id: 'meet-097',
     title: "עוד 100 שאלות עומק — להכיר באמת",
-    description: "בינינו באמת, מה את/ה רוצה שנבטיח אחד לשני כזוג?",
+    description: "איזו הבטחה מציאותית היית רוצה שניתן זה לזה?",
     kind: 'question',
     questionGroup: 'meet100',
     category: 'challenge',
@@ -981,7 +981,7 @@ export const meet100Questions: Meet100QuestionTask[] = [
   {
     id: 'meet-098',
     title: "עוד 100 שאלות עומק — להכיר באמת",
-    description: "רגע של פתיחות: מה הדבר שהכי יכול לקרב בינינו כבר השבוע?",
+    description: "מה נוכל לעשות השבוע כדי לפנות יותר מקום לקרבה?",
     kind: 'question',
     questionGroup: 'meet100',
     category: 'challenge',
@@ -991,7 +991,7 @@ export const meet100Questions: Meet100QuestionTask[] = [
   {
     id: 'meet-099',
     title: "עוד 100 שאלות עומק — להכיר באמת",
-    description: "שאלה למחשבה: מה דבר אחד שאת/ה רוצה שאדע על הלב שלך?",
+    description: "מה היית רוצה שאבין על הדרך שבה הרגשות שלך מתבטאים?",
     kind: 'question',
     questionGroup: 'meet100',
     category: 'challenge',
@@ -1001,7 +1001,7 @@ export const meet100Questions: Meet100QuestionTask[] = [
   {
     id: 'meet-100',
     title: "עוד 100 שאלות עומק — להכיר באמת",
-    description: "כשיש מקום לדבר, מה משפט אחד שמסכם בעיניך זוגיות טובה?",
+    description: "איזה משפט מבטא עבורך את הזוגיות שהיית רוצה לחיות בה?",
     kind: 'question',
     questionGroup: 'meet100',
     category: 'challenge',

@@ -23,7 +23,7 @@ export default defineConfig(({ mode }) => {
         manifest: {
           name: 'ספין זוגי | Couple Spin',
           short_name: 'ספין זוגי',
-          description: 'משחק משימות מצחיק וכיפי לזוגות — בלי שאלות, רק משימות!',
+          description: 'משחק שאלות ומשימות לזוגות — לשיחה, לצחוק ולזמן יחד.',
           theme_color: '#10071f',
           background_color: '#10071f',
           display: 'standalone',

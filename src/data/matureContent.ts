@@ -1097,7 +1097,7 @@ export const matureQuestions: CoupleQuestionTask[] = [
   {
     id: 'spicy-q-01',
     title: "שאלות 18+",
-    description: "מה הכי מפתה אותך אצלי — בגוף, בקול, במבט או בתנועה?",
+    description: "מה בי מושך אותך במיוחד: הקול, המבט, התנועה או משהו אחר?",
     kind: 'question',
     questionGroup: 'spicy',
     category: 'spicy',
@@ -1107,7 +1107,7 @@ export const matureQuestions: CoupleQuestionTask[] = [
   {
     id: 'spicy-q-02',
     title: "שאלות 18+",
-    description: "איזו מחווה רומנטית-סקסית היית רוצה לקבל ממני יותר (נשיקה, מגע, לחישה…)?",
+    description: "איזו מחווה חושנית ממני היית רוצה לקבל יותר?",
     kind: 'question',
     questionGroup: 'spicy',
     category: 'spicy',
@@ -1117,7 +1117,7 @@ export const matureQuestions: CoupleQuestionTask[] = [
   {
     id: 'spicy-q-03',
     title: "שאלות 18+",
-    description: "מתי את/ה מרגיש/ה הכי קרוב/ה אליי פיזית ורגשית בו-זמנית?",
+    description: "באיזה רגע הרגשת חיבור חזק בין הקרבה הגופנית לרגשית שלנו?",
     kind: 'question',
     questionGroup: 'spicy',
     category: 'spicy',
@@ -1127,7 +1127,7 @@ export const matureQuestions: CoupleQuestionTask[] = [
   {
     id: 'spicy-q-04',
     title: "שאלות 18+",
-    description: "מה היית רוצה שנעשה יותר בפרטיות — בלי לחץ ובקצב שלנו?",
+    description: "איזו חוויה בפרטיות היית רוצה שנפנה לה יותר זמן?",
     kind: 'question',
     questionGroup: 'spicy',
     category: 'spicy',
@@ -1137,7 +1137,7 @@ export const matureQuestions: CoupleQuestionTask[] = [
   {
     id: 'spicy-q-05',
     title: "שאלות 18+",
-    description: "מה גורם לך להרגיש ממש מושך/ת ורצוי/ה אליי?",
+    description: "מה עוזר לך להרגיש שיש בי משיכה ורצון לקרבה אליך?",
     kind: 'question',
     questionGroup: 'spicy',
     category: 'spicy',
@@ -1147,7 +1147,7 @@ export const matureQuestions: CoupleQuestionTask[] = [
   {
     id: 'spicy-q-06',
     title: "שאלות 18+",
-    description: "איזה רגע איתי היה הכי חם, מלא תשוקה ובלתי נשכח?",
+    description: "איזה רגע אינטימי שלנו נשאר בזיכרון שלך במיוחד?",
     kind: 'question',
     questionGroup: 'spicy',
     category: 'spicy',
@@ -1157,7 +1157,7 @@ export const matureQuestions: CoupleQuestionTask[] = [
   {
     id: 'spicy-q-07',
     title: "שאלות 18+",
-    description: "מה את/ה אוהב/ת במיוחד בגוף שלי — ואיפה את/ה הכי אוהב/ת לגעת או שיגעו בך?",
+    description: "איזה סוג של מגע ממני נעים לך במיוחד?",
     kind: 'question',
     questionGroup: 'spicy',
     category: 'spicy',
@@ -1167,7 +1167,7 @@ export const matureQuestions: CoupleQuestionTask[] = [
   {
     id: 'spicy-q-08',
     title: "שאלות 18+",
-    description: "מה היית רוצה שאגיד לך או אלחש לך לפני שנתחיל להתקרב?",
+    description: "מה היית רוצה לשמוע ממני לפני רגע של קרבה?",
     kind: 'question',
     questionGroup: 'spicy',
     category: 'spicy',
@@ -1177,7 +1177,7 @@ export const matureQuestions: CoupleQuestionTask[] = [
   {
     id: 'spicy-q-09',
     title: "שאלות 18+",
-    description: "איך את/ה אוהב/ת להתחיל ערב רומנטי-סקסי — מה הצעד הראשון שמדליק אותך?",
+    description: "מה מעורר בך רצון להתקרב בתחילתו של ערב רומנטי?",
     kind: 'question',
     questionGroup: 'spicy',
     category: 'spicy',
@@ -1187,7 +1187,7 @@ export const matureQuestions: CoupleQuestionTask[] = [
   {
     id: 'spicy-q-10',
     title: "שאלות 18+",
-    description: "מה חשוב לך שנכבד כשאנחנו קרובים ומלאים תשוקה?",
+    description: "מה יעזור לנו להבין מה נעים לכל אחד בזמן קרבה?",
     kind: 'question',
     questionGroup: 'spicy',
     category: 'spicy',
@@ -1197,7 +1197,7 @@ export const matureQuestions: CoupleQuestionTask[] = [
   {
     id: 'spicy-q-11',
     title: "שאלות 18+",
-    description: "מה היית רוצה לנסות יחד ועדיין לא ניסינו — משהו שמעורר סקרנות וחשק?",
+    description: "איזו חוויה אינטימית חדשה מסקרנת אותך לנסות יחד?",
     kind: 'question',
     questionGroup: 'spicy',
     category: 'spicy',
@@ -1207,7 +1207,7 @@ export const matureQuestions: CoupleQuestionTask[] = [
   {
     id: 'spicy-q-12',
     title: "שאלות 18+",
-    description: "איזה מקום בבית (או מחוצה לו) הכי אינטימי ומעורר חשק בשבילך?",
+    description: "באיזה מקום פרטי ונוח יש לך תחושה של אינטימיות?",
     kind: 'question',
     questionGroup: 'spicy',
     category: 'spicy',
@@ -1217,7 +1217,7 @@ export const matureQuestions: CoupleQuestionTask[] = [
   {
     id: 'spicy-q-13',
     title: "שאלות 18+",
-    description: "מה עושה לך הכי טוב אחרי יום ארוך מבחינת קרבה גופנית ומגע?",
+    description: "איזה מגע יעזור לך להירגע אחרי יום ארוך?",
     kind: 'question',
     questionGroup: 'spicy',
     category: 'spicy',
@@ -1227,7 +1227,7 @@ export const matureQuestions: CoupleQuestionTask[] = [
   {
     id: 'spicy-q-14',
     title: "שאלות 18+",
-    description: "מה את/ה צריך/ה כדי להרגיש בטוח/ה, רגוע/ה ומלא/ת חשק כשאנחנו מתקרבים?",
+    description: "מה נחוץ לך כדי להרגיש ביטחון ונינוחות ברגע אינטימי?",
     kind: 'question',
     questionGroup: 'spicy',
     category: 'spicy',
@@ -1237,7 +1237,7 @@ export const matureQuestions: CoupleQuestionTask[] = [
   {
     id: 'spicy-q-15',
     title: "שאלות 18+",
-    description: "איזה שיר (או סוג מוזיקה) הכי מתאים לאווירה החמה והסקסית שלנו עכשיו?",
+    description: "איזה סוג של מוזיקה מתאים לאווירה אינטימית בינינו?",
     kind: 'question',
     questionGroup: 'spicy',
     category: 'spicy',
@@ -1247,7 +1247,7 @@ export const matureQuestions: CoupleQuestionTask[] = [
   {
     id: 'spicy-q-16',
     title: "שאלות 18+",
-    description: "מה היית רוצה שאעשה בשבילך הערב — משהו שיגרום לך להרגיש רצוי/ה ומסופק/ת?",
+    description: "מה היית רוצה ממני הערב כדי שיהיה לך נעים ברגעים הפרטיים שלנו?",
     kind: 'question',
     questionGroup: 'spicy',
     category: 'spicy',
@@ -1257,7 +1257,7 @@ export const matureQuestions: CoupleQuestionTask[] = [
   {
     id: 'spicy-q-17',
     title: "שאלות 18+",
-    description: "מתי בפעם האחרונה הרגשת באמת רצוי/ה, מושך/ת ומלא/ת תשוקה?",
+    description: "מתי לאחרונה הרגשת שאני נמשך אליך במיוחד?",
     kind: 'question',
     questionGroup: 'spicy',
     category: 'spicy',
@@ -1267,7 +1267,7 @@ export const matureQuestions: CoupleQuestionTask[] = [
   {
     id: 'spicy-q-18',
     title: "שאלות 18+",
-    description: "מה גבול שחשוב לך לשמור — וגם לכבד — גם כשהחשק גבוה?",
+    description: "איזה גבול אישי חשוב לך שאכבד גם ברגע של תשוקה?",
     kind: 'question',
     questionGroup: 'spicy',
     category: 'spicy',
@@ -1277,7 +1277,7 @@ export const matureQuestions: CoupleQuestionTask[] = [
   {
     id: 'spicy-q-19',
     title: "שאלות 18+",
-    description: "איך את/ה אומר/ת \"אני רוצה אותך\" בלי מילים — במבט, במגע או בתנועה?",
+    description: "איך אפשר להבין ממך שיש רצון לקרבה בלי להסתמך רק על ניחוש?",
     kind: 'question',
     questionGroup: 'spicy',
     category: 'spicy',
@@ -1287,7 +1287,7 @@ export const matureQuestions: CoupleQuestionTask[] = [
   {
     id: 'spicy-q-20',
     title: "שאלות 18+",
-    description: "מה היית רוצה שנזכור מהערב הזה — מהרגע הכי חם או מהרגע הכי רך?",
+    description: "איזה רגע אינטימי מהערב היית רוצה שניקח איתנו הלאה?",
     kind: 'question',
     questionGroup: 'spicy',
     category: 'spicy',

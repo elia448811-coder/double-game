@@ -51,29 +51,13 @@ function extractFromSource(content, onlyQuestions = false) {
   return items;
 }
 
-function extractMatureQuestions(content) {
-  const items = [];
-  const lineRe =
-    /\{\s*id:\s*'([^']+)',\s*title:\s*'([^']*)',\s*description:\s*'((?:\\'|[^'])*)',\s*kind:\s*'question'/g;
-  let m;
-  while ((m = lineRe.exec(content)) !== null) {
-    items.push({
-      id: m[1],
-      title: m[2],
-      description: m[3].replace(/\\'/g, "'"),
-      group: 'spicy',
-    });
-  }
-  return items;
-}
-
 const all = [];
 
 for (const src of SOURCES) {
   const content = readFileSync(join(root, src.file), 'utf8');
   const items =
     src.file.includes('matureContent')
-      ? extractMatureQuestions(content)
+      ? extractFromSource(content, true)
       : extractFromSource(content);
   all.push({ ...src, items });
 }
@@ -111,7 +95,9 @@ lines.push('  סוף הקובץ');
 lines.push('══════════════════════════════════════════');
 lines.push('');
 
-const outPath = join(root, 'שאלות');
+const outIndex = process.argv.indexOf('--out');
+if (outIndex !== -1 && !process.argv[outIndex + 1]) throw new Error('Missing --out path');
+const outPath = outIndex === -1 ? join(root, 'שאלות.txt') : process.argv[outIndex + 1];
 writeFileSync(outPath, lines.join('\n'), 'utf8');
 console.log(`✓ נוצר: ${outPath}`);
 console.log(`  ${total} שאלות`);

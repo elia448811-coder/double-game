@@ -87,14 +87,17 @@ describe('data integrity', () => {
   });
 
   it('questions have unique wording', () => {
-    const texts = allQuestions.map((q) => q.description);
+    const texts = allContent.filter((q) => q.kind === 'question').map((q) => q.description);
     expect(new Set(texts).size).toBe(texts.length);
   });
 
   it('questions use clean Hebrew punctuation', () => {
-    for (const q of allQuestions) {
+    for (const q of allContent.filter((item) => item.kind === 'question')) {
       expect(q.description).not.toMatch(/[a-zA-Z]/);
       expect(q.description).not.toContain('פרטנר');
+      expect(q.description).toMatch(/\?$/);
+      expect(q.description).not.toMatch(/\s+[,.?!:]/);
+      expect(q.description).not.toMatch(/^(בלי פילטרים|מהלב|ברגע של אמת|שאלה ללב|סיבוב עומק)[:,]/);
     }
   });
 
