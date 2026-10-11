@@ -1,0 +1,74 @@
+.content-artwork {
+  position: relative;
+  overflow: hidden;
+  isolation: isolate;
+  background: #e9d4ec;
+}
+.content-artwork img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+}
+.content-artwork--card {
+  height: clamp(120px, 22vh, 180px);
+  margin: 0 0 18px;
+  border-radius: 20px;
+  border: 1px solid rgba(255, 255, 255, .14);
+}
+.content-artwork__label {
+  position: absolute;
+  inset-inline-start: 12px;
+  bottom: 10px;
+  padding: 5px 11px;
+  border-radius: 999px;
+  background: rgba(36, 18, 52, .88);
+  color: #fff4ef;
+  font-size: 12px;
+  font-weight: 600;
+}
+.content-artwork--hero {
+  height: clamp(150px, 27vw, 280px);
+  margin: -8px -8px 24px;
+  border-radius: 22px;
+}
+.content-artwork--hero img { object-position: center 58%; }
+.content-artwork--option {
+  height: 72px;
+  width: 100%;
+  border-radius: 12px;
+  margin-bottom: 6px;
+}
+.option-card--illustrated { overflow: hidden; }
+.task-modal.task-modal--illustrated {
+  max-height: calc(100dvh - 32px);
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  scrollbar-width: thin;
+}
+@media (max-width: 600px) {
+  .content-artwork--card { height: clamp(100px, 19dvh, 145px); margin-bottom: 14px; border-radius: 16px; }
+  .content-artwork--option { height: 58px; }
+  .content-artwork--hero { margin: 0 0 20px; border-radius: 18px; }
+}
+@media (max-height: 500px) and (orientation: landscape) {
+  .task-modal.task-modal--illustrated { max-width: 720px; }
+  .task-modal__intro {
+    display: grid;
+    grid-template-columns: 160px minmax(0, 1fr);
+    column-gap: 18px;
+    align-items: center;
+  }
+  .task-modal__intro .content-artwork--card {
+    grid-row: 1 / span 4;
+    height: 100%;
+    min-height: 135px;
+    margin: 0;
+  }
+  .task-modal__intro > :not(.content-artwork) { grid-column: 2; }
+  .task-modal__intro .category-badge { justify-self: center; margin-top: 8px; }
+  .task-modal--illustrated .task-modal__main-actions { flex-direction: row; margin-top: 14px; }
+  .task-modal--illustrated .task-modal__main-actions > button { flex: 1; }
+  .content-artwork--hero { height: 145px; }
+}

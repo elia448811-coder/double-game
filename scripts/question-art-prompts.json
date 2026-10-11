@@ -1,0 +1,61 @@
+{
+  "generator": "Built-in image_gen tool; no CLI/API fallback",
+  "assets": [
+    {
+      "key": "conversation",
+      "generationPrompt": "Use case: illustration-story. Asset type: wide illustration for a Hebrew couples conversation game card. Create a polished tactile paper-cut / soft clay editorial illustration, soft rounded shapes, fine grain, warm peach and lilac with deep plum accents, gentle lighting. Landscape 1536x1024 composition. Central scene entirely inside middle 80% width and middle 70% height so it survives a wide crop. Welcoming, contemporary, sophisticated but playful, uncluttered. No text, letters, logos, watermark, UI or borders. No identifiable real people. Two empty comfortable armchairs angled toward each other, two warm mugs on a small round table, luminous abstract overlapping speech bubbles and a small heart above, an inviting quiet living room. Theme: listening, trust and getting to know each other.",
+      "asset": "src/assets/question-art/conversation.webp",
+      "mobileAsset": "src/assets/question-art/conversation-small.webp"
+    },
+    {
+      "key": "date",
+      "generationPrompt": "Use case: illustration-story. Asset type: wide illustration for a Hebrew couples conversation game card. Create a polished tactile paper-cut / soft clay editorial illustration, soft rounded shapes, fine grain, warm peach and lilac with deep plum accents, gentle lighting. Landscape 1536x1024 composition. Central scene entirely inside middle 80% width and middle 70% height so it survives a wide crop. Welcoming, contemporary, sophisticated but playful, uncluttered. No text, letters, logos, watermark, UI or borders. No identifiable real people. An intimate evening picnic for two under a starry lilac sky, two cushions, a blanket, warm lantern, strawberries, two cups, a subtle heart-shaped glow. Theme: romantic memories and quality time; no people.",
+      "asset": "src/assets/question-art/date.webp",
+      "mobileAsset": "src/assets/question-art/date-small.webp"
+    },
+    {
+      "key": "adventure",
+      "generationPrompt": "Use case: illustration-story. Asset type: wide illustration for a Hebrew couples conversation game card. Create a polished tactile paper-cut / soft clay editorial illustration, soft rounded shapes, fine grain, warm peach and lilac with deep plum accents, gentle lighting. Landscape 1536x1024 composition. Central scene entirely inside middle 80% width and middle 70% height so it survives a wide crop. Welcoming, contemporary, sophisticated but playful, uncluttered. No text, letters, logos, watermark, UI or borders. No identifiable real people. Two tiny unoccupied backpacks side by side on a winding scenic trail, distant peach mountains, a folded map and compass in foreground, soft sunrise and fluffy clouds. Theme: travel, shared future and dreams.",
+      "asset": "src/assets/question-art/adventure.webp",
+      "mobileAsset": "src/assets/question-art/adventure-small.webp"
+    },
+    {
+      "key": "home",
+      "generationPrompt": "Use case: illustration-story. Asset type: wide illustration for a Hebrew couples conversation game card. A polished tactile paper-cut / soft clay editorial illustration with felt and ceramic textures, soft rounded shapes, fine grain, warm peach and lilac with deep plum accents, gentle lighting, matching an inviting cozy visual series. Landscape 1536x1024. Main scene inside middle 80% width and middle 70% height, wide cropping friendly. Sophisticated, playful and uncluttered. No text, letters, logos, watermark, UI or borders. No people. A miniature cozy cream and lilac house with warmly lit windows, two mugs on its porch, potted leafy plants, a small cooking pot and a woven blanket; a safe, welcoming home vignette. Theme: home, family, everyday life and shared rituals.",
+      "asset": "src/assets/question-art/home.webp",
+      "mobileAsset": "src/assets/question-art/home-small.webp"
+    },
+    {
+      "key": "playful",
+      "generationPrompt": "Use case: illustration-story. Asset type: wide illustration for a Hebrew couples conversation game card. A polished tactile paper-cut / soft clay editorial illustration with felt and ceramic textures, soft rounded shapes, fine grain, warm peach and lilac with deep plum accents, gentle lighting, matching an inviting cozy visual series. Landscape 1536x1024. Main scene inside middle 80% width and middle 70% height, wide cropping friendly. Sophisticated, playful and uncluttered. No text, letters, logos, watermark, UI or borders. No people. Two whimsical small clay dice, playful colorful board-game pawns and a friendly paper-cut smile-shaped arc, a few floating confetti shapes, warm peach and lilac tabletop. Theme: laughter, fun and friendly challenges. Dice dots are shapes, no letters or numbers.",
+      "asset": "src/assets/question-art/playful.webp",
+      "mobileAsset": "src/assets/question-art/playful-small.webp"
+    },
+    {
+      "key": "calm",
+      "generationPrompt": "Use case: illustration-story. Asset type: wide illustration for a Hebrew couples conversation game card. A polished tactile paper-cut / soft clay editorial illustration with felt and ceramic textures, soft rounded shapes, fine grain, warm peach and lilac with deep plum accents, gentle lighting, matching an inviting cozy visual series. Landscape 1536x1024. Main scene inside middle 80% width and middle 70% height, wide cropping friendly. Sophisticated, playful and uncluttered. No text, letters, logos, watermark, UI or borders. No people. Two soft cushions beside a still pond, lilac water, peach sunset, round stones, small soft paper-cut leaves, a ceramic teapot. A balanced calm landscape with gentle ripples. Theme: breathing, rest and unwinding together.",
+      "asset": "src/assets/question-art/calm.webp",
+      "mobileAsset": "src/assets/question-art/calm-small.webp"
+    },
+    {
+      "key": "creative",
+      "generationPrompt": "Use case: illustration-story. Asset type: wide illustration for a Hebrew couples conversation game card. A polished tactile paper-cut / soft clay editorial illustration with felt and ceramic textures, soft rounded shapes, fine grain, warm peach and lilac with deep plum accents, gentle lighting, matching an inviting cozy visual series. Landscape 1536x1024. Main scene inside middle 80% width and middle 70% height, wide cropping friendly. Sophisticated, playful and uncluttered. No text, letters, logos, watermark, UI or borders. No people. A cozy craft table for two: two sketchbooks with abstract heart shapes and waves (no text), peach and lilac paint pots, chunky brushes, folded paper stars, soft floating paper-cut clouds and a warm glowing light bulb. Theme: imagination, stories, creating together.",
+      "asset": "src/assets/question-art/creative.webp",
+      "mobileAsset": "src/assets/question-art/creative-small.webp"
+    },
+    {
+      "key": "growth",
+      "generationPrompt": "Use case: illustration-story. Asset type: wide illustration for a Hebrew couples conversation game card. A polished tactile paper-cut / soft clay editorial illustration with felt and ceramic textures, soft rounded shapes, fine grain, warm peach and lilac with deep plum accents, gentle lighting, matching an inviting cozy visual series. Landscape 1536x1024. Main scene inside middle 80% width and middle 70% height, wide cropping friendly. Sophisticated, playful and uncluttered. No text, letters, logos, watermark, UI or borders. No people. Two small ceramic plant pots growing together, beside a round peach coin jar and a few blank round coins, lilac notebook with blank cover, miniature sunny window. Theme: shared finances, work-life balance and building a future. No currency signs or digits.",
+      "finalEditPrompt": "Use case: precise-object-edit. Edit the provided image of the shared finances still life. Remove ALL text, letters and words from every surface: plant pots, coin jar, cup, signs and book spines. Pots, jar and cup must be plain ceramic with at most small simple heart shapes, never words. Replace background signs and books with blank color surfaces. Keep the two plants, coin jar, coins, notebook, warm daylight, peach and lilac colors, cozy composition. Widen canvas to landscape 1536x1024 with the complete central still life visible. Maintain the tactile soft clay/paper-cut illustration look to match the cozy series. No text anywhere, no watermarks, no logos.",
+      "asset": "src/assets/question-art/growth.webp",
+      "mobileAsset": "src/assets/question-art/growth-small.webp"
+    },
+    {
+      "key": "music",
+      "generationPrompt": "Use case: illustration-story. Asset type: wide illustration for a Hebrew couples conversation game card. A polished tactile paper-cut / soft clay editorial illustration with felt and ceramic textures, soft rounded shapes, fine grain, warm peach and lilac with deep plum accents, gentle lighting, matching an inviting cozy visual series. Landscape 1536x1024. Main scene inside middle 80% width and middle 70% height, wide cropping friendly. Sophisticated, playful and uncluttered. No text, letters, logos, watermark, UI or borders. No people. A peach and lilac small vintage record player, two soft rounded headphones, a vinyl disc, floating paper-cut music notes and gentle rhythmic curved shapes on a cozy tabletop. Theme: music, dancing and playful movement together.",
+      "finalEditPrompt": "Use case: precise-object-edit. Edit the provided music still life. Remove EVERY letter, word, slogan and line of text from ALL surfaces: the record player's inside lid and disc label, the cup, book spines, background posters and foreground cards. Replace written posters and cards with plain lilac or peach paper shapes or abstract music notes only. Record player's lid must be completely blank lilac, disc label completely blank peach. Preserve the player, vinyl, two headphones, floating musical notes, warm peach and lilac cozy visual theme. Widen to landscape 1536x1024 with central scene inside crop-safe center area. Tactile soft clay editorial illustration. No text anywhere, no logo or watermark.",
+      "asset": "src/assets/question-art/music.webp",
+      "mobileAsset": "src/assets/question-art/music-small.webp"
+    }
+  ]
+}

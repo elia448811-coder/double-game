@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { ContentArtwork } from '../components/ContentArtwork';
 import { getContentBankStats } from '../data/allContent';
 import { PartnerConnectPanel } from '../components/PartnerConnectPanel';
 import { isCurrentUserAdmin } from '../utils/admin';
@@ -102,6 +103,7 @@ export function WelcomeScreen({
       <div className="hub-layout">
         <header className="hub-hero animate-in">
           <div className="hub-hero__glow" aria-hidden />
+          <ContentArtwork artwork="date" variant="hero" />
           <p className="hub-hero__badge">Couple Spin</p>
           <h1 className="hub-hero__title">ערב אחד. רק שניכם.</h1>
           <p className="hub-hero__tag">

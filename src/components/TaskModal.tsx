@@ -5,6 +5,8 @@ import type { CoupleTask } from '../types/game';
 import { getCategoryLabel } from '../utils/adminCategories';
 import { polishPrompt } from '../utils/polishPrompt';
 import { CategoryIcon } from './CategoryIcon';
+import { ContentArtwork } from './ContentArtwork';
+import { getContentArtworkKey } from '../data/contentArtwork';
 
 const EXTRA_GROUP_LABELS: Record<string, string> = {};
 
@@ -115,13 +117,15 @@ export function TaskModal({
     <div className="modal-backdrop" role="presentation">
       <div
         ref={trapRef}
-        className={`task-modal task-modal--clean ${isQuestion ? 'task-modal--question' : ''}`}
+        className={`task-modal task-modal--clean task-modal--illustrated ${isQuestion ? 'task-modal--question' : ''}`}
         role="dialog"
         aria-modal="true"
         aria-labelledby="task-modal-title"
         aria-describedby={!readOnly && confirmSkip ? 'task-skip-confirm-text' : undefined}
         tabIndex={-1}
       >
+        <div className="task-modal__intro">
+        <ContentArtwork artwork={getContentArtworkKey(task)} />
         <p className="task-modal__who">
           {isQuestion
             ? isMature
@@ -152,6 +156,7 @@ export function TaskModal({
         {!isQuestion && task.durationSeconds && (
           <p className="task-duration">⏱ {task.durationSeconds} שניות</p>
         )}
+        </div>
 
         {!readOnly && confirmSkip ? (
           <div className="task-modal__skip-confirm" role="alertdialog" aria-labelledby="task-skip-confirm-text">

@@ -1,4 +1,6 @@
 import { useState } from 'react';
+import { ContentArtwork } from '../components/ContentArtwork';
+import { getModeArtworkKey } from '../data/contentArtwork';
 import { AgeGateModal } from '../components/AgeGateModal';
 import { ConsentBoundsPanel } from '../components/ConsentBoundsPanel';
 import { LevelSelector } from '../components/LevelSelector';
@@ -40,15 +42,6 @@ type VibePreset = 'quick' | 'normal' | 'chill';
 
 const MODES: GameMode[] = ['funny', 'romantic', 'challenge', 'calm', 'mixed', 'spicy'];
 const CONTENT_MODES: ContentMode[] = ['tasks', 'questions', 'mixed'];
-
-const MODE_EMOJI: Record<GameMode, string> = {
-  funny: '😂',
-  romantic: '💜',
-  challenge: '🏆',
-  calm: '🌙',
-  mixed: '🎲',
-  spicy: '🔥',
-};
 
 const CONTENT_EMOJI: Record<ContentMode, string> = {
   tasks: '🎯',
@@ -227,12 +220,12 @@ export function QuickSetupScreen({
                 <button
                   key={m}
                   type="button"
-                  className={`option-card pressable ${mode === m ? 'option-card--on' : ''}`}
+                  className={`option-card option-card--illustrated pressable ${mode === m ? 'option-card--on' : ''}`}
                   onClick={() => onModeSelect(m)}
                   aria-pressed={mode === m}
                   title={MODE_DESCRIPTIONS[m]}
                 >
-                  <span className="option-card__emoji">{MODE_EMOJI[m]}</span>
+                  <ContentArtwork artwork={getModeArtworkKey(m)} variant="option" />
                   <strong>{MODE_LABELS[m]}</strong>
                   <small>{MODE_DESCRIPTIONS[m]}</small>
                 </button>

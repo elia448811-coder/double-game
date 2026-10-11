@@ -1,14 +1,7 @@
 import type { GameMode } from '../types/game';
 import { MODE_DESCRIPTIONS, MODE_LABELS } from '../types/game';
-
-const MODE_EMOJI: Record<GameMode, string> = {
-  funny: '😂',
-  romantic: '💜',
-  challenge: '🏆',
-  calm: '🌙',
-  mixed: '🎲',
-  spicy: '🔥',
-};
+import { ContentArtwork } from './ContentArtwork';
+import { getModeArtworkKey } from '../data/contentArtwork';
 
 type ModeCardProps = {
   mode: GameMode;
@@ -25,7 +18,7 @@ export function ModeCard({ mode, selected, onSelect }: ModeCardProps) {
       aria-pressed={selected}
       aria-label={`בחר מצב ${MODE_LABELS[mode]}`}
     >
-      <span className="mode-card__emoji">{MODE_EMOJI[mode]}</span>
+      <ContentArtwork artwork={getModeArtworkKey(mode)} variant="option" />
       <strong>{MODE_LABELS[mode]}</strong>
       <p>{MODE_DESCRIPTIONS[mode]}</p>
     </button>
