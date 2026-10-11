@@ -23,6 +23,7 @@
     "import:bank": "node scripts/import-improved-bank.mjs",
     "generate:icons": "node scripts/generate-pwa-icons.mjs",
     "check:bundle": "node scripts/check-bundle-budget.mjs",
+    "check:images": "node scripts/verify-hosted-images.mjs",
     "check:firebase": "node scripts/check-firebase.mjs",
     "check:firestore-rooms": "node scripts/check-firestore-rooms.mjs",
     "check:user-profile": "node scripts/check-user-profile.mjs",

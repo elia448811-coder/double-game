@@ -2,7 +2,9 @@
   position: relative;
   overflow: hidden;
   isolation: isolate;
-  background: #e9d4ec;
+  background: var(--cinema-card-background, var(--cs-surface));
+  border: 1px solid var(--cinema-line, var(--cs-border));
+  border-radius: var(--cinema-image-radius, 20px);
 }
 .content-artwork img {
   display: block;
@@ -14,8 +16,6 @@
 .content-artwork--card {
   height: clamp(120px, 22vh, 180px);
   margin: 0 0 18px;
-  border-radius: 20px;
-  border: 1px solid rgba(255, 255, 255, .14);
 }
 .content-artwork__label {
   position: absolute;
@@ -30,14 +30,12 @@
 }
 .content-artwork--hero {
   height: clamp(150px, 27vw, 280px);
-  margin: -8px -8px 24px;
-  border-radius: 22px;
+  margin: 0 0 24px;
 }
 .content-artwork--hero img { object-position: center 58%; }
 .content-artwork--option {
   height: 72px;
   width: 100%;
-  border-radius: 12px;
   margin-bottom: 6px;
 }
 .option-card--illustrated { overflow: hidden; }
@@ -48,9 +46,9 @@
   scrollbar-width: thin;
 }
 @media (max-width: 600px) {
-  .content-artwork--card { height: clamp(100px, 19dvh, 145px); margin-bottom: 14px; border-radius: 16px; }
+  .content-artwork--card { height: clamp(100px, 19dvh, 145px); margin-bottom: 14px; }
   .content-artwork--option { height: 58px; }
-  .content-artwork--hero { margin: 0 0 20px; border-radius: 18px; }
+  .content-artwork--hero { margin: 0 0 20px; }
 }
 @media (max-height: 500px) and (orientation: landscape) {
   .task-modal.task-modal--illustrated { max-width: 720px; }

@@ -17,6 +17,7 @@ export function ContentArtwork({ artwork, variant = 'card' }: Props) {
         width={960} height={640} alt=""
         loading={variant === 'option' ? 'lazy' : 'eager'}
         decoding="async"
+        crossOrigin="anonymous"
         fetchPriority={variant === 'hero' ? 'high' : 'auto'}
         onError={() => setFailedSrc(image.src)}
       />

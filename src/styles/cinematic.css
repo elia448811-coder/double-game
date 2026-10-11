@@ -6,6 +6,10 @@
   --cinema-pink: #ff6f9f;
   --cinema-violet: #a984ff;
   --cinema-cream: #fff8f2;
+  --cinema-card-background: linear-gradient(145deg, rgba(37, 20, 62, .88), var(--cinema-panel));
+  --cinema-card-shadow: 0 28px 80px rgba(3, 1, 10, .48), inset 0 1px rgba(255,255,255,.05);
+  --cinema-card-radius: 28px;
+  --cinema-image-radius: 20px;
 }
 
 html { background: var(--cinema-ink); }
@@ -13,7 +17,7 @@ html { background: var(--cinema-ink); }
 body {
   background:
     linear-gradient(180deg, rgba(8, 4, 18, .38), rgba(8, 4, 18, .78)),
-    url('../assets/couple-night-bg.png') center / cover fixed no-repeat;
+    url('https://res.cloudinary.com/ipb43mz0/image/upload/f_webp,q_82,c_limit,w_1600/v1791737237/double-game/tz9oydjromsfmnfynnnu.webp') center / cover fixed no-repeat;
   color: var(--cinema-cream);
 }
 
@@ -70,18 +74,25 @@ body {
   color: rgba(255, 248, 244, .82);
 }
 
+.hub-hero,
 .hub-card,
+.option-card--illustrated,
+.mode-card,
 .flow-card,
 .game-card,
 .task-modal,
 .site-gate__card {
-  background: linear-gradient(145deg, rgba(37, 20, 62, .88), var(--cinema-panel));
+  background: var(--cinema-card-background);
   border: 1px solid var(--cinema-line);
-  box-shadow: 0 28px 80px rgba(3, 1, 10, .48), inset 0 1px rgba(255,255,255,.05);
+  box-shadow: var(--cinema-card-shadow);
   backdrop-filter: blur(22px) saturate(125%);
 }
 
 .hub-card { border-radius: 28px; }
+
+:is(.hub-hero, .option-card--illustrated, .mode-card, .task-modal--illustrated) {
+  border-radius: var(--cinema-card-radius);
+}
 
 .hub-cta,
 .cta-button,
@@ -106,6 +117,7 @@ body {
 }
 
 .option-card--on,
+.mode-card.selected,
 .choice-chip[aria-pressed='true'],
 .target-chip--on {
   border-color: rgba(255, 127, 170, .78);
@@ -133,6 +145,9 @@ html[data-theme='light'] {
   --cs-gradient-surface: linear-gradient(145deg, #fff, #f5efff);
   --cs-gold: #805500;
   --cinema-cream: #1b0d3d;
+  --cinema-line: var(--cs-border);
+  --cinema-card-background: var(--cs-gradient-surface);
+  --cinema-card-shadow: 0 12px 32px rgba(49, 24, 80, .1), inset 0 1px rgba(255, 255, 255, .8);
 }
 
 html[data-theme='light'] body {
@@ -144,6 +159,11 @@ html[data-theme='light'] :is(.hub-hero, .hub-card, .flow-card, .game-card, .task
   background: var(--cs-gradient-surface);
   border-color: var(--cs-border);
   color: var(--cs-text);
+}
+
+html[data-theme='light'] :is(.option-card--illustrated.option-card--on, .mode-card.selected) {
+  background: linear-gradient(145deg, #ffe4ed, #efe3ff);
+  border-color: #ad4070;
 }
 
 html[data-theme='light'] :is(.flow-title, .setup-title) {
@@ -180,6 +200,7 @@ button:focus-visible, input:focus-visible, select:focus-visible, textarea:focus-
 }
 
 @media (max-width: 720px) {
+  :root { --cinema-card-radius: var(--layout-modal-radius, 28px); --cinema-image-radius: 16px; }
   body { background-attachment: scroll; background-position: 58% center; }
   .hub-hero__title { font-size: clamp(2.65rem, 14vw, 4.1rem); }
   .hub-card, .flow-card, .game-card { border-radius: 22px; }

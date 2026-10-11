@@ -6,12 +6,21 @@ test('layouts: artwork loads on home and mood choices without horizontal overflo
   const hero = page.locator('.content-artwork--hero img');
   await expect(hero).toBeVisible();
   await expect.poll(() => hero.evaluate((img: HTMLImageElement) => img.complete && img.naturalWidth > 0)).toBe(true);
+  expect(await hero.evaluate((img: HTMLImageElement) => new URL(img.currentSrc).hostname)).toBe('res.cloudinary.com');
+  expect(await page.evaluate(() => getComputedStyle(document.body).backgroundImage)).toContain('res.cloudinary.com/ipb43mz0/');
+  const cardSurface = async (selector: string) => page.locator(selector).first().evaluate((element) => {
+    const css = getComputedStyle(element);
+    return [css.backgroundImage, css.borderColor, css.borderTopLeftRadius];
+  });
+  const heroSurface = await cardSurface('.hub-hero');
   await page.getByRole('button', { name: /בואו נתחיל/ }).click();
   const options = page.locator('.option-card--illustrated');
   await expect(options).toHaveCount(6);
+  expect(await cardSurface('.option-card--illustrated:not(.option-card--on)')).toEqual(heroSurface);
   for (const option of await options.all()) {
     await option.scrollIntoViewIfNeeded();
     await expect.poll(() => option.locator('img').evaluate((img: HTMLImageElement) => img.complete && img.naturalWidth > 0)).toBe(true);
+    expect(await option.locator('img').evaluate((img: HTMLImageElement) => new URL(img.currentSrc).pathname)).toContain('/double-game/');
   }
   expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth + 1)).toBe(true);
 });

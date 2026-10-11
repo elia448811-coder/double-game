@@ -1,6 +1,7 @@
 import { defineConfig, loadEnv } from 'vite';
 import react from '@vitejs/plugin-react';
 import { VitePWA } from 'vite-plugin-pwa';
+import { OFFLINE_IMAGE_URLS } from './src/data/hostedImageUrl.ts';
 
 export default defineConfig(({ mode }) => {
   const env = loadEnv(mode, process.cwd(), '');
@@ -54,6 +55,7 @@ export default defineConfig(({ mode }) => {
         },
         workbox: {
           globPatterns: ['**/*.{js,css,html,ico,png,webp,svg,woff2,webmanifest}'],
+          additionalManifestEntries: OFFLINE_IMAGE_URLS.map((url) => ({ url, revision: null })),
           navigateFallback: `${base}index.html`,
           navigateFallbackDenylist: [/^\/api\//],
         },

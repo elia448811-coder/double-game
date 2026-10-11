@@ -1,33 +1,20 @@
 import type { CoupleTask, GameMode } from '../types/game';
-import conversation from '../assets/question-art/conversation.webp';
-import date from '../assets/question-art/date.webp';
-import adventure from '../assets/question-art/adventure.webp';
-import home from '../assets/question-art/home.webp';
-import playful from '../assets/question-art/playful.webp';
-import calm from '../assets/question-art/calm.webp';
-import creative from '../assets/question-art/creative.webp';
-import growth from '../assets/question-art/growth.webp';
-import music from '../assets/question-art/music.webp';
-import conversationSmall from '../assets/question-art/conversation-small.webp';
-import dateSmall from '../assets/question-art/date-small.webp';
-import adventureSmall from '../assets/question-art/adventure-small.webp';
-import homeSmall from '../assets/question-art/home-small.webp';
-import playfulSmall from '../assets/question-art/playful-small.webp';
-import calmSmall from '../assets/question-art/calm-small.webp';
-import creativeSmall from '../assets/question-art/creative-small.webp';
-import growthSmall from '../assets/question-art/growth-small.webp';
-import musicSmall from '../assets/question-art/music-small.webp';
+import { hostedImageUrl, type HostedImageKey } from './hostedImageUrl';
+
+const artwork = (key: HostedImageKey, label: string) => ({
+  src: hostedImageUrl(key, 960), small: hostedImageUrl(key, 480), label,
+});
 
 export const CONTENT_ARTWORK = {
-  conversation: { src: conversation, small: conversationSmall, label: 'לב אל לב' },
-  date: { src: date, small: dateSmall, label: 'זמן לשניכם' },
-  adventure: { src: adventure, small: adventureSmall, label: 'יוצאים לדרך' },
-  home: { src: home, small: homeSmall, label: 'הבית שלכם' },
-  playful: { src: playful, small: playfulSmall, label: 'קצת צחוק' },
-  calm: { src: calm, small: calmSmall, label: 'רגע של שקט' },
-  creative: { src: creative, small: creativeSmall, label: 'דמיון משותף' },
-  growth: { src: growth, small: growthSmall, label: 'בונים יחד' },
-  music: { src: music, small: musicSmall, label: 'בקצב שלכם' },
+  conversation: artwork('conversation', 'לב אל לב'),
+  date: artwork('date', 'זמן לשניכם'),
+  adventure: artwork('adventure', 'יוצאים לדרך'),
+  home: artwork('home', 'הבית שלכם'),
+  playful: artwork('playful', 'קצת צחוק'),
+  calm: artwork('calm', 'רגע של שקט'),
+  creative: artwork('creative', 'דמיון משותף'),
+  growth: artwork('growth', 'בונים יחד'),
+  music: artwork('music', 'בקצב שלכם'),
 } as const;
 
 export type ArtworkKey = keyof typeof CONTENT_ARTWORK;
