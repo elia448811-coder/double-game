@@ -3,6 +3,7 @@ import { DEFAULT_SETTINGS } from '../types/game';
 import { loadSettings, saveSettings } from './storage';
 import { addCustomContent, loadCustomContent } from './customContent';
 import { readLocalCloudWatermark } from './cloudSync';
+import { CLOUD_DATA_APPLIED_EVENT } from './cloudRevision';
 import { pullUserData, pushUserData, pushCloudSnapshot, scheduleCloudPush, subscribeSyncState } from './cloudSync';
 
 const backend = vi.hoisted(() => ({ getDoc: vi.fn(), setDoc: vi.fn() }));
@@ -132,5 +133,11 @@ describe('cloud settings on new devices and during startup', () => {
     expect(readLocalCloudWatermark()).toBe(editTime);
     finishDownload(remoteSnapshot()); expect((await pull).ok).toBe(true);
     expect(loadCustomContent().some((entry) => entry.id === item?.id)).toBe(true);
+  });
+  it('notifies mounted screens after cloud data is applied', async () => {
+    const dispatch = vi.fn(); Object.assign(window, { dispatchEvent: dispatch });
+    expect((await pullUserData()).ok).toBe(true);
+    expect(dispatch).toHaveBeenCalledWith(expect.objectContaining({ type: CLOUD_DATA_APPLIED_EVENT }));
+    expect(loadSettings().theme).toBe('light');
   });
 });

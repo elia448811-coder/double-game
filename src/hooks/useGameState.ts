@@ -20,6 +20,7 @@ import { clearSnapshot, loadSnapshot, prepareLocalResume, saveSnapshot } from '.
 import { clearUndo, hasUndo, popUndo, pushUndo } from '../utils/undoStack';
 import { isGuestMode } from '../utils/privacy';
 import { rememberContent } from '../utils/contentMemory';
+import { CLOUD_DATA_APPLIED_EVENT } from '../utils/cloudRevision';
 import {
   pullCloudSnapshot,
   scheduleCloudPush,
@@ -137,6 +138,11 @@ export function useGameState() {
   gameRef.current = game;
 
   useApplyTheme(settings);
+  useEffect(() => {
+    const refreshCloudSettings = () => setSettings(loadSettings());
+    window.addEventListener(CLOUD_DATA_APPLIED_EVENT, refreshCloudSettings);
+    return () => window.removeEventListener(CLOUD_DATA_APPLIED_EVENT, refreshCloudSettings);
+  }, []);
 
   useEffect(() => {
     if (isGuestMode()) return;

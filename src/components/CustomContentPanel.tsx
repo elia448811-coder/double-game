@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { RadioGroup } from './RadioGroup';
+import { CLOUD_DATA_APPLIED_EVENT } from '../utils/cloudRevision';
 import { LEVEL_LABELS, type ContentKind, type TaskCategory, type TaskLevel } from '../types/game';
 import {
   getCachedCategories,
@@ -44,6 +45,11 @@ export function CustomContentPanel({ matureAgeConfirmed, dataRevision = 0 }: Cus
   useEffect(() => {
     setItems(loadCustomContent());
   }, [dataRevision]);
+  useEffect(() => {
+    const refreshCloudContent = () => setItems(loadCustomContent());
+    window.addEventListener(CLOUD_DATA_APPLIED_EVENT, refreshCloudContent);
+    return () => window.removeEventListener(CLOUD_DATA_APPLIED_EVENT, refreshCloudContent);
+  }, []);
 
   const handleAdd = () => {
     setFormError('');

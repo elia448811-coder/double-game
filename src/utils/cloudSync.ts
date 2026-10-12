@@ -19,7 +19,7 @@ import {
 } from './storage';
 import type { AppSettings, GameHistoryEntry, GameState, LocalRecords } from '../types/game';
 import { gameSyncData } from './gameSyncData';
-import { CLOUD_WATERMARK_KEY, markLocalCloudWatermark } from './cloudRevision';
+import { CLOUD_DATA_APPLIED_EVENT, CLOUD_WATERMARK_KEY, markLocalCloudWatermark } from './cloudRevision';
 export { markLocalCloudWatermark } from './cloudRevision';
 
 export const SCHEMA_VERSION = 2;
@@ -180,6 +180,9 @@ export function applyCloudBundle(bundle: CloudBundle): void {
   writeJson(DISCRETE_KEY, bundle.discrete);
   writeJson(CUSTOM_KEY, bundle.customContent);
   markLocalCloudWatermark(bundle.updatedAtMs);
+  if (typeof window !== 'undefined' && typeof window.dispatchEvent === 'function') {
+    window.dispatchEvent(new Event(CLOUD_DATA_APPLIED_EVENT));
+  }
 }
 
 function parseRemoteBundle(raw: Partial<CloudBundle>): CloudBundle {
