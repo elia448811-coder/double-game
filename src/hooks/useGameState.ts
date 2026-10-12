@@ -133,6 +133,7 @@ export function useGameState() {
   const timerRef = useRef<ReturnType<typeof setInterval> | null>(null);
   const gameRef = useRef(game);
   const remoteVersionRef = useRef(0);
+  const remoteRoomRef = useRef<string | null>(null);
   gameRef.current = game;
 
   useApplyTheme(settings);
@@ -373,7 +374,11 @@ export function useGameState() {
     restoreCloudSnapshot: () => {
       if (cloudResume) dispatch({ type: 'RESTORE_SNAPSHOT', snapshot: prepareLocalResume(cloudResume) });
     },
-    applyRemoteSnapshot: (snapshot: GameState, version: number) => {
+    applyRemoteSnapshot: (snapshot: GameState, version: number, roomId: string | null = null) => {
+      if (remoteRoomRef.current !== roomId) {
+        remoteRoomRef.current = roomId;
+        remoteVersionRef.current = 0;
+      }
       if (version <= remoteVersionRef.current) return;
       remoteVersionRef.current = version;
       dispatch({ type: 'RESTORE_SNAPSHOT', snapshot });

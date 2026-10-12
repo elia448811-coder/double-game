@@ -1,7 +1,7 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { DEFAULT_SETTINGS } from '../types/game';
 import { loadSettings, saveSettings } from './storage';
-import { pullUserData, scheduleCloudPush } from './cloudSync';
+import { pullUserData, pushCloudSnapshot, scheduleCloudPush, subscribeSyncState } from './cloudSync';
 
 const backend = vi.hoisted(() => ({ getDoc: vi.fn(), setDoc: vi.fn() }));
 vi.mock('../lib/firebase', () => ({
@@ -66,5 +66,18 @@ describe('cloud settings on new devices and during startup', () => {
     expect((await pullUserData()).ok).toBe(true);
     expect(loadSettings().playerOneName).toBe('Saved before reload');
     expect(localStorage.getItem('couple-spin-cloud-outbox')).toBeNull();
+  });
+  it('stores a regular evening without undefined optional fields', async () => {
+    await pushCloudSnapshot({ screen: 'game', finishEventId: null, favoriteTaskIds: undefined } as never);
+    expect(backend.setDoc).toHaveBeenCalledOnce();
+    expect(backend.setDoc.mock.calls[0]?.[1].game).toEqual({ screen: 'game', finishEventId: null });
+  });
+  it('notifies sync subscribers after the settings updater has returned', async () => {
+    let insideUpdater = false;
+    const notifiedDuringUpdate: boolean[] = [];
+    const stop = subscribeSyncState(() => { notifiedDuringUpdate.push(insideUpdater); });
+    insideUpdater = true; scheduleCloudPush(); insideUpdater = false;
+    await Promise.resolve();
+    expect(notifiedDuringUpdate.every((inside) => !inside)).toBe(true); stop();
   });
 });

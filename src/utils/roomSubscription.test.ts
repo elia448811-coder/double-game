@@ -26,6 +26,9 @@ describe('room subscription after a partner transaction', () => {
     const changed = vi.fn(); const stop = subscribeCoupleRoom('room-id', '12345678', changed);
     await vi.waitFor(() => expect(backend.next).toBeDefined());
     backend.next!(snapshot(false, true)); expect(changed).not.toHaveBeenCalled();
+    backend.next!({ exists: () => true, metadata: { fromCache: true }, data: () => ({ partnerUid: 'partner', status: 'lobby' }) });
+    backend.next!({ exists: () => true, metadata: { fromCache: false }, data: () => ({ partnerUid: 'partner', status: 'lobby' }) });
+    expect(changed).not.toHaveBeenCalled();
     backend.next!(snapshot(true, false));
     expect(changed).toHaveBeenCalledWith(expect.objectContaining({ roomId: 'room-id', partnerUid: 'partner' }));
     stop(); expect(backend.stop).toHaveBeenCalledOnce();

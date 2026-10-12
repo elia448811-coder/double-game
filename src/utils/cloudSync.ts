@@ -18,6 +18,7 @@ import {
   sanitizeSettings,
 } from './storage';
 import type { AppSettings, GameHistoryEntry, GameState, LocalRecords } from '../types/game';
+import { gameSyncData } from './gameSyncData';
 
 export const SCHEMA_VERSION = 2;
 const OUTBOX_KEY = 'couple-spin-cloud-outbox';
@@ -62,7 +63,8 @@ let pushTimer: ReturnType<typeof setTimeout> | null = null;
 
 function emitSync(patch: Partial<SyncState>): void {
   syncState = { ...syncState, ...patch };
-  listeners.forEach((fn) => fn(syncState));
+  // Settings can be persisted inside a React updater. Notify other components afterwards.
+  queueMicrotask(() => listeners.forEach((fn) => fn(syncState)));
 }
 
 export function subscribeSyncState(listener: SyncListener): () => void {
@@ -387,7 +389,7 @@ export async function pushCloudSnapshot(game: GameState): Promise<void> {
     if (!user || !db) return;
     const { doc, serverTimestamp, setDoc } = await import('firebase/firestore');
     await setDoc(doc(db, 'users', user.uid, 'data', 'activeGame'), {
-      game,
+      game: gameSyncData(game),
       updatedAtMs: Date.now(),
       updatedAt: serverTimestamp(),
     });

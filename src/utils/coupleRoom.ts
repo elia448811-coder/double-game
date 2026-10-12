@@ -3,6 +3,7 @@ import { getFirestoreDb, isFirebaseConfigured } from '../lib/firebase';
 import { ensureAnonAuth } from './cloudSync';
 import { captureError, captureEvent } from './monitoring';
 import { checkJoinRateLimit, recordJoinFailure, resetJoinRateLimit } from './roomJoinRateLimit';
+import { gameSyncData } from './gameSyncData';
 
 const ROOM_ID_KEY = 'couple-spin-room-id';
 const ROOM_CODE_KEY = 'couple-spin-room-code';
@@ -118,7 +119,7 @@ async function assertJoinGuard(): Promise<{ ok: boolean; error?: string }> {
 
 /** Strip heavy / non-essential fields before pushing over the wire. */
 export function sanitizeGameForSync(game: GameState): GameState {
-  return {
+  return gameSyncData({
     ...game,
     usedTaskIds: Array.isArray(game.usedTaskIds) ? game.usedTaskIds.slice(-200) : [],
     sessionNewAchievements: Array.isArray(game.sessionNewAchievements)
@@ -127,7 +128,7 @@ export function sanitizeGameForSync(game: GameState): GameState {
     unlockedAchievements: Array.isArray(game.unlockedAchievements)
       ? game.unlockedAchievements.slice(-40)
       : [],
-  };
+  });
 }
 
 function clampName(name: string, fallback: string): string {
@@ -535,7 +536,8 @@ export async function setPlayerReady(roomId: string, ready: boolean): Promise<vo
       ? { hostReady: ready, hostLastSeenMs: now, updatedBy: user.uid }
       : { partnerReady: ready, partnerLastSeenMs: now, updatedBy: user.uid };
   await patchCoupleRoom(roomId, patch);
-  await appendRoomEvent(roomId, 'PLAYER_READY', { ready });
+  // Readiness is already stored in the room. Updating it must not also race
+  // both phones against the shared version used for game snapshots.
 }
 
 export async function sendPresenceHeartbeat(roomId: string): Promise<void> {
@@ -562,53 +564,69 @@ export async function appendRoomEvent(
     return { ok: false, error: 'sync_failed' };
   }
 
-  const { doc, runTransaction, serverTimestamp } = await import('firebase/firestore');
+  const { doc, runTransaction, serverTimestamp, getDocFromServer } = await import('firebase/firestore');
   const roomRef = doc(db, 'rooms', roomId);
   const eventId =
     typeof crypto !== 'undefined' && 'randomUUID' in crypto
       ? crypto.randomUUID()
       : `evt-${Date.now()}`;
 
-  try {
-    const version = await runTransaction(db, async (tx) => {
-      const snap = await tx.get(roomRef);
-      if (!snap.exists()) throw new Error('room_not_found');
-      const room = parseRoom(roomId, snap.data() as Record<string, unknown>);
-      if (isExpired(room)) throw new Error('room_expired');
-      const isMember = room.hostUid === user.uid || room.partnerUid === user.uid;
-      if (!isMember) throw new Error('permission_denied');
-      if (type === 'GAME_STARTED') {
-        if (!room.partnerUid || !room.hostReady || !room.partnerReady) {
-          throw new Error('not_ready');
+  for (let attempt = 0; attempt < 3; attempt += 1) {
+    let readVersion: number | null = null;
+    try {
+      const version = await runTransaction(db, async (tx) => {
+        const snap = await tx.get(roomRef);
+        if (!snap.exists()) throw new Error('room_not_found');
+        const room = parseRoom(roomId, snap.data() as Record<string, unknown>);
+        readVersion = room.version;
+        if (isExpired(room)) throw new Error('room_expired');
+        const isMember = room.hostUid === user.uid || room.partnerUid === user.uid;
+        if (!isMember) throw new Error('permission_denied');
+        if (type === 'GAME_STARTED') {
+          if (!room.partnerUid || !room.hostReady || !room.partnerReady) {
+            throw new Error('not_ready');
+          }
         }
-      }
 
-      const nextVersion = room.version + 1;
-      const eventRef = doc(db, 'rooms', roomId, 'events', eventId);
-      tx.set(eventRef, {
-        type,
-        version: nextVersion,
-        createdBy: user.uid,
-        createdAtMs: Date.now(),
-        payload,
-        createdAt: serverTimestamp(),
+        const nextVersion = room.version + 1;
+        const eventRef = doc(db, 'rooms', roomId, 'events', eventId);
+        tx.set(eventRef, {
+          type,
+          version: nextVersion,
+          createdBy: user.uid,
+          createdAtMs: Date.now(),
+          payload,
+          createdAt: serverTimestamp(),
+        });
+        tx.update(roomRef, {
+          version: nextVersion,
+          lastEventId: eventId,
+          updatedBy: user.uid,
+          updatedAtMs: Date.now(),
+          updatedAt: serverTimestamp(),
+          ...(type === 'GAME_STARTED' ? { status: 'playing' } : {}),
+          ...(type === 'GAME_ENDED' ? { status: 'ended' } : {}),
+        });
+        return nextVersion;
       });
-      tx.update(roomRef, {
-        version: nextVersion,
-        lastEventId: eventId,
-        updatedBy: user.uid,
-        updatedAtMs: Date.now(),
-        updatedAt: serverTimestamp(),
-        ...(type === 'GAME_STARTED' ? { status: 'playing' } : {}),
-        ...(type === 'GAME_ENDED' ? { status: 'ended' } : {}),
-      });
-      return nextVersion;
-    });
-    return { ok: true, version };
-  } catch (err) {
-    const msg = err instanceof Error ? err.message : 'sync_failed';
-    return { ok: false, error: msg };
+      return { ok: true, version };
+    } catch (err) {
+      const code = err && typeof err === 'object' && 'code' in err ? String(err.code) : '';
+      if (attempt < 2 && code.endsWith('permission-denied') && readVersion !== null) {
+        try {
+          const latest = await getDocFromServer(roomRef);
+          const current = latest.exists() ? parseRoom(roomId, latest.data() as Record<string, unknown>) : null;
+          // Rules can reject a stale version before the SDK reports a transaction conflict.
+          // Retry only a verified version race within a room the caller still belongs to.
+          if (current && current.version > readVersion && !isExpired(current)
+            && (current.hostUid === user.uid || current.partnerUid === user.uid)) continue;
+        } catch { /* Preserve the original denial. */ }
+      }
+      const msg = err instanceof Error ? err.message : 'sync_failed';
+      return { ok: false, error: msg };
+    }
   }
+  return { ok: false, error: 'version_conflict' };
 }
 
 export async function pushRoomGameState(roomId: string, game: GameState): Promise<void> {
@@ -647,12 +665,20 @@ export function subscribeCoupleRoom(
         if (!snap.metadata.fromCache) onRoom(null);
         return;
       }
-      const room = parseRoom(roomId, snap.data() as Record<string, unknown>);
+      const data = snap.data() as Record<string, unknown>;
+      // A transaction can leave only its updated fields in the local cache.
+      // That partial document has no expiry or identity until the server replies.
+      if (typeof data.expiresAtMs !== 'number' || typeof data.hostUid !== 'string') return;
+      const room = parseRoom(roomId, data);
       if (isExpired(room)) {
         onRoom(null);
         return;
       }
       onRoom({ ...room, displayCode: room.displayCode || displayCode, code: room.displayCode || displayCode });
+    }, (error) => {
+      if (cancelled) return;
+      if (error.code === 'permission-denied') onRoom(null);
+      else captureError(error, { action: 'subscribeCoupleRoom' });
     });
   })();
   return () => { cancelled = true; unsubscribe(); };
@@ -665,10 +691,13 @@ export function subscribeRoomEvents(
 ): () => void {
   if (!canUseRooms()) return () => {};
   let unsubscribe = () => {};
+  let cancelled = false;
   void (async () => {
     const db = await getFirestoreDb();
+    if (cancelled) return;
     if (!db) return;
     const { collection, onSnapshot, orderBy, query } = await import('firebase/firestore');
+    if (cancelled) return;
     const q = query(collection(db, 'rooms', roomId, 'events'), orderBy('version', 'asc'));
     let lastSeen = fromVersion;
     unsubscribe = onSnapshot(q, (snap) => {
@@ -687,9 +716,12 @@ export function subscribeRoomEvents(
           payload: (raw.payload as Record<string, unknown>) ?? {},
         });
       }
+    }, (error) => {
+      // Losing membership during leave/expiry closes the listener normally.
+      if (!cancelled && error.code !== 'permission-denied') captureError(error, { action: 'subscribeRoomEvents' });
     });
   })();
-  return () => unsubscribe();
+  return () => { cancelled = true; unsubscribe(); };
 }
 
 export function partnerConnected(room: CoupleRoom | null): boolean {

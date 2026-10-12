@@ -194,8 +194,8 @@ function AppContent() {
     if (couple.role !== 'partner') return;
     const remote = peekRemoteGame();
     if (!remote) return;
-    applyRemoteSnapshot(remote, couple.lastEventVersion);
-  }, [couple.role, couple.lastEventVersion, peekRemoteGame, applyRemoteSnapshot]);
+    applyRemoteSnapshot(remote, couple.lastEventVersion, couple.room?.roomId ?? null);
+  }, [couple.role, couple.room?.roomId, couple.lastEventVersion, peekRemoteGame, applyRemoteSnapshot]);
 
   const hubStats = {
     totalGames: loadRecords().totalGames,

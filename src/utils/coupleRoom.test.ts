@@ -91,4 +91,11 @@ describe('coupleRoom helpers', () => {
     } as never);
     expect(slim.usedTaskIds).toHaveLength(200);
   });
+  it('omits undefined fields recursively while preserving an explicit favorite collection', () => {
+    const game = { usedTaskIds: [], favoriteTaskIds: undefined, currentTask: { durationSeconds: undefined, title: 'QA' }, scores: [0, 0] } as never;
+    const slim = sanitizeGameForSync(game);
+    expect(Object.hasOwn(slim, 'favoriteTaskIds')).toBe(false);
+    expect(Object.hasOwn(slim.currentTask!, 'durationSeconds')).toBe(false);
+    expect(sanitizeGameForSync({ ...slim, favoriteTaskIds: [] }).favoriteTaskIds).toEqual([]);
+  });
 });

@@ -48,14 +48,16 @@ export function useCoupleRoom() {
         setActiveRoomId(null);
         setActiveDisplayCode(null);
       }
-      if (next) setLastEventVersion(next.version);
     });
     const unsubEvents = subscribeRoomEvents(activeRoomId, eventVersionRef.current, (event) => {
       if (event.version <= eventVersionRef.current) return;
       eventVersionRef.current = event.version;
-      setLastEventVersion(event.version);
       const game = extractGameFromEvent(event);
-      if (game) remoteGameRef.current = game;
+      if (game) {
+        remoteGameRef.current = game;
+        // Notify the screen when the payload arrives, independently of the room metadata.
+        setLastEventVersion(event.version);
+      }
     });
 
     return () => {
