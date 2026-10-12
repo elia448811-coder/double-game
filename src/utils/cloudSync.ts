@@ -60,6 +60,7 @@ type SyncListener = (state: SyncState) => void;
 let syncState: SyncState = { status: 'idle', lastSyncMs: null, lastError: null };
 const listeners = new Set<SyncListener>();
 let pushTimer: ReturnType<typeof setTimeout> | null = null;
+let pushQueue: Promise<unknown> = Promise.resolve();
 
 function emitSync(patch: Partial<SyncState>): void {
   syncState = { ...syncState, ...patch };
@@ -283,7 +284,14 @@ function hasOutbox(): boolean {
   return localStorage.getItem(OUTBOX_KEY) === '1';
 }
 
-export async function pushUserData(): Promise<{ ok: boolean; error?: string }> {
+export function pushUserData(): Promise<{ ok: boolean; error?: string }> {
+  // Startup, autosave and manual save must finish in order within this device.
+  const upload = pushQueue.then(pushUserDataNow, pushUserDataNow);
+  pushQueue = upload;
+  return upload;
+}
+
+async function pushUserDataNow(): Promise<{ ok: boolean; error?: string }> {
   if (!canSync()) return { ok: false, error: 'sync_disabled' };
   emitSync({ status: 'syncing', lastError: null });
   try {
@@ -294,9 +302,10 @@ export async function pushUserData(): Promise<{ ok: boolean; error?: string }> {
       return { ok: false, error: 'firebase_init_failed' };
     }
     const { doc, getDoc, serverTimestamp, setDoc } = await import('firebase/firestore');
-    const bundle = localBundle();
     const ref = doc(db, 'users', user.uid, 'data', 'bundle');
     const existing = await getDoc(ref);
+    const bundle = localBundle();
+    const localRevision = readLocalCloudWatermark();
     const merged = existing.exists()
       ? mergeBundles(bundle, parseRemoteBundle(existing.data() as Partial<CloudBundle>))
       : bundle;
@@ -309,6 +318,11 @@ export async function pushUserData(): Promise<{ ok: boolean; error?: string }> {
       partnerDisplayName: settings.playerTwoName,
       avatar: settings.playerOneAvatar,
     });
+    if (readLocalCloudWatermark() !== localRevision) {
+      // A newer edit must not be replaced by the snapshot this request uploaded.
+      scheduleCloudPush(0);
+      return { ok: true };
+    }
     applyCloudBundle(merged);
     clearOutbox();
     emitSync({ status: 'idle', lastSyncMs: Date.now(), lastError: null });

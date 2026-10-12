@@ -1,7 +1,7 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { DEFAULT_SETTINGS } from '../types/game';
 import { loadSettings, saveSettings } from './storage';
-import { pullUserData, pushCloudSnapshot, scheduleCloudPush, subscribeSyncState } from './cloudSync';
+import { pullUserData, pushUserData, pushCloudSnapshot, scheduleCloudPush, subscribeSyncState } from './cloudSync';
 
 const backend = vi.hoisted(() => ({ getDoc: vi.fn(), setDoc: vi.fn() }));
 vi.mock('../lib/firebase', () => ({
@@ -79,5 +79,34 @@ describe('cloud settings on new devices and during startup', () => {
     insideUpdater = true; scheduleCloudPush(); insideUpdater = false;
     await Promise.resolve();
     expect(notifiedDuringUpdate.every((inside) => !inside)).toBe(true); stop();
+  });
+  it('keeps the latest settings when an older upload finishes after another edit', async () => {
+    let finishUpload!: () => void;
+    backend.setDoc.mockReturnValueOnce(new Promise<void>((resolve) => { finishUpload = resolve; }));
+    saveSettings({ ...DEFAULT_SETTINGS, theme: 'dark' }); scheduleCloudPush();
+    const upload = pushUserData();
+    await vi.waitFor(() => expect(backend.setDoc).toHaveBeenCalledOnce());
+    vi.setSystemTime(10001);
+    saveSettings({ ...DEFAULT_SETTINGS, theme: 'light', calmDisplay: true }); scheduleCloudPush();
+    finishUpload(); expect((await upload).ok).toBe(true);
+    expect(loadSettings()).toMatchObject({ theme: 'light', calmDisplay: true });
+    expect(localStorage.getItem('couple-spin-cloud-outbox')).toBe('1');
+    vi.clearAllTimers();
+    expect((await pushUserData()).ok).toBe(true);
+    expect(backend.setDoc.mock.calls.at(-1)?.[1].settings).toMatchObject({ theme: 'light', calmDisplay: true });
+  });
+  it('serializes overlapping uploads so the latest settings are written last', async () => {
+    let finishFirst!: () => void;
+    backend.setDoc.mockReturnValueOnce(new Promise<void>((resolve) => { finishFirst = resolve; }));
+    saveSettings({ ...DEFAULT_SETTINGS, theme: 'dark' }); scheduleCloudPush();
+    const first = pushUserData();
+    await vi.waitFor(() => expect(backend.setDoc).toHaveBeenCalledOnce());
+    vi.setSystemTime(10001);
+    saveSettings({ ...DEFAULT_SETTINGS, theme: 'light' }); scheduleCloudPush();
+    const second = pushUserData();
+    await Promise.resolve(); expect(backend.setDoc).toHaveBeenCalledOnce();
+    finishFirst(); await first; await second;
+    expect(backend.setDoc.mock.calls.at(-1)?.[1].settings.theme).toBe('light');
+    expect(loadSettings().theme).toBe('light');
   });
 });
