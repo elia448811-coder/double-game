@@ -109,4 +109,15 @@ describe('cloud settings on new devices and during startup', () => {
     expect(backend.setDoc.mock.calls.at(-1)?.[1].settings.theme).toBe('light');
     expect(loadSettings().theme).toBe('light');
   });
+  it('uploads a personal question without undefined optional content fields', async () => {
+    localStorage.setItem('couple-spin-custom-content', JSON.stringify([{
+      id: 'qa-personal', title: 'Personal question', description: 'What did you enjoy today?',
+      category: 'calm', level: 'easy', kind: 'question',
+    }]));
+    expect((await pushUserData()).ok).toBe(true);
+    const sent = backend.setDoc.mock.calls[0]?.[1];
+    expect(sent.customContent).toHaveLength(1);
+    expect(Object.hasOwn(sent.customContent[0], 'questionGroup')).toBe(false);
+    expect(sent.updatedAt).toBe('timestamp');
+  });
 });

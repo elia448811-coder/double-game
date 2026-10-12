@@ -310,7 +310,10 @@ async function pushUserDataNow(): Promise<{ ok: boolean; error?: string }> {
       ? mergeBundles(bundle, parseRemoteBundle(existing.data() as Partial<CloudBundle>))
       : bundle;
     merged.updatedAtMs = Date.now();
-    await setDoc(ref, { ...merged, updatedAt: serverTimestamp() });
+    // Custom questions can contain undefined optional fields after normalization.
+    // Keep the data JSON-shaped; add the Firestore transform after serialization.
+    const serializableBundle = JSON.parse(JSON.stringify(merged)) as CloudBundle;
+    await setDoc(ref, { ...serializableBundle, updatedAt: serverTimestamp() });
     const settings = loadSettings();
     const { ensureUserProfile } = await import('./userProfile');
     await ensureUserProfile({
