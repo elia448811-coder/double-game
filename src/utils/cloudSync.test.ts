@@ -56,4 +56,16 @@ describe('cloudSync merge', () => {
     expect(merged.achievements.sort()).toEqual(['a', 'b']);
     expect(merged.processedFinishIds.sort()).toEqual(['f1', 'f2']);
   });
+  it('preserves explicit favorite and personal-content removals from the newer device snapshot', () => {
+    const local = baseBundle({ updatedAtMs: 2000, favorites: [], customContent: [] });
+    const remote = baseBundle({ updatedAtMs: 1000, favorites: ['q1'], customContent: [{
+      id: 'custom-1', title: 'QA', description: 'QA question', kind: 'question', category: 'calm', level: 'easy', createdAt: '2026-10-12',
+    }] });
+    expect(mergeBundles(local, remote)).toMatchObject({ favorites: [], customContent: [] });
+  });
+  it('loads the newer cloud collections rather than resurrecting stale local items', () => {
+    const local = baseBundle({ updatedAtMs: 1000, favorites: ['old'] });
+    const remote = baseBundle({ updatedAtMs: 2000, favorites: ['new'] });
+    expect(mergeBundles(local, remote).favorites).toEqual(['new']);
+  });
 });

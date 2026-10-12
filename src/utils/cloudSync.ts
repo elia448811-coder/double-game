@@ -167,10 +167,9 @@ export function mergeBundles(local: CloudBundle, remote: CloudBundle): CloudBund
       ? newerFirst.boundaries
       : older.boundaries,
     hiddenTasks: [...new Set([...local.hiddenTasks, ...remote.hiddenTasks])],
-    favorites: [...new Set([...local.favorites, ...remote.favorites])],
+    favorites: newerFirst.favorites,
     discrete: newerFirst.discrete,
-    customContent:
-      local.customContent.length >= remote.customContent.length ? local.customContent : remote.customContent,
+    customContent: newerFirst.customContent,
     processedFinishIds: [...new Set([...local.processedFinishIds, ...remote.processedFinishIds])].slice(0, 200),
   };
 }
