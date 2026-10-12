@@ -336,7 +336,8 @@ export async function pullUserData(): Promise<{ ok: boolean; bundle?: CloudBundl
       return { ok: true };
     }
     const remote = parseRemoteBundle(snap.data() as Partial<CloudBundle>);
-    const local = { ...localBundle(), updatedAtMs: readLocalCloudWatermark() || localBundle().updatedAtMs };
+    // Opening a fresh device does not make its default settings newer than the cloud.
+    const local = { ...localBundle(), updatedAtMs: readLocalCloudWatermark() };
     const merged = mergeBundles(local, remote);
     if (local.updatedAtMs > remote.updatedAtMs) {
       await pushUserData();
@@ -368,7 +369,9 @@ export async function syncCloudOnStartup(): Promise<boolean> {
 
 export function scheduleCloudPush(delayMs = 800): void {
   if (!canSync()) return;
-  emitSync({ status: 'pending' });
+  // Record the edit immediately, including while startup is still downloading data.
+  markLocalCloudWatermark();
+  queueOutbox();
   if (pushTimer) clearTimeout(pushTimer);
   pushTimer = setTimeout(() => {
     pushTimer = null;
