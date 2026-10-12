@@ -87,6 +87,7 @@ export function useCoupleRoom() {
     remoteGameRef.current = null;
     setRoom(result.room);
     setRole('host');
+    setLastEventVersion(0);
     setActiveRoomId(result.room.roomId);
     setActiveDisplayCode(result.room.displayCode);
     return result.room;
@@ -106,6 +107,7 @@ export function useCoupleRoom() {
     remoteGameRef.current = null;
     setRoom(result.room);
     setRole(storedAfter?.role ?? 'partner');
+    setLastEventVersion(0);
     setActiveRoomId(result.room.roomId);
     setActiveDisplayCode(result.room.displayCode || code.replace(/\D/g, '').slice(0, 8));
     return result.room;
@@ -121,6 +123,7 @@ export function useCoupleRoom() {
     eventVersionRef.current = 0;
     remoteGameRef.current = null;
     setBusy(false);
+    setLastEventVersion(0);
   }, []);
 
   const toggleReady = useCallback(
