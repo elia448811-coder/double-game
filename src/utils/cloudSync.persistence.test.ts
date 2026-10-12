@@ -127,8 +127,9 @@ describe('cloud settings on new devices and during startup', () => {
     backend.getDoc.mockReturnValueOnce(new Promise((resolve) => { finishDownload = resolve; }));
     const pull = pullUserData();
     await vi.waitFor(() => expect(backend.getDoc).toHaveBeenCalled());
+    const editTime = Date.now();
     const item = addCustomContent({ kind: 'question', title: 'Keep this question', description: 'What did you enjoy?', category: 'romantic', level: 'normal' });
-    expect(readLocalCloudWatermark()).toBe(10000);
+    expect(readLocalCloudWatermark()).toBe(editTime);
     finishDownload(remoteSnapshot()); expect((await pull).ok).toBe(true);
     expect(loadCustomContent().some((entry) => entry.id === item?.id)).toBe(true);
   });
