@@ -630,16 +630,21 @@ export function subscribeCoupleRoom(
     return () => {};
   }
   let unsubscribe = () => {};
+  let cancelled = false;
   void (async () => {
     const db = await getFirestoreDb();
+    if (cancelled) return;
     if (!db) {
       onRoom(null);
       return;
     }
     const { doc, onSnapshot } = await import('firebase/firestore');
-    unsubscribe = onSnapshot(doc(db, 'rooms', roomId), (snap) => {
+    if (cancelled) return;
+    unsubscribe = onSnapshot(doc(db, 'rooms', roomId), { includeMetadataChanges: true }, (snap) => {
       if (!snap.exists()) {
-        onRoom(null);
+        // Transaction reads do not populate the cache. Wait for the server before
+        // treating an initially empty cache as a deleted room.
+        if (!snap.metadata.fromCache) onRoom(null);
         return;
       }
       const room = parseRoom(roomId, snap.data() as Record<string, unknown>);
@@ -650,7 +655,7 @@ export function subscribeCoupleRoom(
       onRoom({ ...room, displayCode: room.displayCode || displayCode, code: room.displayCode || displayCode });
     });
   })();
-  return () => unsubscribe();
+  return () => { cancelled = true; unsubscribe(); };
 }
 
 export function subscribeRoomEvents(
