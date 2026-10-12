@@ -100,7 +100,7 @@ export function EndScreen({ game, settings, onNewGame, onPlayAgain, onHome }: En
   return (
     <section className="page-screen flow-screen end-screen">
       <ConfettiEffect
-        active
+        active={!settings.calmDisplay}
         colors={[settings.playerOneColor, settings.playerTwoColor, '#FACC15', '#FF4FA3']}
       />
       <div className="flow-card end-card">

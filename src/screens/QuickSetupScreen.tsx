@@ -22,6 +22,8 @@ type QuickSetupScreenProps = {
   playerTwoName: string;
   matureAgeConfirmed: boolean;
   presets?: GamePreset[];
+  favoriteCount?: number;
+  onUseAllContent?: () => void;
   onApplyPreset?: (preset: GamePreset) => void;
   onModeSelect: (mode: GameMode) => void;
   onLevelSelect: (level: TaskLevel) => void;
@@ -89,6 +91,8 @@ export function QuickSetupScreen({
   playerTwoName,
   matureAgeConfirmed,
   presets = [],
+  favoriteCount,
+  onUseAllContent,
   onApplyPreset,
   onModeSelect,
   onLevelSelect,
@@ -183,6 +187,11 @@ export function QuickSetupScreen({
         </nav>
 
         <div className="setup-body">
+          {favoriteCount !== undefined && <section className="setup-block favorites-setup-note" aria-live="polite">
+            <h2 className="setup-label">ערב מהמועדפים שלכם</h2>
+            <p>{favoriteCount ? `${favoriteCount === 1 ? 'פריט אחד מתאים' : `${favoriteCount} פריטים מתאימים`} לבחירות הנוכחיות. המשחק יבחר רק מהרשימה ששמרתם.` : 'אין ברשימה פריטים שמתאימים לבחירות האלה. שנו את האווירה, הרמה או סוג התוכן.'}</p>
+            <button type="button" className="secondary-action pressable" onClick={onUseAllContent}>מעבר לכל השאלות והמשימות</button>
+          </section>}
           {presets.length > 0 && onApplyPreset && (
             <section className="setup-block setup-block--quick">
               <h2 className="setup-label">התחלה מהירה</h2>
@@ -370,7 +379,7 @@ export function QuickSetupScreen({
         </div>
       </div>
       <div className="setup-footer">
-        <button type="button" className="cta-button pressable" onClick={handleContinue}>
+        <button type="button" className="cta-button pressable" onClick={handleContinue} disabled={favoriteCount === 0}>
           הכל מוכן — ממשיכים
         </button>
         <p className="setup-summary">

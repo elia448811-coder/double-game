@@ -20,6 +20,7 @@ type SpinOptions = {
   soundPack: SoundPack;
   segments?: SpinnerSegment[];
   onTick?: () => void;
+  reducedMotion?: boolean;
 };
 
 export function useSpinWheel(
@@ -85,7 +86,7 @@ export function useSpinWheel(
       }
       onSpinEndRef.current(targetIndex);
       landedTimerRef.current = setTimeout(() => setLanded(false), 1200);
-    }, SPIN_DURATION_MS);
+    }, optionsRef.current.reducedMotion ? 400 : SPIN_DURATION_MS);
   }, []);
 
   const resetRotation = useCallback(() => {
@@ -117,6 +118,7 @@ export function useApplyTheme(settings: {
   fontChoice: string;
   bgTheme: string;
   animationStyle: string;
+  calmDisplay?: boolean;
   colorblindMode: boolean;
   playerOneColor: string;
   playerTwoColor: string;
@@ -124,9 +126,10 @@ export function useApplyTheme(settings: {
   useEffect(() => {
     const root = document.documentElement;
     const reduce =
-      settings.animationStyle === 'reduced' ||
+      settings.calmDisplay || settings.animationStyle === 'reduced' ||
       (typeof window !== 'undefined' &&
         window.matchMedia?.('(prefers-reduced-motion: reduce)').matches);
+    root.setAttribute('data-calm', String(Boolean(settings.calmDisplay)));
     root.setAttribute('data-theme', settings.theme);
     root.setAttribute('data-font', settings.fontChoice);
     root.setAttribute('data-bg', settings.bgTheme);

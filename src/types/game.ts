@@ -48,6 +48,7 @@ export type Screen =
   | 'tutorial'
   | 'game'
   | 'end'
+  | 'favorites'
   | 'settings'
   | 'admin';
 
@@ -84,6 +85,9 @@ export type AppSettings = {
   spinnerStyle: SpinnerStyle;
   fontChoice: FontChoice;
   animationStyle: AnimationStyle;
+  calmDisplay: boolean;
+  personalizeContent: boolean;
+  preferUnseenContent: boolean;
   bgTheme: BgTheme;
   colorblindMode: boolean;
   soundPack: SoundPack;
@@ -122,6 +126,8 @@ export type GameState = {
   scores: [number, number];
   cooperativeScore: number;
   usedTaskIds: string[];
+  /** A fixed collection for this evening; undefined means the full bank. */
+  favoriteTaskIds?: string[];
   currentTask: CoupleTask | null;
   isSpinning: boolean;
   wheelLanded: boolean;
@@ -344,6 +350,9 @@ export const DEFAULT_SETTINGS: AppSettings = {
   spinnerStyle: 'glass',
   fontChoice: 'heebo',
   animationStyle: 'full',
+  calmDisplay: false,
+  personalizeContent: true,
+  preferUnseenContent: true,
   bgTheme: 'default',
   colorblindMode: false,
   soundPack: 'default',

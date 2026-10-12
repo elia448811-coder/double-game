@@ -19,6 +19,7 @@ import { pickTaskWithFallback, spinPickOptions } from '../utils/pickTaskWithFall
 import { clearSnapshot, loadSnapshot, prepareLocalResume, saveSnapshot } from '../utils/gameSnapshot';
 import { clearUndo, hasUndo, popUndo, pushUndo } from '../utils/undoStack';
 import { isGuestMode } from '../utils/privacy';
+import { rememberContent } from '../utils/contentMemory';
 import {
   pullCloudSnapshot,
   scheduleCloudPush,
@@ -160,6 +161,7 @@ export function useGameState() {
       const prev = gameRef.current;
       const { state, effects } = gameReducer(prev, event);
       if (state === prev) return;
+      if ((event.type === 'SPIN_LANDED' || event.type === 'TASK_REPLACED') && state.currentTask) rememberContent(state.currentTask.id);
       if (event.type === 'TASK_COMPLETED' || event.type === 'TASK_SKIPPED' || event.type === 'START_SPIN') pushUndo(prev);
       if (event.type === 'START_GAME' || event.type === 'NEW_GAME' || event.type === 'PLAY_AGAIN' || event.type === 'RESET_SCORES') clearUndo();
       gameRef.current = state;
@@ -241,10 +243,13 @@ export function useGameState() {
         coupleOnly: prev.coupleTaskMode,
         contentMode: prev.contentMode,
         excludeIds,
+        allowedIds: prev.favoriteTaskIds,
+        personalize: settings.personalizeContent,
+        preferUnseen: settings.preferUnseenContent,
       };
       return pickTaskWithFallback(prev.mode, prev.level, prev.usedTaskIds, settings.advancedTasksEnabled, opts);
     },
-    [settings.advancedTasksEnabled],
+    [settings.advancedTasksEnabled, settings.personalizeContent, settings.preferUnseenContent],
   );
 
   return {
@@ -256,6 +261,7 @@ export function useGameState() {
     effectiveTarget: getEffectiveTarget(game),
     updateSettings,
     navigate: (screen: Screen) => dispatch({ type: 'NAVIGATE', screen }),
+    setFavoriteCollection: (ids?: string[]) => dispatch({ type: 'SET_FAVORITES', ids }),
     setMode: (mode: GameMode) => dispatch({ type: 'SET_MODE', mode }),
     setLevel: (level: TaskLevel) => dispatch({ type: 'SET_LEVEL', level }),
     setGameFormat: (format: GameFormat) => dispatch({ type: 'SET_FORMAT', format }),
@@ -291,10 +297,7 @@ export function useGameState() {
       const prev = gameRef.current;
       if (!prev.currentTask) return false;
       const next = pickForSegment({ ...prev, usedTaskIds: [...prev.usedTaskIds, prev.currentTask.id] }, prev.spinCategory, [prev.currentTask.id]);
-      if (!next) {
-        dispatch({ type: 'SET_POOL_EMPTY', empty: true });
-        return false;
-      }
+      if (!next) return false;
       dispatch({ type: 'TASK_REPLACED', usedId: prev.currentTask.id, next });
       return true;
     },
@@ -312,6 +315,9 @@ export function useGameState() {
           coupleOnly: prev.coupleTaskMode,
           contentMode: prev.contentMode,
           excludeIds: [prev.currentTask.id],
+          allowedIds: prev.favoriteTaskIds,
+          personalize: settings.personalizeContent,
+          preferUnseen: settings.preferUnseenContent,
         });
       if (!task) return false;
       dispatch({ type: 'TASK_REPLACED', usedId: prev.currentTask.id, next: task });
@@ -331,6 +337,9 @@ export function useGameState() {
           coupleOnly: prev.coupleTaskMode,
           contentMode: prev.contentMode,
           excludeIds: [prev.currentTask.id],
+          allowedIds: prev.favoriteTaskIds,
+          personalize: settings.personalizeContent,
+          preferUnseen: settings.preferUnseenContent,
         });
       if (!task) return false;
       dispatch({ type: 'TASK_REPLACED', usedId: prev.currentTask.id, next: task });

@@ -1,3 +1,5 @@
+import { isGuestMode } from './privacy';
+
 const TASK_FEEDBACK_KEY = 'couple-spin-task-feedback';
 const EVENING_RATINGS_KEY = 'couple-spin-evening-ratings';
 
@@ -11,12 +13,14 @@ type EveningRating = {
   atMs: number;
 };
 
-function readTaskMap(): TaskFeedbackMap {
+export function readTaskMap(): TaskFeedbackMap {
   try {
+    if (isGuestMode()) return {};
     const raw = localStorage.getItem(TASK_FEEDBACK_KEY);
     if (!raw) return {};
-    const parsed = JSON.parse(raw) as TaskFeedbackMap;
-    return parsed && typeof parsed === 'object' ? parsed : {};
+    const parsed: unknown = JSON.parse(raw);
+    if (!parsed || typeof parsed !== 'object' || Array.isArray(parsed)) return {};
+    return Object.fromEntries(Object.entries(parsed).filter(([id, rating]) => id.length <= 128 && (rating === 'up' || rating === 'down')));
   } catch {
     return {};
   }
@@ -28,6 +32,7 @@ export function getTaskFeedback(taskId: string): TaskRating | null {
 
 export function setTaskFeedback(taskId: string, rating: TaskRating): void {
   try {
+    if (isGuestMode()) return;
     const next = { ...readTaskMap(), [taskId]: rating };
     localStorage.setItem(TASK_FEEDBACK_KEY, JSON.stringify(next));
   } catch {

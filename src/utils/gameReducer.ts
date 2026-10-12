@@ -89,6 +89,9 @@ export function gameReducer(state: GameState, event: GameEvent): ReduceResult {
       return { state: next, effects: leaving ? [{ type: 'persist_snapshot' }] : [] };
     }
 
+    case 'SET_FAVORITES':
+      return { state: { ...state, favoriteTaskIds: event.ids ? [...new Set(event.ids)] : undefined }, effects: [] };
+
     case 'SET_MODE':
       return {
         state: {
@@ -388,6 +391,7 @@ export function gameReducer(state: GameState, event: GameEvent): ReduceResult {
           playerOneName: event.settingsNames.one,
           playerTwoName: event.settingsNames.two,
           contentMode: event.settingsNames.contentMode,
+          favoriteTaskIds: undefined,
           scores: [0, 0],
           cooperativeScore: 0,
           usedTaskIds: [],

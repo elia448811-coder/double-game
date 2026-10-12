@@ -16,6 +16,9 @@ const EXPORT_KEYS = [
   HIDDEN_TASKS_KEY,
   FAVORITES_KEY,
   DISCRETE_KEY,
+  'couple-spin-seen-content',
+  'couple-spin-task-feedback',
+  'couple-spin-evening-ratings',
 ] as const;
 
 export type ContentBoundary = 'touch' | 'photo' | 'outside' | 'intimate';

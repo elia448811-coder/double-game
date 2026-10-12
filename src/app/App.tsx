@@ -16,6 +16,7 @@ import { clearJoinParamFromUrl, parseJoinCodeFromUrl } from '../utils/roomInvite
 import { getRoomError } from '../utils/roomErrors';
 import { isFeatureEnabled } from '../utils/featureFlags';
 import { generateSurpriseEvening } from '../utils/surpriseEvening';
+import { filterTasks } from '../utils/taskSelection';
 import { loadRecords, loadUnlockedAchievements } from '../utils/storage';
 import '../styles/tokens.css';
 import '../styles/globals.css';
@@ -35,6 +36,7 @@ const QuickSetupScreen = lazy(() =>
 const DiceRollScreen = lazy(() =>
   import('../screens/DiceRollScreen').then((m) => ({ default: m.DiceRollScreen })),
 );
+const FavoritesScreen = lazy(() => import('../screens/FavoritesScreen').then((m) => ({ default: m.FavoritesScreen })));
 const GameScreen = lazy(() => import('../screens/GameScreen').then((m) => ({ default: m.GameScreen })));
 const EndScreen = lazy(() => import('../screens/EndScreen').then((m) => ({ default: m.EndScreen })));
 const SettingsScreen = lazy(() =>
@@ -61,6 +63,7 @@ function AppContent() {
     updateSettings,
     navigate,
     setMode,
+    setFavoriteCollection,
     setLevel,
     setGameFormat,
     setScoringMode,
@@ -152,12 +155,13 @@ function AppContent() {
   }, [couple.error, showToast]);
 
   const handleSurpriseEvening = useCallback(() => {
+    setFavoriteCollection();
     const surprise = generateSurpriseEvening();
     applyPreset(surprise);
     setEveningName(surprise.eveningTitle);
     setSurpriseNote(`${surprise.twist} ${surprise.surpriseMessage}`);
     goToDiceRoll();
-  }, [applyPreset, setEveningName, goToDiceRoll]);
+  }, [applyPreset, setEveningName, goToDiceRoll, setFavoriteCollection]);
 
   const handleStartGame = useCallback(
     (firstPlayer: 0 | 1 = 0) => {
@@ -178,7 +182,7 @@ function AppContent() {
   useEffect(() => {
     if (couple.role !== 'host' && !(couple.role === 'partner' && isFeatureEnabled('enablePartnerControl'))) return;
     if (!couple.room?.roomId) return;
-    if (game.screen === 'welcome' || game.screen === 'settings') return;
+    if (game.screen === 'welcome' || game.screen === 'settings' || game.screen === 'favorites') return;
     clearTimeout(syncTimerRef.current);
     syncTimerRef.current = setTimeout(() => {
       void syncGameToRoom(game);
@@ -224,8 +228,8 @@ function AppContent() {
   return (
     <main className={`app-shell ${isGame ? 'app-shell--focus' : ''}`} dir="rtl">
       {!previewMode && <LogoutButton />}
-      {!isGame && <BackgroundGlow />}
-      {!isGame && <FloatingParticles reduced={settings.animationStyle === 'reduced'} />}
+      {!isGame && !settings.calmDisplay && <BackgroundGlow />}
+      {!isGame && !settings.calmDisplay && <FloatingParticles reduced={settings.animationStyle === 'reduced'} />}
       <InstallPWABanner />
       {!previewMode && (
         <SyncStatusBanner
@@ -257,7 +261,8 @@ function AppContent() {
               </div>
             )}
             <WelcomeScreen
-              onStart={go(navigate, 'setup')}
+              onStart={() => { setFavoriteCollection(); navigate('setup'); }}
+              onFavorites={go(navigate, 'favorites')}
               onSettings={() => { settingsReturnRef.current = 'welcome'; navigate('settings'); }}
               onTutorial={go(navigate, 'tutorial')}
               onSurprise={handleSurpriseEvening}
@@ -283,6 +288,13 @@ function AppContent() {
           </>
         )}
 
+        {game.screen === 'favorites' && <FavoritesScreen
+          matureAgeConfirmed={settings.matureAgeConfirmed} onConfirmMatureAge={confirmMatureAge}
+          onBack={go(navigate, 'welcome')} onStart={(ids, mature, contentMode) => {
+            setFavoriteCollection(ids); setMode(mature ? 'spicy' : 'mixed'); setContentMode(contentMode); setCoupleTaskMode(false);
+            setLevel(settings.advancedTasksEnabled ? 'advanced' : 'normal'); navigate('setup');
+          }} />}
+
         {game.screen === 'setup' && (
           <QuickSetupScreen
             mode={game.mode}
@@ -297,6 +309,8 @@ function AppContent() {
             playerOneName={game.playerOneName}
             playerTwoName={game.playerTwoName}
             matureAgeConfirmed={settings.matureAgeConfirmed}
+            favoriteCount={game.favoriteTaskIds === undefined ? undefined : filterTasks(game.mode, game.level, [], settings.advancedTasksEnabled, { contentMode: game.contentMode, coupleOnly: game.coupleTaskMode, allowedIds: game.favoriteTaskIds }).length}
+            onUseAllContent={() => setFavoriteCollection()}
             presets={presets}
             onApplyPreset={applyPreset}
             onModeSelect={setMode}
@@ -393,12 +407,12 @@ function AppContent() {
       </Suspense>
 
       <Suspense fallback={null}>
-      <MiniRobot
+      {!settings.calmDisplay && <MiniRobot
         game={game}
         settings={settings}
         effectiveTarget={effectiveTarget}
         soundEnabled={settings.soundEnabled}
-      />
+      />}
       </Suspense>
     </main>
   );

@@ -50,6 +50,9 @@ export function sanitizeSettings(raw: unknown): AppSettings {
     soundEnabled: asBool(o.soundEnabled, base.soundEnabled),
     vibrationEnabled: asBool(o.vibrationEnabled, base.vibrationEnabled),
     backgroundMusicEnabled: asBool(o.backgroundMusicEnabled, base.backgroundMusicEnabled),
+    calmDisplay: asBool(o.calmDisplay, base.calmDisplay),
+    personalizeContent: asBool(o.personalizeContent, base.personalizeContent),
+    preferUnseenContent: asBool(o.preferUnseenContent, base.preferUnseenContent),
     theme: THEMES.has(String(o.theme)) ? (o.theme as AppSettings['theme']) : base.theme,
     playerOneName: asString(o.playerOneName, base.playerOneName),
     playerTwoName: asString(o.playerTwoName, base.playerTwoName),
@@ -202,6 +205,8 @@ export function clearAllLocalData(): { ok: boolean; error?: string } {
     localStorage.removeItem(RECORDS_KEY);
     localStorage.removeItem(ACHIEVEMENTS_KEY);
     localStorage.removeItem('couple-spin-custom-content');
+    for (const key of ['couple-spin-seen-content', 'couple-spin-task-feedback', 'couple-spin-evening-ratings', 'couple-spin-favorites', 'couple-spin-hidden-tasks', 'couple-spin-boundaries', 'couple-spin-discrete', 'couple-spin-guest']) localStorage.removeItem(key);
+    sessionStorage.removeItem('couple-spin-active-game');
     sessionStorage.removeItem('couple-spin-auth-session');
     return { ok: true };
   } catch (e) {

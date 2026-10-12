@@ -42,6 +42,7 @@ export function isValidLocalSnapshot(value: unknown): value is GameState {
     typeof g.playerOneName === 'string' && typeof g.playerTwoName === 'string' &&
     (g.currentPlayerIndex === 0 || g.currentPlayerIndex === 1) &&
     Array.isArray(g.scores) && g.scores.length === 2 && g.scores.every(number) && number(g.cooperativeScore) &&
+    (g.favoriteTaskIds === undefined || strings(g.favoriteTaskIds)) &&
     strings(g.usedTaskIds) && strings(g.unlockedAchievements) && strings(g.sessionNewAchievements) &&
     !!g.stats && ['totalCompleted', 'totalSkipped', 'roundNumber', 'startTime', 'streak', 'maxStreak']
       .every((key) => number(g.stats[key as keyof GameState['stats']])) &&

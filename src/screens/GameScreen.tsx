@@ -7,7 +7,7 @@ import { TaskModal } from '../components/TaskModal';
 import { useSpinWheel } from '../hooks/useSpinWheel';
 import { getSpinnerSegments } from '../types/game';
 import type { AppSettings, ContentMode, CoupleTask, GameState } from '../types/game';
-import { hideTaskForever, toggleFavorite } from '../utils/privacy';
+import { hideTaskForever, listFavorites, toggleFavorite } from '../utils/privacy';
 import { getTaskFeedback, setTaskFeedback } from '../utils/taskFeedback';
 import { hasUndo } from '../utils/undoStack';
 
@@ -74,6 +74,7 @@ export function GameScreen({
     soundEnabled: settings.soundEnabled,
     soundPack: settings.soundPack,
     segments,
+    reducedMotion: settings.calmDisplay,
   });
   const [confirmEnd, setConfirmEnd] = useState(false);
 
@@ -96,13 +97,16 @@ export function GameScreen({
   ]);
 
   const [taskRating, setTaskRating] = useState<'up' | 'down' | null>(null);
+  const [isFavorite, setIsFavorite] = useState(false);
   const currentTaskId = game.currentTask?.id;
 
   useEffect(() => {
     if (!currentTaskId) {
+      setIsFavorite(false);
       setTaskRating(null);
       return;
     }
+    setIsFavorite(listFavorites().includes(currentTaskId));
     setTaskRating(getTaskFeedback(currentTaskId));
   }, [currentTaskId]);
 
@@ -230,6 +234,7 @@ export function GameScreen({
           isCoupleTask={game.coupleTaskMode}
           isFunniest={game.stats.funniestTaskId === game.currentTask.id}
           readOnly={spectatorMode}
+          isFavorite={isFavorite}
           taskFeedback={taskRating}
           onTaskFeedback={
             spectatorMode
@@ -249,7 +254,7 @@ export function GameScreen({
             hideTaskForever(game.currentTask!.id);
             onSkip();
           }}
-          onToggleFavorite={() => toggleFavorite(game.currentTask!.id)}
+          onToggleFavorite={() => setIsFavorite(toggleFavorite(game.currentTask!.id))}
         />
       )}
     </section>

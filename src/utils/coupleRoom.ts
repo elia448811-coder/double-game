@@ -711,6 +711,7 @@ export function isValidRemoteGameState(value: unknown): value is GameState {
   if (typeof g.playerOneName !== 'string' || typeof g.playerTwoName !== 'string') return false;
   if (g.currentPlayerIndex !== 0 && g.currentPlayerIndex !== 1) return false;
   if (!Array.isArray(g.usedTaskIds)) return false;
+  if (g.favoriteTaskIds !== undefined && (!Array.isArray(g.favoriteTaskIds) || !g.favoriteTaskIds.every((id) => typeof id === 'string'))) return false;
   if (!g.stats || typeof g.stats !== 'object') return false;
   return true;
 }

@@ -266,3 +266,29 @@ html[data-theme='light'] .site-gate__input { background: var(--cs-surface); bord
   background: var(--experience-inset); color: var(--cinema-cream); font-weight: 600; cursor: pointer;
 }
 .task-feedback-btn, .mini-robot__chip, .task-modal__more-toggle, .flow-link { min-height: 44px; }
+
+/* Saved cards use the same surface, artwork and spacing as question cards. */
+.favorites-screen { width: min(100%, 1000px); }
+.favorites-shell { padding: clamp(16px, 3vw, 28px); }
+.favorites-tools { display: grid; gap: 16px; margin: 24px 0; }
+.favorites-tools .setup-field { min-width: 0; }
+.favorites-start { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 12px; margin: 20px 0; }
+.favorites-start .cta-button { min-width: 220px; width: auto; flex: 1; }
+.favorites-grid { display: grid; gap: 20px; }
+.favorite-card { min-width: 0; overflow: hidden; border: 1px solid var(--cinema-line); border-radius: var(--cinema-card-radius); background: var(--cinema-card-background); box-shadow: var(--cinema-card-shadow); }
+.favorite-card .content-artwork { width: 100%; height: auto; margin: 0; border-radius: 0; aspect-ratio: 16 / 9; }
+.favorite-card__body { padding: 20px; display: grid; gap: 12px; }
+.favorite-card__body h2 { font-size: 20px; line-height: 1.45; overflow-wrap: anywhere; margin: 0; }
+.favorite-card__body > p:not(.flow-kicker) { font-size: 18px; line-height: 1.75; overflow-wrap: anywhere; margin: 0 0 8px; }
+.favorite-card__body .secondary-action { width: 100%; }
+.favorites-empty { padding: 24px 4px; text-align: center; line-height: 1.8; }
+.favorites-more { margin-top: 24px; width: 100%; }
+.favorites-setup-note { grid-column: 1 / -1; line-height: 1.75; }
+.hub-links { flex-wrap: wrap; }
+[data-calm='true'] *, [data-calm='true'] *::before, [data-calm='true'] *::after { animation: none !important; transition: none !important; scroll-behavior: auto !important; }
+[data-calm='true'] .wheel-flash { display: none; }
+@media (min-width: 700px) {
+  .favorites-tools { grid-template-columns: repeat(2, minmax(0,1fr)); }
+  .favorites-tools .setup-field { grid-column: 1 / -1; }
+  .favorites-grid { grid-template-columns: repeat(2, minmax(0,1fr)); }
+}

@@ -14,6 +14,8 @@ import {
 } from '../types/game';
 import { getCachedCategories } from './adminCategories';
 import { isTaskHidden, taskAllowedByBoundaries } from './privacy';
+import { loadSeenContent } from './contentMemory';
+import { readTaskMap } from './taskFeedback';
 
 const MODE_CATEGORIES: Record<GameMode, TaskCategory[]> = {
   funny: ['funny', 'movement', 'creative'],
@@ -72,6 +74,9 @@ export function filterTasks(
     contentMode?: ContentMode;
     excludeIds?: string[];
     exactLevel?: TaskLevel;
+    allowedIds?: string[];
+    personalize?: boolean;
+    preferUnseen?: boolean;
   } = {},
 ): CoupleTask[] {
   const modeCategories = getCategoriesForMode(mode);
@@ -84,7 +89,9 @@ export function filterTasks(
         ? ['easy', 'normal']
         : ['easy', 'normal', 'advanced'];
 
+  const allowedIds = options.allowedIds ? new Set(options.allowedIds) : null;
   return getAllContent().filter((task: CoupleTask) => {
+    if (allowedIds && !allowedIds.has(task.id)) return false;
     if (isTaskHidden(task.id)) return false;
     if (!taskAllowedByBoundaries(task)) return false;
     if (task.category === 'spicy' && mode !== 'spicy') return false;
@@ -119,12 +126,46 @@ export function pickRandomTask(
   options: Parameters<typeof filterTasks>[4] = {},
 ): CoupleTask | null {
   const pool = filterTasks(mode, level, usedIds, advancedEnabled, options);
-  if (pool.length === 0) {
-    const fallback = filterTasks(mode, level, [], advancedEnabled, options);
-    if (fallback.length === 0) return null;
-    return fallback[Math.floor(Math.random() * fallback.length)];
+  return choosePreferredContent(pool.length ? pool : filterTasks(mode, level, [], advancedEnabled, options), options);
+}
+
+/** Preferences rank an already allowed pool; they never relax content restrictions. */
+export function choosePreferredContent(
+  pool: CoupleTask[], options: { personalize?: boolean; preferUnseen?: boolean; allowedIds?: string[] } = {}, random = Math.random(),
+): CoupleTask | null {
+  if (!pool.length) return null;
+  let candidates = pool;
+  if (options.preferUnseen !== false && options.allowedIds === undefined) {
+    const seen = new Map(loadSeenContent().map((item) => [item.id, item.atMs]));
+    const unseen = pool.filter((item) => !seen.has(item.id));
+    if (unseen.length) candidates = unseen;
+    else {
+      // When everything was seen, reuse the oldest quarter rather than the last card.
+      candidates = [...pool].sort((a, b) => (seen.get(a.id) ?? 0) - (seen.get(b.id) ?? 0))
+        .slice(0, Math.max(1, Math.ceil(pool.length / 4)));
+    }
   }
-  return pool[Math.floor(Math.random() * pool.length)];
+  const ratings = options.personalize === false ? {} : readTaskMap();
+  const affinity = new Map<string, number>();
+  if (options.personalize !== false) {
+    for (const item of getAllContent()) {
+      const rating = ratings[item.id];
+      if (!rating) continue;
+      const topic = `${item.kind ?? 'task'}:${item.questionGroup ?? item.category}`;
+      affinity.set(topic, (affinity.get(topic) ?? 0) + (rating === 'up' ? 1 : -1));
+    }
+  }
+  const weights = candidates.map((item) => {
+    const direct = ratings[item.id] === 'up' ? 3 : ratings[item.id] === 'down' ? 0.2 : 1;
+    const topic = `${item.kind ?? 'task'}:${item.questionGroup ?? item.category}`;
+    return direct * Math.max(0.5, Math.min(1.5, 1 + (affinity.get(topic) ?? 0) * 0.1));
+  });
+  let cursor = Math.max(0, Math.min(1, random)) * weights.reduce((sum, weight) => sum + weight, 0);
+  for (let index = 0; index < candidates.length; index++) {
+    cursor -= weights[index];
+    if (cursor < 0) return candidates[index];
+  }
+  return candidates[candidates.length - 1];
 }
 
 export function pickEasierTask(

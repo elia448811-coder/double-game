@@ -7,6 +7,7 @@ import { SectionTabs } from './SectionTabs';
 import { clearAllLocalData, loadHistory, loadRecords, loadUnlockedAchievements } from '../utils/storage';
 import { getFeatureFlags, setFeatureFlag } from '../utils/featureFlags';
 import { isCurrentUserAdmin } from '../utils/admin';
+import { clearContentMemory } from '../utils/contentMemory';
 import { signOutUser } from '../utils/userAuth';
 import { ACHIEVEMENTS, AVATAR_OPTIONS, PLAYER_COLORS } from '../types/game';
 import type { AnimationStyle, AppSettings, BgTheme, FontChoice, SoundPack, SpinnerStyle } from '../types/game';
@@ -67,6 +68,7 @@ export function SettingsPanel({
   const records = loadRecords();
   const history = loadHistory();
   const achievements = loadUnlockedAchievements();
+  const [contentNotice, setContentNotice] = useState('');
   const [cleared, setCleared] = useState(false);
   const [flags, setFlags] = useState(getFeatureFlags);
   const [isAdmin, setIsAdmin] = useState(false);
@@ -101,6 +103,12 @@ export function SettingsPanel({
             <input type="checkbox" checked={settings.vibrationEnabled} onChange={(e) => onUpdate({ vibrationEnabled: e.target.checked })} />
             <span className="settings-toggle__slider" />
           </label>
+          <label className="settings-toggle">
+            <span>תצוגה רגועה</span>
+            <input type="checkbox" checked={settings.calmDisplay} onChange={(e) => onUpdate({ calmDisplay: e.target.checked })} />
+            <span className="settings-toggle__slider" />
+          </label>
+          <p className="custom-content-panel__hint">מסתירה את הרובוט ואת אפקטי הרקע, ומצמצמת תנועה בזמן המשחק.</p>
           <label className="settings-toggle">
             <span>מצב כהה</span>
             <input type="checkbox" checked={settings.theme === 'dark'} onChange={(e) => onUpdate({ theme: e.target.checked ? 'dark' : 'light' })} />
@@ -179,6 +187,23 @@ export function SettingsPanel({
         </div>
       </section>
       <section className="settings-tabpanel" id="settings-panel-content" role="tabpanel" aria-labelledby="settings-tab-content" hidden={section !== 'content'} tabIndex={0}>
+        <div className="settings-group">
+          <h2 className="settings-label">התוכן שמתאים לכם</h2>
+          <label className="settings-toggle"><span>התאמה לפי הדירוגים שלכם</span>
+            <input type="checkbox" checked={settings.personalizeContent} onChange={(e) => onUpdate({ personalizeContent: e.target.checked })} />
+            <span className="settings-toggle__slider" />
+          </label>
+          <label className="settings-toggle"><span>העדפת שאלות ומשימות חדשות</span>
+            <input type="checkbox" checked={settings.preferUnseenContent} onChange={(e) => onUpdate({ preferUnseenContent: e.target.checked })} />
+            <span className="settings-toggle__slider" />
+          </label>
+          <p className="custom-content-panel__hint">הדירוגים עוזרים לבחור תוכן דומה שאהבתם. זיכרון הפריטים שהופיעו נשמר במכשיר ל־90 יום, ללא התשובות שלכם. במועדפים אפשר לחזור בכוונה לתוכן ששמרתם.</p>
+          <button type="button" className="secondary-action pressable" onClick={() => {
+            if (!window.confirm('לשכוח אילו שאלות ומשימות כבר הופיעו במכשיר? המועדפים והדירוגים יישמרו.')) return;
+            clearContentMemory(); setContentNotice('זיכרון השאלות והמשימות אופס.');
+          }}>איפוס זיכרון השאלות והמשימות</button>
+          {contentNotice && <p role="status">{contentNotice}</p>}
+        </div>
         <div className="settings-group">
           <span className="settings-label">חיבור זוגי (ניסיוני)</span>
           <label className="settings-toggle">

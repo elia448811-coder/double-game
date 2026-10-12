@@ -27,6 +27,9 @@ const PRIVACY_KEYS = [
   'couple-spin-hidden-tasks',
   'couple-spin-favorites',
   'couple-spin-discrete',
+  'couple-spin-seen-content',
+  'couple-spin-task-feedback',
+  'couple-spin-evening-ratings',
 ];
 
 function statusLabel(status: CloudStatus | null, checking: boolean): string {

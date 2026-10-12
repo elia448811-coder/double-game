@@ -18,6 +18,7 @@ type WelcomeScreenProps = {
   onStart: () => void;
   onSettings: () => void;
   onTutorial: () => void;
+  onFavorites?: () => void;
   onSurprise: () => void;
   onOpenAdmin?: () => void;
   playerOneName: string;
@@ -44,6 +45,7 @@ export function WelcomeScreen({
   onStart,
   onSettings,
   onTutorial,
+  onFavorites,
   onSurprise,
   onOpenAdmin,
   playerOneName,
@@ -161,6 +163,7 @@ export function WelcomeScreen({
                 </span>
               </div>
               <div className="hub-links">
+                {onFavorites && <button type="button" className="hub-link pressable" onClick={onFavorites}>💜 המועדפים שלכם</button>}
                 <button type="button" className="hub-link pressable" onClick={onTutorial}>
                   איך משחקים?
                 </button>

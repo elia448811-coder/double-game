@@ -23,6 +23,7 @@ type TaskModalProps = {
   onMarkFunniest: () => void;
   onHideForever?: () => void;
   onToggleFavorite?: () => void;
+  isFavorite?: boolean;
   readOnly?: boolean;
   taskFeedback?: 'up' | 'down' | null;
   onTaskFeedback?: (rating: 'up' | 'down') => void;
@@ -48,6 +49,7 @@ export function TaskModal({
   onMarkFunniest,
   onHideForever,
   onToggleFavorite,
+  isFavorite = false,
   readOnly = false,
   taskFeedback = null,
   onTaskFeedback,
@@ -247,8 +249,8 @@ export function TaskModal({
               {isFunniest ? '⭐ נבחר!' : isQuestion ? '⭐ שאלה מועדפת' : '😂 הכי מצחיקה'}
             </button>
             {onToggleFavorite && (
-              <button type="button" className="extra-btn pressable" onClick={onToggleFavorite}>
-                💜 מועדפים
+              <button type="button" className={`extra-btn pressable ${isFavorite ? 'extra-btn--on' : ''}`} aria-pressed={isFavorite} onClick={onToggleFavorite}>
+                {isFavorite ? '💜 נשמר במועדפים' : '♡ שמירה למועדפים'}
               </button>
             )}
             {onHideForever && (

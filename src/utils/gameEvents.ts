@@ -12,6 +12,7 @@ import type {
 export type GameEvent =
   | { type: 'NAVIGATE'; screen: Screen }
   | { type: 'SET_MODE'; mode: GameMode }
+  | { type: 'SET_FAVORITES'; ids?: string[] }
   | { type: 'SET_LEVEL'; level: TaskLevel }
   | { type: 'SET_FORMAT'; format: GameFormat }
   | { type: 'SET_SCORING'; scoring: ScoringMode }
