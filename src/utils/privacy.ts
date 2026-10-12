@@ -1,4 +1,5 @@
 import type { GameHistoryEntry } from '../types/game';
+import { markLocalCloudWatermark } from './cloudRevision';
 
 const GUEST_KEY = 'couple-spin-guest';
 const BOUNDARIES_KEY = 'couple-spin-boundaries';
@@ -58,6 +59,7 @@ function boundaryList(value: unknown): ContentBoundary[] {
 }
 
 function notifyPrivacyChanged(): void {
+  markLocalCloudWatermark();
   void import('./cloudSync').then(({ scheduleCloudPush }) => scheduleCloudPush());
 }
 

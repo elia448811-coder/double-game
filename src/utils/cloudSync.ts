@@ -19,10 +19,12 @@ import {
 } from './storage';
 import type { AppSettings, GameHistoryEntry, GameState, LocalRecords } from '../types/game';
 import { gameSyncData } from './gameSyncData';
+import { CLOUD_WATERMARK_KEY, markLocalCloudWatermark } from './cloudRevision';
+export { markLocalCloudWatermark } from './cloudRevision';
 
 export const SCHEMA_VERSION = 2;
 const OUTBOX_KEY = 'couple-spin-cloud-outbox';
-const WATERMARK_KEY = 'couple-spin-cloud-updated-at';
+const WATERMARK_KEY = CLOUD_WATERMARK_KEY;
 const HIDDEN_KEY = 'couple-spin-hidden-tasks';
 const FAVORITES_KEY = 'couple-spin-favorites';
 const DISCRETE_KEY = 'couple-spin-discrete';
@@ -106,14 +108,6 @@ export function readLocalCloudWatermark(): number {
   const raw = localStorage.getItem(WATERMARK_KEY);
   const n = raw ? Number(raw) : 0;
   return Number.isFinite(n) ? n : 0;
-}
-
-export function markLocalCloudWatermark(ms = Date.now()): void {
-  try {
-    localStorage.setItem(WATERMARK_KEY, String(ms));
-  } catch {
-    // ignore
-  }
 }
 
 export function localBundle(): CloudBundle {

@@ -1,4 +1,5 @@
 import type { ContentKind, CoupleTask, TaskCategory, TaskLevel } from '../types/game';
+import { markLocalCloudWatermark } from './cloudRevision';
 
 const CUSTOM_CONTENT_KEY = 'couple-spin-custom-content';
 const LEVELS = new Set<TaskLevel>(['easy', 'normal', 'advanced']);
@@ -70,6 +71,7 @@ export function loadCustomContent(): CustomContentItem[] {
 function saveCustomContent(items: CustomContentItem[]): { ok: boolean } {
   try {
     localStorage.setItem(CUSTOM_CONTENT_KEY, JSON.stringify(items));
+    markLocalCloudWatermark();
     void import('./cloudSync').then(({ scheduleCloudPush }) => scheduleCloudPush());
     return { ok: true };
   } catch {

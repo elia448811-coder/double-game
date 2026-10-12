@@ -1,6 +1,8 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { DEFAULT_SETTINGS } from '../types/game';
 import { loadSettings, saveSettings } from './storage';
+import { addCustomContent, loadCustomContent } from './customContent';
+import { readLocalCloudWatermark } from './cloudSync';
 import { pullUserData, pushUserData, pushCloudSnapshot, scheduleCloudPush, subscribeSyncState } from './cloudSync';
 
 const backend = vi.hoisted(() => ({ getDoc: vi.fn(), setDoc: vi.fn() }));
@@ -119,5 +121,15 @@ describe('cloud settings on new devices and during startup', () => {
     expect(sent.customContent).toHaveLength(1);
     expect(Object.hasOwn(sent.customContent[0], 'questionGroup')).toBe(false);
     expect(sent.updatedAt).toBe('timestamp');
+  });
+  it('marks a personal-content edit synchronously before a startup download can replace it', async () => {
+    let finishDownload!: (snapshot: ReturnType<typeof remoteSnapshot>) => void;
+    backend.getDoc.mockReturnValueOnce(new Promise((resolve) => { finishDownload = resolve; }));
+    const pull = pullUserData();
+    await vi.waitFor(() => expect(backend.getDoc).toHaveBeenCalled());
+    const item = addCustomContent({ kind: 'question', title: 'Keep this question', description: 'What did you enjoy?', category: 'romantic', level: 'normal' });
+    expect(readLocalCloudWatermark()).toBe(10000);
+    finishDownload(remoteSnapshot()); expect((await pull).ok).toBe(true);
+    expect(loadCustomContent().some((entry) => entry.id === item?.id)).toBe(true);
   });
 });
