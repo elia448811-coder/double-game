@@ -10,3 +10,6 @@ ALLOWED_ORIGINS = "https://elia448811-coder.github.io,https://couple-spin.vercel
 # Secrets (not in git):
 #   npx wrangler secret put PASS_W
 #   npx wrangler secret put SESSION_SECRET
+
+[secrets]
+required = ["PASS_W", "SESSION_SECRET"]
