@@ -9,7 +9,7 @@ service cloud.firestore {
     // Sole admin: locked UID and/or locked email from Auth token (not spoofable).
     function isAdmin() {
       return isAuth() && (
-        request.auth.uid == 'tpbKWXtXWFapFC7Fd80Wd4IMqxC2'
+        request.auth.uid == 'tpbKWXtXWFapFC7Fd80Wd4IMqxC2' // gitleaks:allow public Firebase account identifier
         || (
           request.auth.token.email is string
           && request.auth.token.email.lower() == 'elia448811@gmail.com'
