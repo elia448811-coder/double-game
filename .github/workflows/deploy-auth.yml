@@ -34,9 +34,7 @@ jobs:
           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
           workingDirectory: worker
-          secrets: |
-            PASS_W
-            SESSION_SECRET
+          wranglerVersion: "4.165.0"
 
       - name: Worker URL reminder
         run: |
