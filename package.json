@@ -5,7 +5,7 @@
   "description": "ספין זוגי — משחק משימות ושאלות לזוגות (Couple Spin)",
   "type": "module",
   "engines": {
-    "node": ">=20"
+    "node": "24.x"
   },
   "scripts": {
     "dev": "vite",
@@ -39,7 +39,7 @@
     "prebuild": "node scripts/generate-pwa-icons.mjs"
   },
   "dependencies": {
-    "firebase": "^12.16.0",
+    "firebase": "^12.19.0",
     "react": "^19.2.7",
     "react-dom": "^19.2.7"
   },
@@ -58,6 +58,15 @@
     "vitest": "^4.1.9"
   },
   "overrides": {
-    "brace-expansion": "5.0.8"
+    "brace-expansion": "^5.0.12",
+    "@grpc/grpc-js": "^1.14.0",
+    "workbox-build": {
+      "glob": "^14.0.6",
+      "source-map": "^0.7.6"
+    }
+  },
+  "allowScripts": {
+    "@firebase/util@1.15.3": true,
+    "protobufjs@7.6.6": true
   }
 }

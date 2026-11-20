@@ -1,3 +1,5 @@
+import { pushCloudSnapshot } from './cloudSync';
+import { accountSession } from './accountStorage';
 import type { GameState } from '../types/game';
 
 const SNAPSHOT_KEY = 'couple-spin-active-game';
@@ -6,14 +8,14 @@ export function saveSnapshot(game: GameState, syncCloud = true): void {
   if ((game.screen !== 'game' && !game.paused) || game.finishEventId) return;
   const snapshot = { ...game, screen: 'game' as const };
   try {
-    sessionStorage.setItem(SNAPSHOT_KEY, JSON.stringify(snapshot));
-    if (syncCloud) void import('./cloudSync').then(({ pushCloudSnapshot }) => pushCloudSnapshot(snapshot));
+    accountSession.setItem(SNAPSHOT_KEY, JSON.stringify(snapshot));
+    if (syncCloud) void pushCloudSnapshot(snapshot);
   } catch {}
 }
 
 export function loadSnapshot(): GameState | null {
   try {
-    const raw = sessionStorage.getItem(SNAPSHOT_KEY);
+    const raw = accountSession.getItem(SNAPSHOT_KEY);
     const value: unknown = raw ? JSON.parse(raw) : null;
     return isValidLocalSnapshot(value) ? prepareLocalResume(value) : null;
   } catch {
@@ -55,6 +57,6 @@ export function isValidLocalSnapshot(value: unknown): value is GameState {
 
 export function clearSnapshot(): void {
   try {
-    sessionStorage.removeItem(SNAPSHOT_KEY);
+    accountSession.removeItem(SNAPSHOT_KEY);
   } catch {}
 }

@@ -1,5 +1,6 @@
+import { accountLocal } from '../utils/accountStorage';
 import { useEffect, useRef, useState, type ChangeEvent } from 'react';
-import { clearAllLocalData } from '../utils/storage';
+import { clearAllLocalData, clearDeviceHistory } from '../utils/storage';
 import {
   exportAllData,
   importAllData,
@@ -119,15 +120,14 @@ export function PrivacyPanel({ onChanged }: PrivacyPanelProps) {
 
   const clearHistory = () => {
     if (!window.confirm('למחוק את ההיסטוריה מהמכשיר?')) return;
-    localStorage.removeItem('couple-spin-history');
-    setMessage('ההיסטוריה נמחקה.');
-    scheduleCloudPush();
+    clearDeviceHistory();
+    setMessage('ההיסטוריה נמחקה מהמכשיר.');
     changed();
   };
 
   const clearCustom = () => {
     if (!window.confirm('למחוק את כל השאלות והמשימות שהוספתם?')) return;
-    localStorage.removeItem('couple-spin-custom-content');
+    accountLocal.removeItem('couple-spin-custom-content');
     setMessage('התוכן המותאם נמחק.');
     scheduleCloudPush();
     changed();
@@ -136,11 +136,10 @@ export function PrivacyPanel({ onChanged }: PrivacyPanelProps) {
   const clearEverything = () => {
     if (!window.confirm('למחוק את כל המידע המקומי מהמכשיר?')) return;
     clearAllLocalData();
-    PRIVACY_KEYS.forEach((key) => localStorage.removeItem(key));
+    PRIVACY_KEYS.forEach((key) => accountLocal.removeItem(key));
     setGuest(false);
     setDiscrete(false);
     setMessage('כל המידע המקומי נמחק.');
-    scheduleCloudPush();
     changed();
   };
 

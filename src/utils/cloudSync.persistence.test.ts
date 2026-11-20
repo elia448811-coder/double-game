@@ -1,10 +1,11 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
+import { selectAccount } from './accountStorage';
 import { DEFAULT_SETTINGS } from '../types/game';
-import { loadSettings, saveSettings } from './storage';
+import { clearDeviceHistory, loadHistory, loadSettings, saveSettings } from './storage';
 import { addCustomContent, loadCustomContent } from './customContent';
 import { readLocalCloudWatermark } from './cloudSync';
 import { CLOUD_DATA_APPLIED_EVENT } from './cloudRevision';
-import { pullUserData, pushUserData, pushCloudSnapshot, scheduleCloudPush, subscribeSyncState } from './cloudSync';
+import { pullUserData, pushUserData, closeCloudSnapshot, pushCloudSnapshot, scheduleCloudPush, subscribeSyncState } from './cloudSync';
 
 const backend = vi.hoisted(() => ({ getDoc: vi.fn(), setDoc: vi.fn() }));
 vi.mock('../lib/firebase', () => ({
@@ -13,6 +14,12 @@ vi.mock('../lib/firebase', () => ({
   getFirestoreDb: async () => ({}),
 }));
 vi.mock('firebase/firestore', () => ({
+  runTransaction: async (_db: unknown, operation: (tx: { get: typeof backend.getDoc; set: typeof backend.setDoc }) => Promise<unknown>) => {
+    const writes: Promise<unknown>[] = [];
+    const result = await operation({ get: backend.getDoc, set: ((...args: unknown[]) => { writes.push(backend.setDoc(...args)); }) as typeof backend.setDoc });
+    await Promise.all(writes);
+    return result;
+  },
   doc: () => ({}), getDoc: backend.getDoc, setDoc: backend.setDoc, serverTimestamp: () => 'timestamp',
 }));
 vi.mock('./userProfile', () => ({ ensureUserProfile: async () => null }));
@@ -61,6 +68,19 @@ describe('cloud settings on new devices and during startup', () => {
     expect(backend.setDoc.mock.calls[0]?.[1].settings.playerOneName).toBe('Local edit');
   });
 
+  it('discards a download that finishes after the browser switches accounts', async () => {
+    selectAccount('qa-sync');
+    try {
+      let finish!: (value: ReturnType<typeof remoteSnapshot>) => void;
+      backend.getDoc.mockReturnValueOnce(new Promise((resolve) => { finish = resolve; }));
+      const pull = pullUserData();
+      await vi.waitFor(() => expect(backend.getDoc).toHaveBeenCalled());
+      selectAccount('other');
+      finish(remoteSnapshot());
+      expect(await pull).toMatchObject({ ok: false, error: 'account_changed' });
+      expect(loadSettings().theme).toBe(DEFAULT_SETTINGS.theme);
+    } finally { selectAccount(null); }
+  });
   it('keeps an edit queued when the page closes before the delayed upload', async () => {
     saveSettings({ ...DEFAULT_SETTINGS, playerOneName: 'Saved before reload' });
     scheduleCloudPush();
@@ -71,9 +91,33 @@ describe('cloud settings on new devices and during startup', () => {
     expect(localStorage.getItem('couple-spin-cloud-outbox')).toBeNull();
   });
   it('stores a regular evening without undefined optional fields', async () => {
-    await pushCloudSnapshot({ screen: 'game', finishEventId: null, favoriteTaskIds: undefined } as never);
+    await pushCloudSnapshot({ screen: 'game', stats: { startTime: 1 }, finishEventId: null, favoriteTaskIds: undefined } as never);
     expect(backend.setDoc).toHaveBeenCalledOnce();
-    expect(backend.setDoc.mock.calls[0]?.[1].game).toEqual({ screen: 'game', finishEventId: null });
+    expect(backend.setDoc.mock.calls[0]?.[1].game).toEqual({ screen: 'game', stats: { startTime: 1 }, finishEventId: null });
+  });
+  it('a finished game stays closed after a delayed write from the same game', async () => {
+    const active = { screen: 'game', stats: { startTime: 500 }, finishEventId: null };
+    let persisted: Record<string, unknown> = { game: active, updatedAtMs: 20 };
+    backend.getDoc.mockImplementation(async () => ({ data: () => persisted }));
+    backend.setDoc.mockImplementation(async (_ref, next) => { persisted = next; });
+    await closeCloudSnapshot(500);
+    await pushCloudSnapshot(active as never);
+    expect(persisted).toMatchObject({ game: null, closedThroughStartMs: 500 });
+    const newer = { ...active, stats: { startTime: 1001 } };
+    await pushCloudSnapshot(newer as never);
+    await closeCloudSnapshot(500);
+    expect(persisted.game).toEqual(newer);
+  });
+  it('keeps cloud history after a device-local deletion without displaying it again on pull', async () => {
+    const entry = { id: 'old', date: new Date(100).toISOString(), eveningName: 'fixture' };
+    const remote = remoteSnapshot().data();
+    backend.getDoc.mockResolvedValue({ exists: () => true, data: () => ({ ...remote, history: [entry] }) });
+    clearDeviceHistory();
+    await pullUserData();
+    expect(loadHistory()).toEqual([]);
+    await pushUserData();
+    expect(backend.setDoc.mock.calls.at(-1)?.[1].history[0].id).toBe('old');
+    expect(loadHistory()).toEqual([]);
   });
   it('notifies sync subscribers after the settings updater has returned', async () => {
     let insideUpdater = false;

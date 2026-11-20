@@ -1,3 +1,4 @@
+import { selectAccount } from './accountStorage';
 import { getFirebaseAuth, isFirebaseConfigured } from '../lib/firebase';
 import { isSoleAdminEmail, SOLE_ADMIN_EMAIL } from './admin';
 import { ensureUserProfile } from './userProfile';
@@ -111,6 +112,7 @@ export function subscribeAuth(listener: (user: AuthUserView | null) => void): ()
     }
     const { onAuthStateChanged } = await import('firebase/auth');
     unsub = onAuthStateChanged(auth, (user) => {
+      selectAccount(user && !user.isAnonymous ? user.uid : null);
       if (!user) {
         listener(null);
         return;
@@ -183,6 +185,7 @@ export async function registerWithUsername(
       user = created.user;
     }
 
+    selectAccount(user.uid);
     const name = (displayName?.trim() || label).slice(0, 32);
     await updateProfile(user, { displayName: name });
     await ensureUserProfile({ displayName: name, username: label });
@@ -206,6 +209,7 @@ export async function signInWithUsername(username: string, password: string): Pr
     if (!auth) return { ok: false, error: 'Firebase לא זמין.' };
     const { signInWithEmailAndPassword } = await import('firebase/auth');
     const cred = await signInWithEmailAndPassword(auth, email, password);
+    selectAccount(cred.user.uid);
     await ensureUserProfile({
       displayName: cred.user.displayName || label,
       username: label,
@@ -222,6 +226,7 @@ export async function signOutUser(): Promise<AuthResult> {
     if (!auth) return { ok: true };
     const { signOut } = await import('firebase/auth');
     await signOut(auth);
+    selectAccount(null);
     return { ok: true };
   } catch (error) {
     return { ok: false, error: mapAuthError(error) };

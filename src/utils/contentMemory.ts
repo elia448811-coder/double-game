@@ -1,3 +1,4 @@
+import { accountLocal } from './accountStorage';
 import { isGuestMode } from './privacy';
 
 export const SEEN_CONTENT_KEY = 'couple-spin-seen-content';
@@ -10,7 +11,7 @@ export function loadSeenContent(now = Date.now()): SeenItem[] {
   if (typeof window === 'undefined') return [];
   try {
     if (isGuestMode()) return [];
-    const raw: unknown = JSON.parse(localStorage.getItem(SEEN_CONTENT_KEY) ?? '[]');
+    const raw: unknown = JSON.parse(accountLocal.getItem(SEEN_CONTENT_KEY) ?? '[]');
     if (!Array.isArray(raw)) return [];
     const ids = new Set<string>();
     return raw.filter((item): item is SeenItem => {
@@ -26,12 +27,12 @@ export function rememberContent(id: string): void {
   if (!id || id.length > 128 || typeof window === 'undefined') return;
   try {
     if (isGuestMode()) return;
-    localStorage.setItem(SEEN_CONTENT_KEY, JSON.stringify([
+    accountLocal.setItem(SEEN_CONTENT_KEY, JSON.stringify([
       { id, atMs: Date.now() }, ...loadSeenContent().filter((item) => item.id !== id),
     ].slice(0, MAX_ITEMS)));
   } catch { /* Playing must remain possible when storage is full or disabled. */ }
 }
 
 export function clearContentMemory(): void {
-  try { localStorage.removeItem(SEEN_CONTENT_KEY); } catch { /* optional storage */ }
+  try { accountLocal.removeItem(SEEN_CONTENT_KEY); } catch { /* optional storage */ }
 }

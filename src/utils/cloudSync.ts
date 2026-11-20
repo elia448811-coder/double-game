@@ -1,3 +1,4 @@
+import { accountLocal, currentAccount, accountGeneration } from './accountStorage';
 import { getFirebaseAuth, getFirestoreDb, isFirebaseConfigured } from '../lib/firebase';
 import type { CustomContentItem } from './customContent';
 import { loadCustomContent } from './customContent';
@@ -10,6 +11,7 @@ import {
 } from './privacy';
 import {
   loadHistory,
+  visibleDeviceHistory,
   loadRecords,
   loadSettings,
   loadUnlockedAchievements,
@@ -18,6 +20,7 @@ import {
   sanitizeSettings,
 } from './storage';
 import type { AppSettings, GameHistoryEntry, GameState, LocalRecords } from '../types/game';
+import { isValidLocalSnapshot } from './gameSnapshot';
 import { gameSyncData } from './gameSyncData';
 import { CLOUD_DATA_APPLIED_EVENT, CLOUD_WATERMARK_KEY, markLocalCloudWatermark } from './cloudRevision';
 export { markLocalCloudWatermark } from './cloudRevision';
@@ -50,6 +53,7 @@ export type CloudBundle = {
   records: LocalRecords;
   achievements: string[];
   boundaries: Boundaries;
+  boundariesUpdatedAtMs?: number;
   hiddenTasks: string[];
   favorites: string[];
   discrete: boolean;
@@ -81,12 +85,12 @@ export function getSyncState(): SyncState {
 }
 
 function canSync(): boolean {
-  return isFirebaseConfigured() && !isGuestMode();
+  return isFirebaseConfigured() && !isGuestMode() && (Boolean(currentAccount()) || import.meta.env.MODE === 'test');
 }
 
 function readIds(key: string): string[] {
   try {
-    const raw = localStorage.getItem(key);
+    const raw = accountLocal.getItem(key);
     const parsed: unknown = raw ? JSON.parse(raw) : [];
     return Array.isArray(parsed)
       ? [...new Set(parsed.filter((id): id is string => typeof id === 'string' && id.length <= 128))]
@@ -98,14 +102,14 @@ function readIds(key: string): string[] {
 
 function writeJson(key: string, value: unknown): void {
   try {
-    localStorage.setItem(key, JSON.stringify(value));
+    accountLocal.setItem(key, JSON.stringify(value));
   } catch {
     // ignore
   }
 }
 
 export function readLocalCloudWatermark(): number {
-  const raw = localStorage.getItem(WATERMARK_KEY);
+  const raw = accountLocal.getItem(WATERMARK_KEY);
   const n = raw ? Number(raw) : 0;
   return Number.isFinite(n) ? n : 0;
 }
@@ -119,6 +123,8 @@ export function localBundle(): CloudBundle {
     records: loadRecords(),
     achievements: loadUnlockedAchievements(),
     boundaries: loadBoundaries(),
+    boundariesUpdatedAtMs: accountLocal.getItem(BOUNDARIES_KEY) === null ? 0
+      : Number(accountLocal.getItem(BOUNDARIES_KEY + '-updated-at')) || Math.max(1, readLocalCloudWatermark()),
     hiddenTasks: readIds(HIDDEN_KEY),
     favorites: readIds(FAVORITES_KEY),
     discrete: isDiscreteMode(),
@@ -149,7 +155,11 @@ export function mergeRecords(a: LocalRecords, b: LocalRecords): LocalRecords {
 
 export function mergeBundles(local: CloudBundle, remote: CloudBundle): CloudBundle {
   const newerFirst = local.updatedAtMs >= remote.updatedAtMs ? local : remote;
-  const older = local.updatedAtMs >= remote.updatedAtMs ? remote : local;
+  // Older clients sent empty default arrays even when nobody had chosen any boundaries.
+  const consentTime = (bundle: CloudBundle) => bundle.boundariesUpdatedAtMs ??
+    (bundle.boundaries.playerOne.length || bundle.boundaries.playerTwo.length ? bundle.updatedAtMs : 0);
+  const localConsent = consentTime(local), remoteConsent = consentTime(remote);
+  const consent = localConsent >= remoteConsent ? local : remote;
   return {
     updatedAtMs: Math.max(local.updatedAtMs, remote.updatedAtMs),
     schemaVersion: SCHEMA_VERSION,
@@ -157,9 +167,8 @@ export function mergeBundles(local: CloudBundle, remote: CloudBundle): CloudBund
     history: mergeHistory(local.history, remote.history),
     records: mergeRecords(local.records, remote.records),
     achievements: [...new Set([...local.achievements, ...remote.achievements])],
-    boundaries: newerFirst.boundaries.playerOne.length || newerFirst.boundaries.playerTwo.length
-      ? newerFirst.boundaries
-      : older.boundaries,
+    boundaries: consent.boundaries,
+    boundariesUpdatedAtMs: Math.max(localConsent, remoteConsent),
     hiddenTasks: [...new Set([...local.hiddenTasks, ...remote.hiddenTasks])],
     favorites: newerFirst.favorites,
     discrete: newerFirst.discrete,
@@ -172,9 +181,15 @@ export function applyCloudBundle(bundle: CloudBundle): void {
   saveSettings(bundle.settings);
   saveUnlockedAchievements(bundle.achievements);
   applyProcessedFinishIds(bundle.processedFinishIds);
-  writeJson('couple-spin-history', bundle.history);
+  writeJson('couple-spin-history', visibleDeviceHistory(bundle.history));
   writeJson('couple-spin-records', bundle.records);
-  writeJson(BOUNDARIES_KEY, bundle.boundaries);
+  if (bundle.boundariesUpdatedAtMs) {
+    writeJson(BOUNDARIES_KEY, bundle.boundaries);
+    accountLocal.setItem(BOUNDARIES_KEY + '-updated-at', String(bundle.boundariesUpdatedAtMs));
+  } else {
+    accountLocal.removeItem(BOUNDARIES_KEY);
+    accountLocal.removeItem(BOUNDARIES_KEY + '-updated-at');
+  }
   writeJson(HIDDEN_KEY, bundle.hiddenTasks);
   writeJson(FAVORITES_KEY, bundle.favorites);
   writeJson(DISCRETE_KEY, bundle.discrete);
@@ -195,7 +210,8 @@ function parseRemoteBundle(raw: Partial<CloudBundle>): CloudBundle {
     achievements: Array.isArray(raw.achievements)
       ? raw.achievements.filter((id): id is string => typeof id === 'string')
       : [],
-    boundaries: raw.boundaries ?? loadBoundaries(),
+    boundaries: raw.boundaries ?? { playerOne: [], playerTwo: [] },
+    boundariesUpdatedAtMs: raw.boundariesUpdatedAtMs,
     hiddenTasks: Array.isArray(raw.hiddenTasks) ? raw.hiddenTasks.filter((id) => typeof id === 'string') : [],
     favorites: Array.isArray(raw.favorites) ? raw.favorites.filter((id) => typeof id === 'string') : [],
     discrete: Boolean(raw.discrete),
@@ -220,14 +236,9 @@ export async function ensureAnonAuth() {
 /** Anonymous auth for cloud sync — blocked in guest mode. */
 export async function ensureAnonUser() {
   if (!canSync()) return null;
-  return ensureAnonAuth();
-}
-
-export async function signOutCloudUser(): Promise<void> {
   const auth = await getFirebaseAuth();
-  if (!auth?.currentUser) return;
-  const { signOut } = await import('firebase/auth');
-  await signOut(auth);
+  const user = auth?.currentUser;
+  return user && (user.uid === currentAccount() || (import.meta.env.MODE === 'test' && !currentAccount())) ? user : null;
 }
 
 export async function pingFirestore(): Promise<CloudStatus> {
@@ -261,7 +272,7 @@ export async function pingFirestore(): Promise<CloudStatus> {
 
 function queueOutbox(): void {
   try {
-    localStorage.setItem(OUTBOX_KEY, '1');
+    accountLocal.setItem(OUTBOX_KEY, '1');
     emitSync({ status: 'pending' });
   } catch {
     // ignore
@@ -270,24 +281,26 @@ function queueOutbox(): void {
 
 function clearOutbox(): void {
   try {
-    localStorage.removeItem(OUTBOX_KEY);
+    accountLocal.removeItem(OUTBOX_KEY);
   } catch {
     // ignore
   }
 }
 
 function hasOutbox(): boolean {
-  return localStorage.getItem(OUTBOX_KEY) === '1';
+  return accountLocal.getItem(OUTBOX_KEY) === '1';
 }
 
 export function pushUserData(): Promise<{ ok: boolean; error?: string }> {
   // Startup, autosave and manual save must finish in order within this device.
-  const upload = pushQueue.then(pushUserDataNow, pushUserDataNow);
+  const generation = accountGeneration();
+  const uploadNow = () => generation === accountGeneration() ? pushUserDataNow(generation) : { ok: false, error: 'account_changed' };
+  const upload = pushQueue.then(uploadNow, uploadNow);
   pushQueue = upload;
   return upload;
 }
 
-async function pushUserDataNow(): Promise<{ ok: boolean; error?: string }> {
+async function pushUserDataNow(generation: number): Promise<{ ok: boolean; error?: string }> {
   if (!canSync()) return { ok: false, error: 'sync_disabled' };
   emitSync({ status: 'syncing', lastError: null });
   try {
@@ -297,26 +310,30 @@ async function pushUserDataNow(): Promise<{ ok: boolean; error?: string }> {
       emitSync({ status: 'error', lastError: 'firebase_init_failed' });
       return { ok: false, error: 'firebase_init_failed' };
     }
-    const { doc, getDoc, serverTimestamp, setDoc } = await import('firebase/firestore');
+    const { doc, runTransaction, serverTimestamp } = await import('firebase/firestore');
+    if (generation !== accountGeneration() || !canSync()) return { ok: false, error: 'account_changed' };
     const ref = doc(db, 'users', user.uid, 'data', 'bundle');
-    const existing = await getDoc(ref);
-    const bundle = localBundle();
     const localRevision = readLocalCloudWatermark();
-    const merged = existing.exists()
-      ? mergeBundles(bundle, parseRemoteBundle(existing.data() as Partial<CloudBundle>))
-      : bundle;
-    merged.updatedAtMs = Date.now();
-    // Custom questions can contain undefined optional fields after normalization.
-    // Keep the data JSON-shaped; add the Firestore transform after serialization.
-    const serializableBundle = JSON.parse(JSON.stringify(merged)) as CloudBundle;
-    await setDoc(ref, { ...serializableBundle, updatedAt: serverTimestamp() });
+    const bundle = { ...localBundle(), updatedAtMs: localRevision || Date.now() };
+    const merged = await runTransaction(db, async (tx) => {
+      const existing = await tx.get(ref);
+      if (generation !== accountGeneration() || !canSync()) throw new Error('account_changed');
+      const next = existing.exists() ? mergeBundles(bundle, parseRemoteBundle(existing.data())) : bundle;
+      next.updatedAtMs = Math.max(Date.now(), next.updatedAtMs);
+      // Strip undefined optional fields before adding the Firestore timestamp.
+      tx.set(ref, { ...JSON.parse(JSON.stringify(next)), updatedAt: serverTimestamp() });
+      return next;
+    });
+    if (generation !== accountGeneration() || !canSync()) return { ok: false, error: 'account_changed' };
     const settings = loadSettings();
     const { ensureUserProfile } = await import('./userProfile');
+    if (generation !== accountGeneration()) return { ok: false, error: 'account_changed' };
     await ensureUserProfile({
       displayName: settings.playerOneName,
       partnerDisplayName: settings.playerTwoName,
       avatar: settings.playerOneAvatar,
     });
+    if (generation !== accountGeneration() || !canSync()) return { ok: false, error: 'account_changed' };
     if (readLocalCloudWatermark() !== localRevision) {
       // A newer edit must not be replaced by the snapshot this request uploaded.
       scheduleCloudPush(0);
@@ -327,6 +344,7 @@ async function pushUserDataNow(): Promise<{ ok: boolean; error?: string }> {
     emitSync({ status: 'idle', lastSyncMs: Date.now(), lastError: null });
     return { ok: true };
   } catch (error) {
+    if (generation !== accountGeneration()) return { ok: false, error: 'account_changed' };
     const message = error instanceof Error ? error.message : 'push_failed';
     queueOutbox();
     emitSync({ status: 'error', lastError: message });
@@ -335,6 +353,7 @@ async function pushUserDataNow(): Promise<{ ok: boolean; error?: string }> {
 }
 
 export async function pullUserData(): Promise<{ ok: boolean; bundle?: CloudBundle; error?: string }> {
+  const generation = accountGeneration();
   if (!canSync()) return { ok: false, error: 'sync_disabled' };
   emitSync({ status: 'syncing', lastError: null });
   try {
@@ -346,6 +365,7 @@ export async function pullUserData(): Promise<{ ok: boolean; bundle?: CloudBundl
     }
     const { doc, getDoc } = await import('firebase/firestore');
     const snap = await getDoc(doc(db, 'users', user.uid, 'data', 'bundle'));
+    if (generation !== accountGeneration() || !canSync()) return { ok: false, error: 'account_changed' };
     if (!snap.exists()) {
       emitSync({ status: 'idle', lastSyncMs: Date.now() });
       return { ok: true };
@@ -355,7 +375,8 @@ export async function pullUserData(): Promise<{ ok: boolean; bundle?: CloudBundl
     const local = { ...localBundle(), updatedAtMs: readLocalCloudWatermark() };
     const merged = mergeBundles(local, remote);
     if (local.updatedAtMs > remote.updatedAtMs) {
-      await pushUserData();
+      const uploaded = await pushUserData();
+      if (!uploaded.ok) return uploaded;
       emitSync({ status: 'idle', lastSyncMs: Date.now() });
       return { ok: true, bundle: localBundle() };
     }
@@ -388,40 +409,85 @@ export function scheduleCloudPush(delayMs = 800): void {
   markLocalCloudWatermark();
   queueOutbox();
   if (pushTimer) clearTimeout(pushTimer);
+  const generation = accountGeneration();
   pushTimer = setTimeout(() => {
     pushTimer = null;
-    void pushUserData();
+    if (generation === accountGeneration()) void pushUserData();
   }, delayMs);
 }
 
-export async function pushCloudSnapshot(game: GameState): Promise<void> {
-  if (!canSync() || game.screen !== 'game' || game.finishEventId) return;
+const SNAPSHOT_OUTBOX = 'couple-spin-snapshot-outbox';
+type SnapshotEdit = { game: GameState | null; start: number; at: number; id: string };
+let snapshotQueue: Promise<void> = Promise.resolve();
+
+async function flushCloudSnapshot(): Promise<void> {
+  const generation = accountGeneration();
+  const send = async () => {
+    if (!canSync() || generation !== accountGeneration()) return;
+    let pending: string | null = null;
+    try {
+      pending = accountLocal.getItem(SNAPSHOT_OUTBOX);
+      if (!pending) return;
+      const edit = JSON.parse(pending) as SnapshotEdit;
+      const user = await ensureAnonUser();
+      const db = await getFirestoreDb();
+      if (!user || !db || generation !== accountGeneration()) return;
+      const { doc, runTransaction, serverTimestamp } = await import('firebase/firestore');
+      const ref = doc(db, 'users', user.uid, 'data', 'activeGame');
+      await runTransaction(db, async (tx) => {
+        const snap = await tx.get(ref);
+        if (generation !== accountGeneration() || !canSync()) return;
+        const remote = snap.data();
+        const currentStart = Number(remote?.game?.stats?.startTime ?? 0);
+        const closedThrough = Number(remote?.closedThroughStartMs ?? 0);
+        if (edit.game) {
+          if ((closedThrough && edit.start <= closedThrough) || currentStart > edit.start ||
+              (currentStart === edit.start && Number(remote?.updatedAtMs ?? 0) > edit.at)) return;
+        } else if (currentStart > edit.start) return;
+        tx.set(ref, {
+          game: edit.game, closedThroughStartMs: edit.game ? closedThrough : Math.max(closedThrough, edit.start),
+          updatedAtMs: edit.at, updatedAt: serverTimestamp(),
+        });
+      });
+      if (generation === accountGeneration() && accountLocal.getItem(SNAPSHOT_OUTBOX) === pending) accountLocal.removeItem(SNAPSHOT_OUTBOX);
+    } catch { /* Retain this account's pending edit for reconnect or startup. */ }
+  };
+  snapshotQueue = snapshotQueue.then(send, send);
+  return snapshotQueue;
+}
+
+function queueSnapshot(game: GameState | null, start: number): Promise<void> {
+  if (!canSync()) return Promise.resolve();
   try {
-    const user = await ensureAnonUser();
-    const db = await getFirestoreDb();
-    if (!user || !db) return;
-    const { doc, serverTimestamp, setDoc } = await import('firebase/firestore');
-    await setDoc(doc(db, 'users', user.uid, 'data', 'activeGame'), {
-      game: gameSyncData(game),
-      updatedAtMs: Date.now(),
-      updatedAt: serverTimestamp(),
-    });
-  } catch {
-    queueOutbox();
-  }
+    accountLocal.setItem(SNAPSHOT_OUTBOX, JSON.stringify({ game, start, at: Date.now(), id: crypto.randomUUID() }));
+  } catch { return Promise.resolve(); }
+  return flushCloudSnapshot();
+}
+
+export function pushCloudSnapshot(game: GameState): Promise<void> {
+  if (game.screen !== 'game' || game.finishEventId) return Promise.resolve();
+  return queueSnapshot(gameSyncData(game), game.stats.startTime);
+}
+
+export function closeCloudSnapshot(start: number): Promise<void> {
+  return queueSnapshot(null, start);
 }
 
 export async function pullCloudSnapshot(): Promise<GameState | null> {
   if (!canSync()) return null;
+  const generation = accountGeneration();
   try {
+    await flushCloudSnapshot();
+    if (generation !== accountGeneration()) return null;
     const user = await ensureAnonUser();
     const db = await getFirestoreDb();
     if (!user || !db) return null;
     const { doc, getDoc } = await import('firebase/firestore');
     const snap = await getDoc(doc(db, 'users', user.uid, 'data', 'activeGame'));
-    if (!snap.exists()) return null;
-    const data = snap.data() as { game?: GameState };
-    return data.game?.screen === 'game' ? data.game : null;
+    if (generation !== accountGeneration() || !canSync()) return null;
+    const pending = accountLocal.getItem(SNAPSHOT_OUTBOX);
+    const game = pending ? (JSON.parse(pending) as SnapshotEdit).game : snap.data()?.game;
+    return isValidLocalSnapshot(game) ? game : null;
   } catch {
     return null;
   }
@@ -429,10 +495,14 @@ export async function pullCloudSnapshot(): Promise<GameState | null> {
 
 if (typeof window !== 'undefined') {
   window.addEventListener('online', () => {
+    void flushCloudSnapshot();
     if (hasOutbox()) void pushUserData();
   });
   document.addEventListener('visibilitychange', () => {
-    if (document.visibilityState === 'visible' && hasOutbox()) void pushUserData();
+    if (document.visibilityState === 'visible') {
+      void flushCloudSnapshot();
+      if (hasOutbox()) void pushUserData();
+    }
   });
 }
 

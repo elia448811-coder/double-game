@@ -1,3 +1,5 @@
+import { scheduleCloudPush } from './cloudSync';
+import { accountLocal } from './accountStorage';
 import type { ContentKind, CoupleTask, TaskCategory, TaskLevel } from '../types/game';
 import { markLocalCloudWatermark } from './cloudRevision';
 
@@ -58,7 +60,7 @@ function sanitizeItem(raw: unknown): CustomContentItem | null {
 
 export function loadCustomContent(): CustomContentItem[] {
   try {
-    const raw = localStorage.getItem(CUSTOM_CONTENT_KEY);
+    const raw = accountLocal.getItem(CUSTOM_CONTENT_KEY);
     if (!raw) return [];
     const parsed = JSON.parse(raw);
     if (!Array.isArray(parsed)) return [];
@@ -70,9 +72,9 @@ export function loadCustomContent(): CustomContentItem[] {
 
 function saveCustomContent(items: CustomContentItem[]): { ok: boolean } {
   try {
-    localStorage.setItem(CUSTOM_CONTENT_KEY, JSON.stringify(items));
+    accountLocal.setItem(CUSTOM_CONTENT_KEY, JSON.stringify(items));
     markLocalCloudWatermark();
-    void import('./cloudSync').then(({ scheduleCloudPush }) => scheduleCloudPush());
+    scheduleCloudPush();
     return { ok: true };
   } catch {
     return { ok: false };

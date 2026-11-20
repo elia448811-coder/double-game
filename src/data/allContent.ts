@@ -20,10 +20,10 @@ export const builtInContent: CoupleTask[] = [
 ];
 
 /** מאגר מלא כולל overrides מענן + תוכן מותאם מקומי */
-export function getAllContent(): CoupleTask[] {
+export function getAllContent(overrides = getCachedContentOverrides()): CoupleTask[] {
   return mergeContentWithOverrides(
     builtInContent,
-    getCachedContentOverrides(),
+    overrides,
     getCustomCoupleTasks(),
   );
 }

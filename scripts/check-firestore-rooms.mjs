@@ -79,7 +79,7 @@ const expiresAtMs = now + 2 * 60 * 60 * 1000;
 console.log('Host uid:', host.uid);
 console.log('Testing room architecture on project:', config.projectId);
 
-const { setDoc, serverTimestamp, writeBatch, runTransaction } = await import('firebase/firestore');
+const { serverTimestamp, writeBatch, runTransaction } = await import('firebase/firestore');
 
 try {
   const batch = writeBatch(db);

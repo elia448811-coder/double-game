@@ -23,6 +23,7 @@ import { rememberContent } from '../utils/contentMemory';
 import { CLOUD_DATA_APPLIED_EVENT } from '../utils/cloudRevision';
 import {
   pullCloudSnapshot,
+  closeCloudSnapshot,
   scheduleCloudPush,
   syncCloudOnStartup,
 } from '../utils/cloudSync';
@@ -88,6 +89,7 @@ function runEffects(
     soundPack: AppSettings['soundPack'];
     vibrationEnabled: boolean;
     game: GameState;
+    previousStart: number;
     setSettings: Dispatch<SetStateAction<AppSettings>>;
   },
 ) {
@@ -112,7 +114,10 @@ function runEffects(
       });
     }
     if (effect.type === 'persist_snapshot') saveSnapshot(ctx.game);
-    if (effect.type === 'clear_snapshot') clearSnapshot();
+    if (effect.type === 'clear_snapshot') {
+      clearSnapshot();
+      if (ctx.previousStart > 0) void closeCloudSnapshot(ctx.previousStart);
+    }
     if (effect.type === 'persist_finish') {
       if (processedFinishIds.has(effect.finishEventId)) continue;
       processedFinishIds.add(effect.finishEventId);
@@ -131,6 +136,7 @@ export function useGameState() {
   });
   const [resumeAvailable, setResumeAvailable] = useState(() => Boolean(loadSnapshot()));
   const [cloudResume, setCloudResume] = useState<GameState | null>(null);
+  const resumeRequest = useRef(0);
   const timerRef = useRef<ReturnType<typeof setInterval> | null>(null);
   const gameRef = useRef(game);
   const remoteVersionRef = useRef(0);
@@ -155,8 +161,9 @@ export function useGameState() {
         unlockedAchievements: loadUnlockedAchievements(),
       }));
     });
+    const request = resumeRequest.current;
     void pullCloudSnapshot().then((snap) => {
-      if (!cancelled && snap) setCloudResume(snap);
+      if (!cancelled && request === resumeRequest.current && snap) setCloudResume(snap);
     });
     return () => {
       cancelled = true;
@@ -173,7 +180,12 @@ export function useGameState() {
       if (event.type === 'START_GAME' || event.type === 'NEW_GAME' || event.type === 'PLAY_AGAIN' || event.type === 'RESET_SCORES') clearUndo();
       gameRef.current = state;
       setGame(state);
+      if (effects.some((effect) => effect.type === 'clear_snapshot' || effect.type === 'persist_snapshot')) {
+        resumeRequest.current++;
+        setCloudResume(null);
+      }
       runEffects(effects, {
+        previousStart: prev.stats.startTime,
         soundEnabled: settings.soundEnabled,
         soundPack: settings.soundPack,
         vibrationEnabled: settings.vibrationEnabled,

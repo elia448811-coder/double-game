@@ -1,3 +1,5 @@
+import { scheduleCloudPush } from './cloudSync';
+import { accountLocal } from './accountStorage';
 import type { GameHistoryEntry } from '../types/game';
 import { markLocalCloudWatermark } from './cloudRevision';
 
@@ -26,8 +28,8 @@ export type ContentBoundary = 'touch' | 'photo' | 'outside' | 'intimate';
 export type Boundaries = { playerOne: ContentBoundary[]; playerTwo: ContentBoundary[] };
 const BOUNDARY_VALUES = new Set<ContentBoundary>(['touch', 'photo', 'outside', 'intimate']);
 
-function getStorage(): Storage | null {
-  return typeof window === 'undefined' ? null : window.localStorage;
+function getStorage(): typeof accountLocal | null {
+  return typeof window === 'undefined' ? null : accountLocal;
 }
 
 function readJson(key: string): unknown {
@@ -60,7 +62,7 @@ function boundaryList(value: unknown): ContentBoundary[] {
 
 function notifyPrivacyChanged(): void {
   markLocalCloudWatermark();
-  void import('./cloudSync').then(({ scheduleCloudPush }) => scheduleCloudPush());
+  scheduleCloudPush();
 }
 
 export function isGuestMode(): boolean {
@@ -72,7 +74,7 @@ export function setGuestMode(on: boolean): void {
     const storage = getStorage();
     if (on) {
       storage?.setItem(GUEST_KEY, 'true');
-      void import('./cloudSync').then(({ signOutCloudUser }) => signOutCloudUser());
+      // Guest mode disables persistence while retaining the account required by the game gate.
     } else {
       storage?.removeItem(GUEST_KEY);
       notifyPrivacyChanged();
@@ -87,6 +89,7 @@ export function loadBoundaries(): Boundaries {
 }
 
 export function saveBoundaries(boundaries: Boundaries): void {
+  accountLocal.setItem(BOUNDARIES_KEY + '-updated-at', String(Date.now()));
   writeJson(BOUNDARIES_KEY, {
     playerOne: boundaryList(boundaries.playerOne),
     playerTwo: boundaryList(boundaries.playerTwo),

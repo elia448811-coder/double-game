@@ -1,3 +1,4 @@
+import { accountLocal, accountSession } from './accountStorage';
 import {
   DEFAULT_SETTINGS,
   type AppSettings,
@@ -107,7 +108,7 @@ export function sanitizeSettings(raw: unknown): AppSettings {
 
 function writeJson(key: string, value: unknown): { ok: boolean; error?: string } {
   try {
-    localStorage.setItem(key, JSON.stringify(value));
+    accountLocal.setItem(key, JSON.stringify(value));
     return { ok: true };
   } catch (e) {
     const msg = e instanceof Error ? e.message : 'storage_write_failed';
@@ -118,7 +119,7 @@ function writeJson(key: string, value: unknown): { ok: boolean; error?: string }
 
 export function loadSettings(): AppSettings {
   try {
-    return sanitizeSettings(safeParse(localStorage.getItem(SETTINGS_KEY)));
+    return sanitizeSettings(safeParse(accountLocal.getItem(SETTINGS_KEY)));
   } catch {
     return { ...DEFAULT_SETTINGS };
   }
@@ -128,9 +129,19 @@ export function saveSettings(settings: AppSettings): { ok: boolean; error?: stri
   return writeJson(SETTINGS_KEY, { ...sanitizeSettings(settings), _v: SCHEMA_VERSION });
 }
 
+export function clearDeviceHistory(): void {
+  accountLocal.setItem('couple-spin-history-hidden-through', String(Date.now()));
+  accountLocal.removeItem(HISTORY_KEY);
+}
+
+export function visibleDeviceHistory(history: GameHistoryEntry[]) {
+  const cutoff = Number(accountLocal.getItem('couple-spin-history-hidden-through') ?? 0);
+  return cutoff ? history.filter((entry) => Date.parse(entry.date) > cutoff) : history;
+}
+
 export function loadHistory(): GameHistoryEntry[] {
   try {
-    const parsed = safeParse(localStorage.getItem(HISTORY_KEY));
+    const parsed = safeParse(accountLocal.getItem(HISTORY_KEY));
     if (!Array.isArray(parsed)) return [];
     return parsed
       .filter((e) => e && typeof e === 'object')
@@ -160,7 +171,7 @@ export function saveHistoryEntry(entry: GameHistoryEntry): { ok: boolean; error?
 
 export function loadRecords(): LocalRecords {
   try {
-    const parsed = safeParse(localStorage.getItem(RECORDS_KEY));
+    const parsed = safeParse(accountLocal.getItem(RECORDS_KEY));
     if (!parsed || typeof parsed !== 'object') {
       return { mostCompleted: 0, longestStreak: 0, totalGames: 0, totalTasks: 0 };
     }
@@ -185,7 +196,7 @@ export function updateRecords(partial: Partial<LocalRecords>): LocalRecords {
 
 export function loadUnlockedAchievements(): string[] {
   try {
-    const parsed = safeParse(localStorage.getItem(ACHIEVEMENTS_KEY));
+    const parsed = safeParse(accountLocal.getItem(ACHIEVEMENTS_KEY));
     if (!Array.isArray(parsed)) return [];
     return [...new Set(parsed.filter((x): x is string => typeof x === 'string' && x.length < 64))];
   } catch {
@@ -200,14 +211,13 @@ export function saveUnlockedAchievements(ids: string[]): { ok: boolean; error?: 
 
 export function clearAllLocalData(): { ok: boolean; error?: string } {
   try {
-    localStorage.removeItem(SETTINGS_KEY);
-    localStorage.removeItem(HISTORY_KEY);
-    localStorage.removeItem(RECORDS_KEY);
-    localStorage.removeItem(ACHIEVEMENTS_KEY);
-    localStorage.removeItem('couple-spin-custom-content');
-    for (const key of ['couple-spin-seen-content', 'couple-spin-task-feedback', 'couple-spin-evening-ratings', 'couple-spin-favorites', 'couple-spin-hidden-tasks', 'couple-spin-boundaries', 'couple-spin-discrete', 'couple-spin-guest']) localStorage.removeItem(key);
-    sessionStorage.removeItem('couple-spin-active-game');
-    sessionStorage.removeItem('couple-spin-auth-session');
+    accountLocal.removeItem(SETTINGS_KEY);
+    clearDeviceHistory();
+    accountLocal.removeItem(RECORDS_KEY);
+    accountLocal.removeItem(ACHIEVEMENTS_KEY);
+    accountLocal.removeItem('couple-spin-custom-content');
+    for (const key of ['couple-spin-seen-content', 'couple-spin-task-feedback', 'couple-spin-evening-ratings', 'couple-spin-favorites', 'couple-spin-hidden-tasks', 'couple-spin-boundaries', 'couple-spin-discrete', 'couple-spin-guest']) accountLocal.removeItem(key);
+    accountSession.removeItem('couple-spin-active-game');
     return { ok: true };
   } catch (e) {
     return { ok: false, error: e instanceof Error ? e.message : 'clear_failed' };

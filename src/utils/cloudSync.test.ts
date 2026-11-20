@@ -63,6 +63,12 @@ describe('cloudSync merge', () => {
     }] });
     expect(mergeBundles(local, remote)).toMatchObject({ favorites: [], customContent: [] });
   });
+  it('keeps explicitly withdrawn consent through unrelated newer edits', () => {
+    const old = baseBundle({ updatedAtMs: 8000, boundariesUpdatedAtMs: 1000, boundaries: { playerOne: ['photo'], playerTwo: ['photo'] } });
+    const cleared = baseBundle({ updatedAtMs: 2000, boundariesUpdatedAtMs: 2000 });
+    expect(mergeBundles(cleared, old).boundaries).toEqual({ playerOne: [], playerTwo: [] });
+    expect(mergeBundles(old, cleared).boundaries).toEqual({ playerOne: [], playerTwo: [] });
+  });
   it('loads the newer cloud collections rather than resurrecting stale local items', () => {
     const local = baseBundle({ updatedAtMs: 1000, favorites: ['old'] });
     const remote = baseBundle({ updatedAtMs: 2000, favorites: ['new'] });

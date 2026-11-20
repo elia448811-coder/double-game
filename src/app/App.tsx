@@ -4,7 +4,7 @@ import { BackgroundGlow } from '../components/BackgroundGlow';
 import { FloatingParticles } from '../components/FloatingParticles';
 import { LogoutButton } from '../components/LogoutButton';
 import { SyncStatusBanner } from '../components/SyncStatusBanner';
-import { useToast } from '../contexts/ToastContext';
+import { useToast } from '../contexts/useToast';
 import { useCoupleRoom } from '../hooks/useCoupleRoom';
 import { useGameState } from '../hooks/useGameState';
 import { TutorialScreen } from '../screens/TutorialScreen';

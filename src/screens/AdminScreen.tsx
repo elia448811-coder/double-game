@@ -186,7 +186,7 @@ export function AdminScreen({ onBack }: AdminScreenProps) {
 
   const exportCategoryOptions = useMemo(() => {
     const counts = new Map<string, { questions: number; tasks: number }>();
-    for (const item of getAllContent()) {
+    for (const item of getAllContent(overrides)) {
       const cur = counts.get(item.category) ?? { questions: 0, tasks: 0 };
       if (item.kind === 'question') cur.questions += 1;
       else cur.tasks += 1;

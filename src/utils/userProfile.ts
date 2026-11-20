@@ -1,3 +1,4 @@
+import { accountLocal, currentAccount } from './accountStorage';
 import { getFirebaseAuth, getFirestoreDb, isFirebaseConfigured } from '../lib/firebase';
 import { isSoleAdminIdentity } from './admin';
 import { loadSettings, saveSettings } from './storage';
@@ -70,8 +71,9 @@ function parseProfile(uid: string, raw: Record<string, unknown> | undefined): Us
 }
 
 function cacheLocal(profile: UserProfile): void {
+  if (currentAccount() !== profile.uid) return;
   try {
-    localStorage.setItem(LOCAL_CACHE_KEY, JSON.stringify(profile));
+    accountLocal.setItem(LOCAL_CACHE_KEY, JSON.stringify(profile));
   } catch {
     /* ignore */
   }
@@ -79,7 +81,7 @@ function cacheLocal(profile: UserProfile): void {
 
 export function getCachedUserProfile(): UserProfile | null {
   try {
-    const raw = localStorage.getItem(LOCAL_CACHE_KEY);
+    const raw = accountLocal.getItem(LOCAL_CACHE_KEY);
     if (!raw) return null;
     const parsed = JSON.parse(raw) as Record<string, unknown>;
     if (typeof parsed.uid !== 'string') return null;
@@ -96,13 +98,15 @@ export async function ensureUserProfile(
   },
 ): Promise<UserProfile | null> {
   if (!isFirebaseConfigured()) return null;
+  const owner = currentAccount();
   const user = await requireEmailUser();
   const db = await getFirestoreDb();
-  if (!user || !db) return null;
+  if (!user || owner !== user.uid || currentAccount() !== owner || !db) return null;
 
   const { doc, getDoc, serverTimestamp, setDoc } = await import('firebase/firestore');
   const ref = doc(db, 'users', user.uid);
   const snap = await getDoc(ref);
+  if (currentAccount() !== owner) return null;
   const existing = snap.exists() ? parseProfile(user.uid, snap.data() as Record<string, unknown>) : null;
   const base = existing ?? defaultProfile(user.uid);
   const now = Date.now();
@@ -177,7 +181,7 @@ export async function updateUserProfile(
   patch: Partial<Pick<UserProfile, 'displayName' | 'partnerDisplayName' | 'avatar' | 'lastRoomId'>>,
 ): Promise<UserProfile | null> {
   const next = await ensureUserProfile(patch);
-  if (next && (patch.displayName != null || patch.partnerDisplayName != null)) {
+  if (next && currentAccount() === next.uid && (patch.displayName != null || patch.partnerDisplayName != null)) {
     const settings = loadSettings();
     saveSettings({
       ...settings,
@@ -211,7 +215,7 @@ export async function incrementGamesPlayed(): Promise<void> {
   if (!profile) return;
   const user = await requireEmailUser();
   const db = await getFirestoreDb();
-  if (!user || !db) return;
+  if (!user || user.uid !== profile.uid || !db) return;
   const { doc, increment, serverTimestamp, setDoc } = await import('firebase/firestore');
   const now = Date.now();
   await setDoc(

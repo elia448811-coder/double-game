@@ -1,3 +1,4 @@
+import { accountLocal } from './accountStorage';
 import type { GameState } from '../types/game';
 import { getFirestoreDb, isFirebaseConfigured } from '../lib/firebase';
 import { ensureAnonAuth } from './cloudSync';
@@ -210,9 +211,9 @@ async function clearExpiredServerJoinLock(uid: string): Promise<void> {
 
 function readStored(): StoredRoom | null {
   try {
-    const roomId = localStorage.getItem(ROOM_ID_KEY);
-    const displayCode = localStorage.getItem(ROOM_CODE_KEY);
-    const role = localStorage.getItem(ROLE_KEY);
+    const roomId = accountLocal.getItem(ROOM_ID_KEY);
+    const displayCode = accountLocal.getItem(ROOM_CODE_KEY);
+    const role = accountLocal.getItem(ROLE_KEY);
     if (!displayCode || (role !== 'host' && role !== 'partner')) return null;
     return {
       roomId: roomId ?? displayCode,
@@ -225,15 +226,15 @@ function readStored(): StoredRoom | null {
 }
 
 function writeStored(roomId: string, displayCode: string, role: RoomRole): void {
-  localStorage.setItem(ROOM_ID_KEY, roomId);
-  localStorage.setItem(ROOM_CODE_KEY, displayCode);
-  localStorage.setItem(ROLE_KEY, role);
+  accountLocal.setItem(ROOM_ID_KEY, roomId);
+  accountLocal.setItem(ROOM_CODE_KEY, displayCode);
+  accountLocal.setItem(ROLE_KEY, role);
 }
 
 export function clearStoredRoom(): void {
-  localStorage.removeItem(ROOM_ID_KEY);
-  localStorage.removeItem(ROOM_CODE_KEY);
-  localStorage.removeItem(ROLE_KEY);
+  accountLocal.removeItem(ROOM_ID_KEY);
+  accountLocal.removeItem(ROOM_CODE_KEY);
+  accountLocal.removeItem(ROLE_KEY);
 }
 
 export function getStoredRoom(): StoredRoom | null {

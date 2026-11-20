@@ -1,34 +1,37 @@
+import { accountSession, currentAccount } from './accountStorage';
 import type { GameState } from '../types/game';
 import { isValidLocalSnapshot } from './gameSnapshot';
 
 const UNDO_KEY = 'couple-spin-undo';
 let undoState: GameState | null = null;
+let memoryOwner: string | null = null;
 
 export function clearUndo(): void {
   undoState = null;
-  try { sessionStorage.removeItem(UNDO_KEY); } catch {}
+  try { accountSession.removeItem(UNDO_KEY); } catch {}
 }
 
 export function pushUndo(state: GameState): void {
+  memoryOwner = currentAccount();
   undoState = state;
   try {
-    sessionStorage.setItem(UNDO_KEY, JSON.stringify(state));
+    accountSession.setItem(UNDO_KEY, JSON.stringify(state));
   } catch {}
 }
 
 export function popUndo(): GameState | null {
-  const state = undoState ?? readStoredUndo();
+  const state = (memoryOwner === currentAccount() ? undoState : null) ?? readStoredUndo();
   undoState = null;
   try {
-    sessionStorage.removeItem(UNDO_KEY);
+    accountSession.removeItem(UNDO_KEY);
   } catch {}
   return state;
 }
 
 export function hasUndo(): boolean {
-  if (undoState) return true;
+  if (undoState && memoryOwner === currentAccount()) return true;
   try {
-    return sessionStorage.getItem(UNDO_KEY) !== null;
+    return accountSession.getItem(UNDO_KEY) !== null;
   } catch {
     return false;
   }
@@ -36,7 +39,7 @@ export function hasUndo(): boolean {
 
 function readStoredUndo(): GameState | null {
   try {
-    const raw = sessionStorage.getItem(UNDO_KEY);
+    const raw = accountSession.getItem(UNDO_KEY);
     const value: unknown = raw ? JSON.parse(raw) : null;
     return isValidLocalSnapshot(value) ? value : null;
   } catch {
