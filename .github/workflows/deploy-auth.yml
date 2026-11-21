@@ -6,6 +6,8 @@ on:
     branches: [main, master]
     paths:
       - 'worker/**'
+      - 'shared/auth-core.mjs'
+      - 'shared/auth-store.mjs'
       - '.github/workflows/deploy-auth.yml'
 
 jobs:
