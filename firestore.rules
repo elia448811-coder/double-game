@@ -29,15 +29,13 @@ service cloud.firestore {
       return get(/databases/$(database)/documents/users/$(request.auth.uid));
     }
 
-    // Enforced server-side: profile must exist, not banned, not explicitly unapproved.
-    // Legacy docs without `approved` remain allowed (default true).
-    // Missing profile is NOT active — prevents Auth-only bypass of approval.
+    // Account access requires a positive approval recorded by an administrator.
     function isActiveAccount() {
       return isAdmin() || (
         isEmailSignedIn()
         && exists(/databases/$(database)/documents/users/$(request.auth.uid))
         && callerUserDoc().data.get('banned', false) == false
-        && callerUserDoc().data.get('approved', true) != false
+        && callerUserDoc().data.get('approved', false) == true
       );
     }
 
@@ -269,7 +267,7 @@ service cloud.firestore {
 
     function userCreateSafe() {
       return (!('banned' in request.resource.data) || request.resource.data.banned == false)
-        && (!('approved' in request.resource.data) || request.resource.data.approved == false)
+        && request.resource.data.approved == false
         && (!('adminNote' in request.resource.data) || request.resource.data.adminNote == '');
     }
 
