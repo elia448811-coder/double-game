@@ -32,18 +32,27 @@ try {
         lastSeenMs: now, updatedAtMs: now, schemaVersion: 1,
       });
     }
+    await setDoc(doc(context.firestore(), 'users', 'legacy'), { uid: 'legacy', banned: false });
     await setDoc(doc(context.firestore(), 'contentItems', 'qa'), { title: 'QA question' });
     await setDoc(doc(context.firestore(), 'roomCodes', '87654321'), { expiresAtMs: now - 1000, hostUid: 'host', roomId: 'expired' });
   });
   await check('approved account can look up a free room code', async () => {
     assert.equal((await assertSucceeds(getDoc(doc(host, 'roomCodes', '12345678')))).exists(), false);
   });
-  for (const uid of ['pending', 'banned', 'missing']) {
+  for (const uid of ['pending', 'banned', 'missing', 'legacy']) {
     await check(`${uid} account cannot look up codes or read content`, async () => {
       await assertFails(getDoc(doc(auth(uid), 'roomCodes', '12345678')));
       await assertFails(getDoc(doc(auth(uid), 'contentItems', 'qa')));
     });
   }
+  await check('registration records explicit pending approval', async () => {
+    const uid = 'new-account';
+    const profile = { uid, displayName: 'QA', partnerDisplayName: 'Partner',
+      createdAtMs: now, lastSeenMs: now, updatedAtMs: now, schemaVersion: 1 };
+    const ref = doc(auth(uid), 'users', uid);
+    await assertFails(setDoc(ref, profile));
+    await assertSucceeds(setDoc(ref, { ...profile, approved: false }));
+  });
   await check('anonymous account cannot look up room codes', async () => {
     const anonymous = environment.authenticatedContext('anonymous', { firebase: { sign_in_provider: 'anonymous' } }).firestore();
     await assertFails(getDoc(doc(anonymous, 'roomCodes', '12345678')));
